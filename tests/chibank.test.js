@@ -255,7 +255,8 @@ test("㉑著作權補救解說：「要先同意／授權」只能用在超出�
       (x.examples || []).map((y) => y.why),
       // 圖卡每格只看自己有沒有講到同意／授權；條件可以寫在同一列的左格（前一格）
       nodes.filter((s) => ASK.test(s)).map((s) => nodes[nodes.indexOf(s) - 1] + "→" + s));
-    units.forEach((u) => { if (ASK.test(u) && !OK.test(u)) bad.push("第" + (ci + 1) + "張：" + u); });
+    // 逐句判（Codex 審 9daba41：整個單位一起比對時，「合理引用要先取得同意；寫心得不用先問」的錯誤前半句被後半句的「不用先問」掩護）
+    units.flatMap((u) => String(u).split(/[；。！？]/)).forEach((u) => { if (ASK.test(u) && !OK.test(u)) bad.push("第" + (ci + 1) + "張：" + u); });
     const all = units.join("");
     if (/一定要先(得到|取得)/.test(all)) bad.push("第" + (ci + 1) + "張：仍有無條件「一定要先得到同意」");
     if (!/合理引用/.test(all) || !/不用先問/.test(all)) bad.push("第" + (ci + 1) + "張：沒講到合理引用不用先問");
