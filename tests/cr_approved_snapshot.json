@@ -1,0 +1,102 @@
+{
+  "說明": [
+    "測試㉑（tests/chibank.test.js）的審定快照：src/chiexplain.js 的 EXPLAIN.cr（著作權補救解說兩張卡）整份內容正規化後的樣子。",
+    "測試只讀這份檔當預期值，絕不從受測內容即時產生；內容一改，測試就紅並印出差異。",
+    "更新：改內容 → node tests/cr_snapshot.js 看差異 → 重新審定並送審 → PASS 後由人手動執行 node tests/cr_snapshot.js --write → 和內容同一個 commit。",
+    "讀法：cr[0] 是第一張卡；欄位依鍵名排序；svg 是圖卡的元素樹（tag 元素、attrs 全部屬性、text 完整文字含 <tspan>、children 子節點，順序照原圖）。",
+    "看不見的字元（零寬字、方向控制字、全形空白、不換行空白等）一律寫成 \\uXXXX。規則見 tests/cr_snapshot.js 檔頭。",
+    "依據：docs/test21-snapshot-codex-designer-20261013.md（Codex 設計者結論）。"
+  ],
+  "規則版本": "cr-snapshot/1",
+  "sha256": "f58addbd489365f43e0337d06dd222bf23ffc21074921d03b84b34c8bef63276",
+  "cr": [
+    {
+      "ask": "這是合理引用，還是超出合理引用、要先取得授權？",
+      "examples": [
+        {"s":"「我畫好了一張圖。」","why":"畫完就有著作權，別人不能拿去說是他畫的。"},
+        {"s":"「報告裡引用一本已出版的書的一句話。」","why":"合理引用，不用先問，但要寫上作者和書名。"},
+        {"s":"「想把網路上的文章貼到自己的網站。」","why":"整篇貼上不是引用，要先問作者同意。"}
+      ],
+      "lines": [
+        "作品一完成，作者就有著作權，不用登記。",
+        "合理引用不用先問作者，但四件事都要做到：",
+        "①引用的作品已公開發表。",
+        "②是報告、評論等需要才引用。",
+        "③只引合理範圍內的一小段。",
+        "④寫清楚作者和出處。",
+        "超出合理引用的複製、上傳、賣，要先取得授權。",
+        "用自己的話寫讀後心得，不用先問作者。"
+      ],
+      "name": "看圖：想用別人的作品時",
+      "svg": {
+        "tag": "svg",
+        "attrs": {"aria-label":"著作權：作品一完成作者就有著作權；合理引用四件事都做到，不用先問；超出合理引用的複製、上傳、賣，要先取得授權；用自己的話寫心得可以","class":"fig","role":"img","viewBox":"0 0 690 298"},
+        "children": [
+          {"tag":"rect","attrs":{"fill":"var(--card)","height":"56.0","rx":"12","stroke":"var(--line)","stroke-width":"2","width":"270.0","x":"16.0","y":"16.0"}},
+          {"tag":"text","attrs":{"fill":"var(--ink)","font-size":"19","text-anchor":"middle","x":"151.0","y":"52.0"},"text":"作品一完成"},
+          {"tag":"text","attrs":{"fill":"var(--muted)","font-size":"15","text-anchor":"middle","x":"341.0","y":"38.0"},"text":""},
+          {"tag":"line","attrs":{"stroke":"var(--ink)","stroke-width":"2.5","x1":"300.0","x2":"382.0","y1":"50.0","y2":"50.0"}},
+          {"tag":"polygon","attrs":{"fill":"var(--ink)","points":"382.0,50.0 373.0,54.3 373.0,45.7"}},
+          {"tag":"rect","attrs":{"fill":"var(--sun-soft)","height":"56.0","rx":"12","stroke":"var(--line)","stroke-width":"2","width":"278.0","x":"396.0","y":"16.0"}},
+          {"tag":"text","attrs":{"fill":"var(--ink)","font-size":"19","font-weight":"700","text-anchor":"middle","x":"535.0","y":"52.0"},"text":"作者就有著作權"},
+          {"tag":"rect","attrs":{"fill":"var(--card)","height":"56.0","rx":"12","stroke":"var(--line)","stroke-width":"2","width":"270.0","x":"16.0","y":"86.0"}},
+          {"tag":"text","attrs":{"fill":"var(--ink)","font-size":"19","text-anchor":"middle","x":"151.0","y":"122.0"},"text":"合理引用"},
+          {"tag":"text","attrs":{"fill":"var(--muted)","font-size":"15","text-anchor":"middle","x":"341.0","y":"108.0"},"text":""},
+          {"tag":"line","attrs":{"stroke":"var(--ink)","stroke-width":"2.5","x1":"300.0","x2":"382.0","y1":"120.0","y2":"120.0"}},
+          {"tag":"polygon","attrs":{"fill":"var(--ink)","points":"382.0,120.0 373.0,124.3 373.0,115.7"}},
+          {"tag":"rect","attrs":{"fill":"var(--pri-soft)","height":"56.0","rx":"12","stroke":"var(--line)","stroke-width":"2","width":"278.0","x":"396.0","y":"86.0"}},
+          {"tag":"text","attrs":{"fill":"var(--ink)","font-size":"19","font-weight":"700","text-anchor":"middle","x":"535.0","y":"122.0"},"text":"四件事做到，不用先問"},
+          {"tag":"rect","attrs":{"fill":"var(--card)","height":"56.0","rx":"12","stroke":"var(--line)","stroke-width":"2","width":"270.0","x":"16.0","y":"156.0"}},
+          {"tag":"text","attrs":{"fill":"var(--ink)","font-size":"19","text-anchor":"middle","x":"151.0","y":"192.0"},"text":"超出合理引用"},
+          {"tag":"text","attrs":{"fill":"var(--muted)","font-size":"15","text-anchor":"middle","x":"341.0","y":"178.0"},"text":""},
+          {"tag":"line","attrs":{"stroke":"var(--ink)","stroke-width":"2.5","x1":"300.0","x2":"382.0","y1":"190.0","y2":"190.0"}},
+          {"tag":"polygon","attrs":{"fill":"var(--ink)","points":"382.0,190.0 373.0,194.3 373.0,185.7"}},
+          {"tag":"rect","attrs":{"fill":"var(--leaf-soft)","height":"56.0","rx":"12","stroke":"var(--line)","stroke-width":"2","width":"278.0","x":"396.0","y":"156.0"}},
+          {"tag":"text","attrs":{"fill":"var(--ink)","font-size":"19","font-weight":"700","text-anchor":"middle","x":"535.0","y":"192.0"},"text":"複製、上傳、賣要先授權"},
+          {"tag":"rect","attrs":{"fill":"var(--card)","height":"56.0","rx":"12","stroke":"var(--line)","stroke-width":"2","width":"270.0","x":"16.0","y":"226.0"}},
+          {"tag":"text","attrs":{"fill":"var(--ink)","font-size":"19","text-anchor":"middle","x":"151.0","y":"262.0"},"text":"用自己的話寫心得"},
+          {"tag":"text","attrs":{"fill":"var(--muted)","font-size":"15","text-anchor":"middle","x":"341.0","y":"248.0"},"text":""},
+          {"tag":"line","attrs":{"stroke":"var(--ink)","stroke-width":"2.5","x1":"300.0","x2":"382.0","y1":"260.0","y2":"260.0"}},
+          {"tag":"polygon","attrs":{"fill":"var(--ink)","points":"382.0,260.0 373.0,264.3 373.0,255.7"}},
+          {"tag":"rect","attrs":{"fill":"var(--bad-soft)","height":"56.0","rx":"12","stroke":"var(--line)","stroke-width":"2","width":"278.0","x":"396.0","y":"226.0"}},
+          {"tag":"text","attrs":{"fill":"var(--ink)","font-size":"19","font-weight":"700","text-anchor":"middle","x":"535.0","y":"262.0"},"text":"可以，不用先問"}
+        ]
+      },
+      "task": "讀每一句，說出應該怎麼做才對。"
+    },
+    {
+      "ask": "你的報告裡，哪些是別人的話？",
+      "examples": [
+        {"s":"「我想把阿姨拍的整張照片放上網，先問她可不可以。」","why":"整張放上網超出合理引用，先問、得到同意再用才對。"}
+      ],
+      "lines": [
+        "想像你辛苦畫的圖，被別人說是他畫的。",
+        "你一定很難過，也不想再畫了。",
+        "所以要尊重別人的作品，分清楚兩種情形：",
+        "合理引用不用先問，但一定要寫出處。",
+        "超出合理引用的複製、上傳，要先取得授權。"
+      ],
+      "name": "換個說法：換位想一想",
+      "svg": {
+        "tag": "svg",
+        "attrs": {"aria-label":"換位想一想：如果我的畫被別人拿走，我會很難過，所以要尊重別人的作品","class":"fig","role":"img","viewBox":"0 0 690 150"},
+        "children": [
+          {"tag":"rect","attrs":{"fill":"var(--sun-soft)","height":"110.0","rx":"12","stroke":"var(--line)","stroke-width":"2","width":"192.7","x":"16.0","y":"20.0"}},
+          {"tag":"text","attrs":{"fill":"var(--ink)","font-size":"20","font-weight":"700","text-anchor":"middle","x":"112.3","y":"66.0"},"text":"我的畫"},
+          {"tag":"text","attrs":{"fill":"var(--ink)","font-size":"15","text-anchor":"middle","x":"112.3","y":"102.0"},"text":"被別人拿走"},
+          {"tag":"line","attrs":{"stroke":"var(--ink)","stroke-width":"2.5","x1":"212.7","x2":"244.7","y1":"75.0","y2":"75.0"}},
+          {"tag":"polygon","attrs":{"fill":"var(--ink)","points":"244.7,75.0 235.7,79.3 235.7,70.7"}},
+          {"tag":"rect","attrs":{"fill":"var(--pri-soft)","height":"110.0","rx":"12","stroke":"var(--line)","stroke-width":"2","width":"192.7","x":"248.7","y":"20.0"}},
+          {"tag":"text","attrs":{"fill":"var(--ink)","font-size":"20","font-weight":"700","text-anchor":"middle","x":"345.0","y":"66.0"},"text":"我會"},
+          {"tag":"text","attrs":{"fill":"var(--ink)","font-size":"15","text-anchor":"middle","x":"345.0","y":"102.0"},"text":"很難過"},
+          {"tag":"line","attrs":{"stroke":"var(--ink)","stroke-width":"2.5","x1":"445.3","x2":"477.3","y1":"75.0","y2":"75.0"}},
+          {"tag":"polygon","attrs":{"fill":"var(--ink)","points":"477.3,75.0 468.3,79.3 468.3,70.7"}},
+          {"tag":"rect","attrs":{"fill":"var(--leaf-soft)","height":"110.0","rx":"12","stroke":"var(--line)","stroke-width":"2","width":"192.7","x":"481.3","y":"20.0"}},
+          {"tag":"text","attrs":{"fill":"var(--ink)","font-size":"20","font-weight":"700","text-anchor":"middle","x":"577.7","y":"66.0"},"text":"所以"},
+          {"tag":"text","attrs":{"fill":"var(--ink)","font-size":"15","text-anchor":"middle","x":"577.7","y":"102.0"},"text":"尊重別人作品"}
+        ]
+      },
+      "task": "下次做報告時，在最後寫上你用的資料出處。"
+    }
+  ]
+}
