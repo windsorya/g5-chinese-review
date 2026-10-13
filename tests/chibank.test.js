@@ -241,25 +241,62 @@ test("⑳著作權補救解說：合理引用四要件都講到，不說「用�
 });
 
 // Codex 審 c28888ed：圖卡與第二種說法同時寫「合理引用不用先問」與無條件「要先得到同意」，互相矛盾。
-// 每一個講到「同意／授權／先問」的說法單位（每行、每個例句說明、問題、圖卡每格＋前一格、圖說每一段），
-// 都要自己帶上「超出合理引用／不是引用／不用先問」的條件；兩張卡都要講到合理引用不用先問。
-test("㉑著作權補救解說：「要先同意／授權」只能用在超出合理引用時，兩種說法都不能無條件要求同意", () => {
-  const ASK = /同意|授權|先問/, OK = /超出合理引用|超過合理引用|不是引用|不是合理引用|不用先問/;
+// Codex 審 9daba41、899b730：用關鍵字判「條件有沒有跟著要求」，分號、逗號、換行都能讓錯的前半句被後半句掩護而假通過——
+// 「這個同意是用在哪個條件下」是語意關係，沒有字串載體（memory semantic-relations-have-no-string-carrier）。
+// ⇒ 改成逐字審定：卡片任何文字欄位、圖說、圖卡「左格→右格」只要講到同意／授權／先問（含同義詞），就必須逐字等於下面審過的句子。
+//   要改寫這類句子：改內容的同時改這份清單，送審讓審查者看語意；測試只保證「沒有未經審定的說法混進來」。
+const CR_ASK = /同意|授權|先問|問過|允許|許可|徵得|徵求|准許|答應/;
+const CR_APPROVED = [   // [第幾張, 句子, 類別：free＝合理引用不用先問／need＝超出才要授權或同意／other]
+  [0, "合理引用不用先問作者，但四件事都要做到：", "free"],
+  [0, "超出合理引用的複製、上傳、賣，要先取得授權。", "need"],
+  [0, "用自己的話寫讀後心得，不用先問作者。", "other"],
+  [0, "合理引用，不用先問，但要寫上作者和書名。", "free"],
+  [0, "整篇貼上不是引用，要先問作者同意。", "need"],
+  [0, "這是合理引用，還是超出合理引用、要先取得授權？", "other"],
+  [0, "著作權：作品一完成作者就有著作權；合理引用四件事都做到，不用先問；超出合理引用的複製、上傳、賣，要先取得授權；用自己的話寫心得可以", "other"],
+  [0, "合理引用→四件事做到，不用先問", "free"],
+  [0, "超出合理引用→複製、上傳、賣要先授權", "need"],
+  [0, "用自己的話寫心得→可以，不用先問", "other"],
+  [1, "合理引用不用先問，但一定要寫出處。", "free"],
+  [1, "超出合理引用的複製、上傳，要先取得授權。", "need"],
+  [1, "「我想把阿姨拍的整張照片放上網，先問她可不可以。」", "other"],
+  [1, "整張放上網超出合理引用，先問、得到同意再用才對。", "need"],
+];
+function crUnits(x) {
+  const leaves = (o, out) => { if (typeof o === "string") out.push(o); else if (Array.isArray(o)) o.forEach((v) => leaves(v, out)); else if (o && typeof o === "object") Object.keys(o).forEach((k) => leaves(o[k], out)); return out; };
+  const svg = x.svg();
+  const nodes = [...svg.matchAll(/<text[^>]*>([^<]*)<\/text>/g)].map((m) => m[1]).filter((s) => s.trim());
+  const aria = (/aria-label="([^"]*)"/.exec(svg) || [, ""])[1];
+  // 圖卡每格連同左格一起比（條件寫在左格）：左右對調也會變成清單外的組合
+  return leaves(x, []).concat([aria], nodes.map((s, i) => (CR_ASK.test(s) ? nodes[i - 1] + "→" + s : null)).filter(Boolean));
+}
+test("㉑著作權補救解說：講到同意／授權／先問的每一句都必須逐字是審定過的句子；兩張卡都要同時講到「合理引用不用先問」與「超出才要授權」", () => {
   const bad = [];
   X.EXPLAIN.cr.forEach((x, ci) => {
-    const svg = x.svg();
-    const nodes = [...svg.matchAll(/<text[^>]*>([^<]*)<\/text>/g)].map((m) => m[1]).filter((s) => s.trim());
-    const aria = (/aria-label="([^"]*)"/.exec(svg) || [, ""])[1].split(/[；：]/);
-    const units = [].concat(
-      x.lines, aria, [x.ask, x.task],
-      (x.examples || []).map((y) => y.why),
-      // 圖卡每格只看自己有沒有講到同意／授權；條件可以寫在同一列的左格（前一格）
-      nodes.filter((s) => ASK.test(s)).map((s) => nodes[nodes.indexOf(s) - 1] + "→" + s));
-    // 逐句判（Codex 審 9daba41：整個單位一起比對時，「合理引用要先取得同意；寫心得不用先問」的錯誤前半句被後半句的「不用先問」掩護）
-    units.flatMap((u) => String(u).split(/[；。！？]/)).forEach((u) => { if (ASK.test(u) && !OK.test(u)) bad.push("第" + (ci + 1) + "張：" + u); });
-    const all = units.join("");
-    if (/一定要先(得到|取得)/.test(all)) bad.push("第" + (ci + 1) + "張：仍有無條件「一定要先得到同意」");
-    if (!/合理引用/.test(all) || !/不用先問/.test(all)) bad.push("第" + (ci + 1) + "張：沒講到合理引用不用先問");
+    const ok = new Map(CR_APPROVED.filter(([c]) => c === ci).map(([, t, k]) => [t, k]));
+    const units = crUnits(x);
+    units.forEach((u) => { if (CR_ASK.test(u) && !ok.has(u)) bad.push("第" + (ci + 1) + "張：未審定的說法「" + u + "」"); });
+    const kinds = new Set(units.filter((u) => ok.has(u)).map((u) => ok.get(u)));
+    if (!kinds.has("free")) bad.push("第" + (ci + 1) + "張：沒講到合理引用不用先問");
+    if (!kinds.has("need")) bad.push("第" + (ci + 1) + "張：沒講到超出合理引用才要授權或同意");
   });
   assert.deepEqual(bad, []);
+});
+// ㉑的自檢：Codex 審 9daba41、899b730 的三種反例（分號、逗號、換行）與同義詞、左右格對調，都必須被抓到
+test("㉑自檢：分號／逗號／換行反例、同義詞、圖卡左右格對調都會被擋", () => {
+  const base = X.EXPLAIN.cr[1];
+  const variants = [
+    ["分號", "合理引用要先取得同意；用自己的話寫心得不用先問。"],
+    ["逗號", "合理引用要先取得同意，寫心得不用先問"],
+    ["換行", "合理引用要先取得同意\n寫心得不用先問"],
+    ["同義詞", "合理引用也要作者允許才能用。"],
+  ];
+  variants.forEach(([name, line]) => {
+    const x = Object.assign({}, base, { lines: base.lines.slice(0, 3).concat([line], base.lines.slice(4)) });
+    const units = crUnits(x), ok = new Set(CR_APPROVED.filter(([c]) => c === 1).map(([, t]) => t));
+    assert.ok(units.some((u) => CR_ASK.test(u) && !ok.has(u)), name + " 反例沒被擋");
+  });
+  const card0 = X.EXPLAIN.cr[0], swapped = Object.assign({}, card0, { svg: () => card0.svg().replace(">合理引用<", ">__L__<").replace(">超出合理引用<", ">合理引用<").replace(">__L__<", ">超出合理引用<") });
+  const ok0 = new Set(CR_APPROVED.filter(([c]) => c === 0).map(([, t]) => t));
+  assert.ok(crUnits(swapped).some((u) => CR_ASK.test(u) && !ok0.has(u)), "圖卡左右格對調沒被擋");
 });
