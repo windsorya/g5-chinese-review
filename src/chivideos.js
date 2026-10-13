@@ -1,0 +1,195 @@
+// 國語各觀念的教學影片（答錯補救與觀念頁「看影片，聽老師講一次」）。格式比照數學站 src/mathvideos.js，另加 verify 欄記查證方式。
+// 2026-10-13 子代理逐支驗證：yt-dlp metadata（public、playable_in_embed）；18 支 YouTube 都沒有字幕，改用 whisper-cli 整片轉錄全文讀過、
+// 對照畫面字卡修正同音錯字（協調者同日核可這個查證方式）；選用段落抽 4–6 格逐張看過；史實片對照維基文庫《史記》卷八十一。
+// 被刷掉的 16 支與理由、轉錄稿、抽格在 session 暫存（不進 repo）。NO_VIDEO：觀念→沒放影片的理由（目前每個觀念都有影片，所以是空的）。
+(function (root) {
+  "use strict";
+  var DATA = {
+  "V": {
+    "ga": [
+      {
+        "id": "x44P7c2s7l4",
+        "title": "國小國語3上統整3認識說明文翰林出版",
+        "channel": "翰林教學小幫手",
+        "start": 0,
+        "end": 235,
+        "note": "同樣寫新竹的風，一篇是說明文，一篇是記敘文。看看老師怎麼分辨兩種文體！",
+        "verify": "yt-dlp 確認公開且可嵌入；YouTube 無字幕，whisper-cli（ggml-small）整片轉錄全文讀過，同音錯字對照畫面字卡修正；選用段落抽 4–6 格逐張看過，2026-10-13"
+      },
+      {
+        "id": "pRaR3pM4ca0",
+        "title": "小六國語｜文本｜詩歌概說3：詩的表述特性",
+        "channel": "臺北酷課雲",
+        "start": 12,
+        "end": 104,
+        "note": "詩歌和一般文章哪裡不一樣？詩的語言很精簡，還會一句一行分行寫。",
+        "verify": "yt-dlp 確認公開且可嵌入；YouTube 無字幕，whisper-cli（ggml-small）整片轉錄全文讀過，同音錯字對照畫面字卡修正；選用段落抽 4–6 格逐張看過，2026-10-13"
+      }
+    ],
+    "nb": [
+      {
+        "id": "Ie7hixmNQiU",
+        "title": "國小國語3上統整3認識記敘文翰林出版",
+        "channel": "翰林教學小幫手",
+        "start": 0,
+        "end": 92,
+        "note": "記敘文寫人、事、景、物，內容包含人、事、時、地、物。用〈月世界〉看開頭、經過、結尾。",
+        "verify": "yt-dlp 確認公開且可嵌入；YouTube 無字幕，whisper-cli（ggml-small）整片轉錄全文讀過，同音錯字對照畫面字卡修正；選用段落抽 4–6 格逐張看過，2026-10-13"
+      },
+      {
+        "id": "i2F2Iae16Yg",
+        "title": "小三國語｜文本｜記敘文概說",
+        "channel": "臺北酷課雲",
+        "start": 519,
+        "end": 607,
+        "note": "寫事的記敘文要交代起因、經過、結果。跟著〈曬棉被〉一起拆解看看！",
+        "verify": "yt-dlp 確認公開且可嵌入；YouTube 無字幕，whisper-cli（ggml-small）整片轉錄全文讀過，同音錯字對照畫面字卡修正；選用段落抽 4–6 格逐張看過，2026-10-13"
+      }
+    ],
+    "ex": [
+      {
+        "id": "8BvCXbl-eyM",
+        "title": "小三國語｜文本｜說明文：從標題、圖表讀懂說明文",
+        "channel": "臺北酷課雲",
+        "start": 86,
+        "end": 230,
+        "note": "說明文的總標題和小標題是文章的眼睛。先看小標題，就能抓到每段重點。",
+        "verify": "yt-dlp 確認公開且可嵌入；YouTube 無字幕，whisper-cli（ggml-small）整片轉錄全文讀過，同音錯字對照畫面字卡修正；選用段落抽 4–6 格逐張看過，2026-10-13"
+      },
+      {
+        "id": "fqmr3-356rg",
+        "title": "小四國語｜文本｜說明文：說明的方法-3",
+        "channel": "臺北酷課雲",
+        "start": 42,
+        "end": 236,
+        "note": "說明文常用舉例說明。看到「舉例來說」「比如」「像是」，後面就是例子。",
+        "verify": "yt-dlp 確認公開且可嵌入；YouTube 無字幕，whisper-cli（ggml-small）整片轉錄全文讀過，同音錯字對照畫面字卡修正；選用段落抽 4–6 格逐張看過，2026-10-13"
+      }
+    ],
+    "rh1": [
+      {
+        "id": "5ZzDzkdEUrc",
+        "title": "國小國語5上統整1認識修辭 擬人翰林出版",
+        "channel": "翰林教學小幫手",
+        "start": 0,
+        "end": 235,
+        "note": "擬人法是把東西當成人來寫，讓它會想、會說、會動。最後有小挑戰喔！",
+        "verify": "yt-dlp 確認公開且可嵌入；YouTube 無字幕，whisper-cli（ggml-small）整片轉錄全文讀過，同音錯字對照畫面字卡修正；選用段落抽 4–6 格逐張看過，2026-10-13"
+      },
+      {
+        "id": "asXCVmIHIZY",
+        "title": "國小國語5上統整3認識修辭 類疊翰林出版",
+        "channel": "翰林教學小幫手",
+        "start": 0,
+        "end": 247,
+        "note": "類疊分成疊字、類字、疊句、類句四種。聽完試著分辨看看！",
+        "verify": "yt-dlp 確認公開且可嵌入；YouTube 無字幕，whisper-cli（ggml-small）整片轉錄全文讀過，同音錯字對照畫面字卡修正；選用段落抽 4–6 格逐張看過，2026-10-13"
+      }
+    ],
+    "rh2": [
+      {
+        "id": "qq-MGwXssGY",
+        "title": "國小國語5上統整2認識修辭 設問翰林出版",
+        "channel": "翰林教學小幫手",
+        "start": 0,
+        "end": 237,
+        "note": "設問是故意用問句引起注意。分成疑問、提問、激問三種，記得分清楚！",
+        "verify": "yt-dlp 確認公開且可嵌入；YouTube 無字幕，whisper-cli（ggml-small）整片轉錄全文讀過，同音錯字對照畫面字卡修正；選用段落抽 4–6 格逐張看過，2026-10-13"
+      },
+      {
+        "id": "zWXR8MIsiuI",
+        "title": "國小國語5上統整4認識修辭 引用翰林出版",
+        "channel": "翰林教學小幫手",
+        "start": 0,
+        "end": 213,
+        "note": "引用別人的話、俗語或典故，要加上引號。能說出處就寫清楚是誰說的。",
+        "verify": "yt-dlp 確認公開且可嵌入；YouTube 無字幕，whisper-cli（ggml-small）整片轉錄全文讀過，同音錯字對照畫面字卡修正；選用段落抽 4–6 格逐張看過，2026-10-13"
+      }
+    ],
+    "sp": [
+      {
+        "id": "hgNe-Lxjg2s",
+        "title": "國小國語4上統整1認識句子 表達進一步關係的句子翰林出版",
+        "channel": "翰林教學小幫手",
+        "start": 0,
+        "end": 209,
+        "note": "「不但……而且……」「不僅……還……」表示更進一步。重點在後面那一句！",
+        "verify": "yt-dlp 確認公開且可嵌入；YouTube 無字幕，whisper-cli（ggml-small）整片轉錄全文讀過，同音錯字對照畫面字卡修正；選用段落抽 4–6 格逐張看過，2026-10-13"
+      },
+      {
+        "id": "ios8sLIUt84",
+        "title": "國小國語4上統整2認識句子 前後意思相反或相對的句子翰林出版",
+        "channel": "翰林教學小幫手",
+        "start": 0,
+        "end": 170,
+        "note": "「雖然……卻……」「不料」「即使……依然……」讓前後意思相反。重點常在轉折後。",
+        "verify": "yt-dlp 確認公開且可嵌入；YouTube 無字幕，whisper-cli（ggml-small）整片轉錄全文讀過，同音錯字對照畫面字卡修正；選用段落抽 4–6 格逐張看過，2026-10-13"
+      }
+    ],
+    "sy": [
+      {
+        "id": "0A1SDWFhcIk",
+        "title": "小二國語｜字詞｜近義詞：又再還也",
+        "channel": "臺北酷課雲",
+        "start": 408,
+        "end": 545,
+        "note": "「又、再、還、也」意思很像，用法卻不同。看重點整理，學會分辨近義詞。",
+        "verify": "yt-dlp 確認公開且可嵌入；YouTube 無字幕，whisper-cli（ggml-small）整片轉錄全文讀過，同音錯字對照畫面字卡修正；選用段落抽 4–6 格逐張看過，2026-10-13"
+      }
+    ],
+    "an": [
+      {
+        "id": "3__vmTrXlZQ",
+        "title": "5月20日國語課-相似詞/相反詞/顛倒詞",
+        "channel": "JN H",
+        "start": 64,
+        "end": 112,
+        "note": "意思相反的兩個詞就是反義詞。例如溫暖和寒冷、勇敢和膽小。",
+        "verify": "yt-dlp 確認公開且可嵌入；YouTube 無字幕，whisper-cli（ggml-small）整片轉錄全文讀過，同音錯字對照畫面字卡修正；選用段落抽 4–6 格逐張看過，2026-10-13"
+      }
+    ],
+    "hs": [
+      {
+        "id": "Z54kHamhSso",
+        "title": "完璧歸趙【成語故事系列】",
+        "channel": "學習吧LearnMode",
+        "start": 30,
+        "end": 222,
+        "note": "藺相如帶著和氏璧到秦國，靠智慧把璧完整帶回趙國，這就是完璧歸趙。",
+        "verify": "yt-dlp 確認公開且可嵌入；YouTube 無字幕，whisper-cli（ggml-small）整片轉錄全文讀過，同音錯字對照畫面字卡修正；選用段落抽 4–6 格逐張看過，2026-10-13"
+      },
+      {
+        "id": "fC3wdfIOKmE",
+        "title": "歷史百卡06 廉頗與藺相如",
+        "channel": "China Foundation 財團法人中華教育文化基金會",
+        "start": 0,
+        "end": 200,
+        "note": "從完璧歸趙到負荊請罪，看廉頗和藺相如怎麼由不和變成好朋友。",
+        "verify": "yt-dlp 確認公開且可嵌入；YouTube 無字幕，whisper-cli（ggml-small）整片轉錄全文讀過，同音錯字對照畫面字卡修正；選用段落抽 4–6 格逐張看過，2026-10-13"
+      }
+    ],
+    "cr": [
+      {
+        "id": "CUMgqaMMpv8",
+        "title": "認識智慧財產權校園篇_作文篇",
+        "channel": "100copyright",
+        "start": 50,
+        "end": 230,
+        "note": "小威把姐姐的作文抄來交，這樣對嗎？別人的作品要尊重，不能直接抄。",
+        "verify": "yt-dlp 確認公開且可嵌入；YouTube 無字幕，whisper-cli（ggml-small）整片轉錄全文讀過，同音錯字對照畫面字卡修正；選用段落抽 4–6 格逐張看過，2026-10-13"
+      },
+      {
+        "id": "PC5pXVAyBig",
+        "title": "認識智慧財產權校園篇_不翻印書籍篇",
+        "channel": "100copyright",
+        "start": 45,
+        "end": 245,
+        "note": "把整本書拿去影印來省錢，對作者公平嗎？想想尊重創作的正確作法。",
+        "verify": "yt-dlp 確認公開且可嵌入；YouTube 無字幕，whisper-cli（ggml-small）整片轉錄全文讀過，同音錯字對照畫面字卡修正；選用段落抽 4–6 格逐張看過，2026-10-13"
+      }
+    ]
+  },
+  "NO_VIDEO": {}
+};
+  if (typeof module !== "undefined" && module.exports) module.exports = DATA; else root.G5_VIDEOS = DATA;
+})(typeof window !== "undefined" ? window : this);
