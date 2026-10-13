@@ -16,7 +16,8 @@ URL = BASE + "index.html"
 RESULTS = []
 SITES = {"https://windsorya.github.io/g5-sci-review/": "五上自然複習",
          "https://windsorya.github.io/g5-math-review/": "五上數學複習",
-         "https://windsorya.github.io/g5-help/": "難題解說"}
+         "https://windsorya.github.io/g5-help/": "難題解說",
+         "https://windsorya.github.io/g5-social-review/": "五上社會複習"}
 SELF_NAME = "五上國語複習"
 
 
@@ -62,7 +63,7 @@ def flow_main(browser, label, device=None):
     check(f"{label} 小考複習列出四組", all(pg.locator(f'button[data-rv="u{u}"]').count() == 1 for u in ["k1", "k2", "k3", "k4"]))
     check(f"{label} 沒有水平捲動", no_overflow(pg))
     nav = pg.evaluate("[...document.querySelectorAll('#siteNav a')].map(a=>[a.getAttribute('href'),a.textContent.trim()])")
-    check(f"{label} 切換列四項：三個連結到其他站、目前站是「{SELF_NAME}」",
+    check(f"{label} 切換列：連到其他每一站、目前站是「{SELF_NAME}」",
           dict(nav) == SITES and pg.locator('#siteNav [aria-current="page"]').inner_text() == SELF_NAME, nav)
     check(f"{label} 畫面不出現學校名稱", "忠孝" not in pg.locator("body").inner_text())
     pg.locator("#goAll").click()
@@ -115,7 +116,7 @@ def flow_nav_click(browser, label, device=None):
         pg.wait_for_url(href + "**", timeout=5000)
         if not pg.url.startswith(href):
             bad.append((name, pg.url))
-    check(f"{label} 切換列三個連結點了都到對的站", not bad, bad)
+    check(f"{label} 切換列每個連結點了都到對的站", not bad, bad)
     ctx.close()
 
 

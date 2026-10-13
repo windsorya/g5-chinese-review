@@ -28,6 +28,7 @@ const SITES = {
   sci: { url: "https://windsorya.github.io/g5-sci-review/", name: "五上自然複習" },
   math: { url: "https://windsorya.github.io/g5-math-review/", name: "五上數學複習" },
   help: { url: "https://windsorya.github.io/g5-help/", name: "難題解說" },
+  soc: { url: "https://windsorya.github.io/g5-social-review/", name: "五上社會複習" },
   chi: { url: "https://windsorya.github.io/g5-chinese-review/", name: "五上國語複習" },   // 國語站加入（其他三站的複本要各自加這一行）
 };
 const YT_ID = /^[A-Za-z0-9_-]{11}$/;
