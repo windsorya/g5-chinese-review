@@ -105,7 +105,9 @@ def flow_main(browser, label, device=None):
 def flow_nav_click(browser, label, device=None):
     """切換列連結真的點得過去：攔截 windsorya.github.io 回假頁面（不連外網），點每一個連結，看網址到了該站。"""
     ctx, pg, errors = open_page(browser, device)
-    ctx.route("https://windsorya.github.io/**", lambda route: route.fulfill(status=200, content_type="text/html; charset=utf-8", body="<title>stub</title>stub"))
+    # 只攔另外幾站：正式網址也在 windsorya.github.io 底下，全攔會連本站都換成假頁（2026-10-13 線上跑實測逾時）
+    for href in SITES:
+        ctx.route(href + "**", lambda route: route.fulfill(status=200, content_type="text/html; charset=utf-8", body="<title>stub</title>stub"))
     bad = []
     for href, name in SITES.items():
         pg.goto(URL); pg.wait_for_selector("#siteNav a")
