@@ -5,6 +5,7 @@
 存檔 key 換成 g5chi.v1；切換列是四站；另外驗切換列的連結真的點得過去（攔截成假頁面，不連外網）。
 題目答案從頁面上的 window.G5ChiBank 依題目文字查（題庫本身另有 tests/chibank.test.js 獨立檢查）。"""
 import json
+import math
 import sys
 from pathlib import Path
 
@@ -100,6 +101,16 @@ def flow_main(browser, label, device=None):
     pg.reload(); pg.wait_for_selector("#main .btn, #main .done")
     saved2 = json.loads(pg.evaluate("localStorage.getItem('g5chi.v1')") or "null")
     check(f"{label} 重新整理後紀錄還在", saved2 and len(saved2.get("log", [])) == len(saved.get("log", [])) and pg.locator("#cal i.on").count() >= 1)
+    # 跨裝置同步面板（g5-help/sync.js 已收 g5chi.v1）：展開後看得到「開啟跨裝置同步」按鈕，代表 G5Sync.init 真的接上、沒有退回「還沒開放」
+    sync_txt = "（頁面沒有 #syncBox／#g5sync）"
+    if pg.locator("#syncBox summary").count() == 1 and pg.locator("#g5sync").count() == 1:
+        pg.locator("#syncBox summary").click()
+        try:
+            pg.wait_for_function("document.querySelector('#g5sync').innerText.indexOf('開啟跨裝置同步') >= 0", timeout=10000)
+        except Exception:  # noqa: BLE001 — 逾時就照實記 FAIL
+            pass
+        sync_txt = pg.locator("#g5sync").inner_text()
+    check(f"{label} 同步面板：展開看得到「開啟跨裝置同步」", "開啟跨裝置同步" in sync_txt, sync_txt[:200])
     check(f"{label} 沒有 JS 錯誤", not errors, errors)
     ctx.close()
 
@@ -144,40 +155,109 @@ def flow_concepts(browser, label, device=None):
     ctx.close()
 
 
-# 播放器畫面出現這些字＝不能播（YouTube 嵌入錯誤頁；英文介面與中文介面都列）。比對時不分大小寫。（沿用數學站 9545348）
+# 播放器畫面出現這些字＝不能播（YouTube 嵌入錯誤頁；英文介面與中文介面都列）。比對時不分大小寫。
+# 以下 PLAYER_*／player_problem／selftest_player／flow_video_live 照數學站 g5-math-review b1ae271 的 tests/e2e.py
+# （Codex 審 e0ad0ad8：舊版 `paused … and … t > 0` 對 {hasVideo:true, paused:true, t:10} 判通過，不能證明影片真的在播）。
 PLAYER_ERROR_MARKS = ("video unavailable", "this video is private", "private video", "error 153", "錯誤 153",
-                      "無法播放", "影片無法觀看", "私人影片", "an error occurred", "發生錯誤")
+                      "無法播放", "影片無法觀看", "私人影片", "an error occurred", "發生錯誤",
+                      "sign in to confirm", "登入以確認")
+# 讀播放器 iframe 裡的真實狀態。正常播放時 body 文字常是空的（數學站 2026-10-13 正式網址實測），所以「沒有文字」不算失敗；
+# 能不能播看 <video> 元素：存在、沒有 YouTube 錯誤畫面、隔一段時間讀兩次，第二次沒暫停且時間有前進。
 PLAYER_STATE_JS = """b => { const v = b.querySelector('video'), e = b.querySelector('.ytp-error');
   return {text: (b.innerText || '').trim().slice(0, 200), hasVideo: !!v, t: v ? v.currentTime : null, paused: v ? v.paused : null,
           err: e ? (e.innerText || 'ytp-error').trim().slice(0, 120) : ''}; }"""
+PLAY_GAP_MS = 2000        # 兩次讀狀態之間隔多久
+PLAY_MIN_ADVANCE = 0.5    # 隔 PLAY_GAP_MS 後 currentTime 至少要多這麼多秒，才算真的在播
 
 
-def player_problem(src, rp, read_state):
+def player_problem(src, rp, read_state, wait):
+    """判斷一個嵌入播放器是不是真的在播；回傳問題說明，在播回傳 None。
+    read_state() 回傳 {text, hasVideo, t, paused, err}；先讀一次、wait()（約 2 秒）、再讀一次：
+    兩次都要讀得到、有 <video>、沒有錯誤畫面；第二次 paused=false，且 currentTime 比第一次多 ≥ PLAY_MIN_ADVANCE 秒。"""
     if "youtube-nocookie.com/embed/" not in (src or ""):
         return f"iframe 沒指向 youtube-nocookie：{src}"
     if rp != "strict-origin-when-cross-origin":
         return f"referrerpolicy 不對：{rp}"
-    try:
-        st = read_state()
-    except Exception as e:  # noqa: BLE001
-        return f"讀不到播放器內容（{type(e).__name__}：{str(e)[:60]}）"
-    if not isinstance(st, dict):
-        return f"播放器狀態讀不懂：{st!r}"[:120]
-    low = (str(st.get("text") or "") + " " + str(st.get("err") or "")).lower()
-    hit = next((m for m in PLAYER_ERROR_MARKS if m.lower() in low), None)
-    if st.get("err") or hit:
-        return f"播放器顯示錯誤（{hit or st.get('err')}）"
-    if not st.get("hasVideo"):
-        return "播放器裡沒有 <video>（沒有載入影片）"
-    if st.get("paused") is not False and not (st.get("t") or 0) > 0:
-        return f"影片沒有在播（paused={st.get('paused')}、t={st.get('t')}）"
+    states = []
+    for k in (1, 2):
+        if k == 2:
+            wait()
+        try:
+            st = read_state()
+        except Exception as e:  # noqa: BLE001 — 任何讀取失敗都是播放失敗
+            return f"第 {k} 次讀不到播放器內容（{type(e).__name__}：{str(e)[:60]}）"
+        if not isinstance(st, dict):
+            return f"第 {k} 次讀到的播放器狀態讀不懂：{st!r}"[:120]
+        low = (str(st.get("text") or "") + " " + str(st.get("err") or "")).lower()
+        hit = next((m for m in PLAYER_ERROR_MARKS if m.lower() in low), None)
+        if st.get("err") or hit:
+            return f"第 {k} 次讀：播放器顯示錯誤（{hit or st.get('err')}）"
+        if not st.get("hasVideo"):
+            return f"第 {k} 次讀：播放器裡沒有 <video>（沒有載入影片）"
+        states.append(st)
+    t1, t2 = states[0].get("t"), states[1].get("t")
+    if not all(isinstance(x, (int, float)) and not isinstance(x, bool) and math.isfinite(x) for x in (t1, t2)):
+        return f"讀不到播放時間（t={t1}→{t2}）"
+    if states[1].get("paused") is not False:
+        return f"第二次讀時影片沒有在播（paused={states[1].get('paused')}、t={t2}）"
+    if t2 - t1 < PLAY_MIN_ADVANCE:
+        return f"影片沒有往前播（隔約 {PLAY_GAP_MS / 1000:g} 秒，t {t1}→{t2}，只多 {t2 - t1:.2f} 秒，至少要 {PLAY_MIN_ADVANCE}）"
     return None
 
 
+def selftest_player():
+    """播放判準的替身測試（不開瀏覽器）：餵假的兩次狀態序列，斷言判對；也斷言兩次讀之間真的有等（呼叫順序 讀→等→讀）。"""
+    ok_src, ok_rp = "https://www.youtube-nocookie.com/embed/abcdefghijk?start=10", "strict-origin-when-cross-origin"
+
+    def st(**kw):
+        return dict({"text": "", "hasVideo": True, "t": 10.0, "paused": False, "err": ""}, **kw)
+    boom = TimeoutError("frame 逾時")
+    cases = [  # (說明, 兩次狀態（例外＝讀時丟出）, 應判在播?)
+        ("Codex 反例 {hasVideo:true, paused:true, t:10}：停著", [st(t=10, paused=True), st(t=10, paused=True)], False),
+        ("{paused:false, t:0}：沒前進", [st(t=0, paused=False), st(t=0, paused=False)], False),
+        ("正常在播：10→12.1", [st(t=10), st(t=12.1)], True),
+        ("剛好前進 0.5 秒", [st(t=10), st(t=10.5)], True),
+        ("第二次暫停（雖然時間有前進）", [st(t=10), st(t=12, paused=True)], False),
+        ("第二次 paused=None（讀不到）", [st(t=10), st(t=12, paused=None)], False),
+        ("只前進 0.3 秒（緩衝中）", [st(t=10), st(t=10.3)], False),
+        ("時間倒退", [st(t=18), st(t=10)], False),
+        ("第一次 paused=true、第二次在播且前進", [st(t=10, paused=True), st(t=11.9)], True),
+        ("第二次讀逾時", [st(t=10), boom], False),
+        ("第一次讀逾時", [boom, st(t=12)], False),
+        ("第二次出現 Video unavailable", [st(t=10), st(t=12, text="Video unavailable. This video is private.")], False),
+        ("第一次有 .ytp-error", [st(err="ytp-error"), st(t=12)], False),
+        ("Sign in to confirm you're not a bot", [st(t=10, text="Sign in to confirm you're not a bot"), st(t=12)], False),
+        ("沒有 <video>", [st(hasVideo=False, t=None, paused=None), st(hasVideo=False, t=None, paused=None)], False),
+        ("t 是 None", [st(t=None), st(t=None)], False),
+        ("t 是字串", [st(t="10"), st(t="12")], False),
+        ("狀態不是 dict", ["???", st(t=12)], False),
+    ]
+    wrong = []
+    for name, seq, want in cases:
+        log, it = [], iter(seq)
+
+        def read():
+            log.append("讀"); x = next(it)
+            if isinstance(x, Exception):
+                raise x
+            return x
+        got = player_problem(ok_src, ok_rp, read, lambda: log.append("等")) is None
+        if got != want:
+            wrong.append(f"{name}：應判{'在播' if want else '沒在播'}，判成{'在播' if got else '沒在播'}")
+        if want and log != ["讀", "等", "讀"]:
+            wrong.append(f"{name}：呼叫順序應為 讀→等→讀，實際 {log}")
+    if player_problem("https://www.youtube.com/embed/abcdefghijk", ok_rp, lambda: st(), lambda: None) is None:
+        wrong.append("iframe 不是 youtube-nocookie 卻判在播")
+    if player_problem(ok_src, "no-referrer", lambda: st(), lambda: None) is None:
+        wrong.append("referrerpolicy 錯卻判在播")
+    check(f"播放判準替身測試：{len(cases) + 2} 個假狀態序列都判對（含 Codex 的 {{hasVideo:true,paused:true,t:10}}）", not wrong, wrong)
+
+
 def flow_video_live(browser, label, device=None):
-    """只在線上版跑：有影片的觀念頁按第一段影片播放，播放器真的在播。"""
+    """只在線上版跑：每個有影片的觀念頁按第一段影片播放，iframe 指向 youtube-nocookie、帶 referrerpolicy；
+    等播放器載入後隔約 2 秒讀兩次 <video>：都有 <video>、沒有錯誤畫面，第二次在播且時間前進 ≥0.5 秒。任何一個觀念失敗就記 FAIL。"""
     ctx, pg, errors = open_page(browser, device)
-    bad = []
+    bad, ok = [], []
     cids = pg.evaluate("Object.keys(G5ChiBank.CONCEPTS).filter(k=>(G5_VIDEOS.V[k]||[]).length)")
     for cid in cids:
         pg.locator(f'#concepts .ccard[data-cid="{cid}"]').click(); pg.wait_for_selector("#main .remedy")
@@ -185,11 +265,21 @@ def flow_video_live(browser, label, device=None):
         fr = pg.locator("#main .vids iframe").first
         src, rp = fr.get_attribute("src"), fr.get_attribute("referrerpolicy")
         pg.wait_for_timeout(5000)
-        why = player_problem(src, rp, lambda: pg.frame_locator("#main .vids iframe").first.locator("body").evaluate(PLAYER_STATE_JS, timeout=10000))
+        seen = []
+
+        def read():
+            s = pg.frame_locator("#main .vids iframe").first.locator("body").evaluate(PLAYER_STATE_JS, timeout=10000)
+            seen.append({k: s.get(k) for k in ("t", "paused")} if isinstance(s, dict) else s)
+            return s
+        why = player_problem(src, rp, read, lambda: pg.wait_for_timeout(PLAY_GAP_MS))
         if why:
             bad.append((cid, why))
+        else:
+            ok.append((cid, seen))
         pg.locator("#cBack").click(); pg.wait_for_selector("#concepts .ccard")
-    check(f"{label} {len(cids)} 個有影片的觀念都能嵌入播放", not bad, bad)
+    print("  影片兩次讀到的狀態（觀念：[第一次, 第二次]）：" + json.dumps(ok, ensure_ascii=False))
+    check(f"{label} {len(cids)} 個有影片的觀念都真的在播（隔 {PLAY_GAP_MS / 1000:g} 秒讀兩次：有 <video>、無錯誤畫面、第二次沒暫停、時間前進 ≥{PLAY_MIN_ADVANCE} 秒）",
+          cids and not bad, bad or "沒有任何有影片的觀念")
     ctx.close()
 
 
@@ -205,6 +295,7 @@ def flow_review(browser):
 
 def main():
     with sync_playwright() as p:
+        selftest_player()
         cr = p.chromium.launch()
         if BASE.startswith("https:"):
             flow_video_live(cr, "線上Chromium")

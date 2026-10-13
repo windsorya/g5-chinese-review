@@ -163,3 +163,79 @@ test("⑩index.html 不出現學校名稱", () => {
   const html = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
   assert.ok(!/忠孝/.test(html), "index.html 出現學校名稱");
 });
+
+// ⑪～⑳：Codex 審 e0ad0ad8（2026-10-13）逐項 FAIL 的回歸測試。每條先在舊內容上紅，再改內容到綠。
+const card = (id) => B.CARDS.find((c) => c.id === id);
+const optWhy = (c, o) => c.wrongWhy[c.opts.indexOf(o)];
+const GENRES = ["詩歌", "說明文", "記敘文", "歷史故事", "童話", "寓言"];
+const FC = fs.readFileSync(path.join(__dirname, "FACTCHECK.md"), "utf8");
+
+test("⑪文體題：錯項是文體名稱時，不能拿「分不分行」當排除理由（排版不是文體的充分條件）", () => {
+  const bad = [];
+  B.CARDS.filter((c) => c.concept === "ga").forEach((c) => c.opts.forEach((o, i) => {
+    if (i !== c.a && GENRES.indexOf(o) >= 0 && /短短的行|一行一行|分成.{0,4}行|分行/.test(c.wrongWhy[i])) bad.push(c.id + "「" + o + "」：" + c.wrongWhy[i]);
+  }));
+  assert.deepEqual(bad, []);
+});
+
+test("⑫ga5：題幹沒交代形式，不能放「詩歌」當錯項；ga9：歷史故事也是記敘，不能當「不是記敘文」的錯項", () => {
+  const g5 = card("ga5"), g9 = card("ga9");
+  assert.ok(g5.opts.indexOf("詩歌") < 0, "ga5 仍有「詩歌」錯項：" + g5.opts.join("／"));
+  const bad = g9.opts.filter((o, i) => i !== g9.a && /歷史故事|古代真實/.test(g9.wrongWhy[i]));
+  assert.deepEqual(bad, [], "ga9 用「是歷史故事」排除記敘文");
+});
+
+test("⑬ga8 刷牙方法：有國健署／衛福部 src，正解文字對得上 FACTCHECK 摘錄", () => {
+  const c = card("ga8");
+  assert.match(c.src || "", /^https:\/\/[a-z.]*(hpa|mohw)\.gov\.tw\//, "ga8 沒有官方 src");
+  assert.match(FC, /\bga8\b[^\n]*牙刷刷毛朝向牙齦約45度/, "FACTCHECK 沒有 ga8 的官方摘錄");
+  assert.match(c.opts[c.a], /45/, "ga8 正解沒照官方寫法（刷毛朝向牙齦約45度）");
+});
+
+test("⑭譬喻解說：不能把譬喻縮成「有『像』」；要分明喻（有像）與一般譬喻，並給沒有「像」的譬喻例", () => {
+  const e = X.EXPLAIN.rh1, all = e.map((x) => x.svg() + x.lines.join("") + (x.examples || []).map((y) => y.s + y.why).join("")).join("");
+  const figs = e.map((x) => x.svg()).join("");
+  assert.ok(!/有「像」/.test(figs.replace(/&[a-z]+;/g, "")), "圖卡仍把譬喻寫成「有『像』」");
+  assert.ok(/明喻/.test(all), "沒有區分明喻");
+  const ex = e.flatMap((x) => x.examples || []).filter((y) => /譬喻/.test(y.why) && !/像|好像|彷彿|如同/.test(y.s));
+  assert.ok(ex.length >= 1, "沒有不含「像」的譬喻例句");
+});
+
+test("⑮rh2d：把「譬喻」當錯項的引用題，引文不能是用比喻講道理的俗語", () => {
+  const METAPHOR_PROVERBS = /耕耘|收穫|鐵杵|磨成針|滴水穿石|種瓜得瓜/;
+  const bad = B.CARDS.filter((c) => c.opts[c.a] === "引用" && c.opts.indexOf("譬喻") >= 0 && METAPHOR_PROVERBS.test(c.q)).map((c) => c.id + "：" + c.q);
+  assert.deepEqual(bad, []);
+});
+
+test("⑯設問「提問」例句：問號後面要真的回答問題（不能是建議、命令）", () => {
+  const ANSWER = /^(因為|原來|就是|當然|是|已經)/;
+  const bad = [];
+  const tryOne = (where, s) => { const m = /？([^？]+)$/.exec(s.replace(/[「」]/g, "")); if (m && !ANSWER.test(m[1].trim())) bad.push(where + "：" + s); };
+  Object.keys(X.EXPLAIN).forEach((k) => X.EXPLAIN[k].forEach((ex) => (ex.examples || []).forEach((y) => { if (/提問|自己回答/.test(y.why)) tryOne(k + " 例句", y.s); })));
+  tryOne("rh2 出口答案", B.CONCEPTS.rh2.exitAns.split("。")[0].replace(/^例：/, ""));
+  assert.deepEqual(bad, []);
+});
+
+test("⑰「安靜」的白話釋義不寫成「沒有聲音」（辭典相反詞是喧鬧、吵鬧；改「沒有吵鬧聲、很平靜」）", () => {
+  const bad = B.CARDS.flatMap((c) => c.wrongWhy.filter((w) => /「安靜」是沒有聲音/.test(w)).map((w) => c.id + "：" + w));
+  assert.deepEqual(bad, []);
+  assert.match(FC, /安靜[^\n]*39717/, "FACTCHECK 沒有「安靜」辭典條目");
+});
+
+test("⑱hs8：問的是史記那句實際比較的對象（位在○○之右），錯項說明對得上", () => {
+  const c = card("hs8");
+  assert.match(c.q, /位在○○之右/, "hs8 仍在問排名「比誰高」：" + c.q);
+  assert.equal(c.opts[c.a], "廉頗");
+});
+
+test("⑲cr8 加「沒有取得販售授權」條件；cr9 錯因改「未取得授權，不可任意上傳」", () => {
+  assert.match(card("cr8").q, /沒有取得販售授權/, "cr8 題幹沒有授權條件");
+  const c9 = card("cr9"), w = optWhy(c9, "錄完放上網路");
+  assert.ok(w && !/只能自己用/.test(w) && /未取得授權/.test(w) && /任意上傳/.test(w), "cr9 錯因：" + w);
+});
+
+test("⑳著作權補救解說：合理引用四要件都講到，不說「用之前一定要先問」", () => {
+  const all = X.EXPLAIN.cr.map((x) => x.svg() + x.lines.join("") + x.ask + x.task + (x.examples || []).map((y) => y.s + y.why).join("")).join("");
+  ["已公開發表", "需要", "合理範圍", "出處"].forEach((k) => assert.ok(all.indexOf(k) >= 0, "缺合理引用要件：" + k));
+  assert.ok(!/用之前(一定要)?先問/.test(all), "仍寫「用之前先問」");
+});

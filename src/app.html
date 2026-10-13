@@ -209,8 +209,7 @@ textarea{width:100%;min-height:120px;font-size:16px;border:1px solid var(--line)
       <div><a href="https://stroke-order.learningweb.moe.edu.tw/" target="_blank" rel="noopener">教育部《國字標準字體筆順學習網》</a>：練生字筆順（本站沒有生字題，因為手上沒有課本生字表）。</div>
     </div>
   </details>
-  <!-- 跨裝置同步：國語站的存檔 g5chi.v1 不在 g5-help 同步端（sync.js 與 GAS core.js 的 KEYS）白名單裡，送出會被拒（bad-key），
-       所以先不接；家長把 g5chi.v1 加進兩邊白名單並重新部署 GAS 後，再照數學站的方式接上面板（只同步 g5chi.v1）。 -->
+  <details id="syncBox"><summary>換電腦或 iPad 也能接著練（跨裝置同步）</summary><div id="g5sync"></div></details>
   <details id="setBox"><summary>設定與題庫</summary>
     <div style="display:grid;gap:14px">
       <label class="toggle" hidden><input type="checkbox" id="u3"> （國語站不用；保留給共用的核心設定）</label>
@@ -892,4 +891,23 @@ document.addEventListener("visibilitychange",function(){
 renderHome();
 })();
 </script>
-<!-- 跨裝置同步面板沒有接：g5chi.v1 不在 g5-help/sync.js 與 gas/core.js 的 KEYS 白名單（2026-10-13 讀檔確認）。開通後照數學站檔尾那段接回，keys 改 ["g5chi.v1"]。 -->
+<script src="https://windsorya.github.io/g5-help/qrcode.js"></script>
+<script src="https://windsorya.github.io/g5-help/sync.js"></script>
+<script>
+// 跨裝置同步（家庭同步碼）：只同步本站自己的 g5chi.v1；同步程式與其他站共用 g5-help/sync.js，載不到就照常本機使用。
+// 2026-10-13：g5-help/sync.js 前端 KEYS 與 GAS 後端白名單都已收 g5chi.v1（照社會站 g5-social-review 檔尾寫法接回）。
+(function(){
+  var box = document.getElementById("g5sync");
+  function off(){ if (box) box.innerHTML = '<p class="small muted" style="margin:0">國語站的跨裝置同步暫時接不上，作答紀錄先存在這台裝置。</p>'; }
+  if (!window.G5Sync) return off();
+  var queued = false;
+  try {
+    window.G5Sync.init({
+      endpoint: "https://script.google.com/macros/s/AKfycbxwo08VVT5tSRf-DsQEoo1hMlCm1YytGTzj89BPtJ6YWjPieuKyAPbnWXjUKagBdL6l/exec",
+      keys: ["g5chi.v1"], container: "#g5sync",
+      summarize: {"g5chi.v1": function(j){ try { var x = JSON.parse(j), c = x.cards || {}, n = Object.keys(c).filter(function(k){ return c[k] && c[k].seen > 0; }).length; return "練過 " + n + " 張卡"; } catch (e) { return "（讀不懂的紀錄）"; } }},
+      onReplaced: function(){ if (!queued) { queued = true; setTimeout(function(){ location.reload(); }, 0); } }
+    });
+  } catch (e) { off(); }
+})();
+</script>
