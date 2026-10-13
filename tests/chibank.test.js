@@ -239,3 +239,26 @@ test("⑳著作權補救解說：合理引用四要件都講到，不說「用�
   ["已公開發表", "需要", "合理範圍", "出處"].forEach((k) => assert.ok(all.indexOf(k) >= 0, "缺合理引用要件：" + k));
   assert.ok(!/用之前(一定要)?先問/.test(all), "仍寫「用之前先問」");
 });
+
+// Codex 審 c28888ed：圖卡與第二種說法同時寫「合理引用不用先問」與無條件「要先得到同意」，互相矛盾。
+// 每一個講到「同意／授權／先問」的說法單位（每行、每個例句說明、問題、圖卡每格＋前一格、圖說每一段），
+// 都要自己帶上「超出合理引用／不是引用／不用先問」的條件；兩張卡都要講到合理引用不用先問。
+test("㉑著作權補救解說：「要先同意／授權」只能用在超出合理引用時，兩種說法都不能無條件要求同意", () => {
+  const ASK = /同意|授權|先問/, OK = /超出合理引用|超過合理引用|不是引用|不是合理引用|不用先問/;
+  const bad = [];
+  X.EXPLAIN.cr.forEach((x, ci) => {
+    const svg = x.svg();
+    const nodes = [...svg.matchAll(/<text[^>]*>([^<]*)<\/text>/g)].map((m) => m[1]).filter((s) => s.trim());
+    const aria = (/aria-label="([^"]*)"/.exec(svg) || [, ""])[1].split(/[；：]/);
+    const units = [].concat(
+      x.lines, aria, [x.ask, x.task],
+      (x.examples || []).map((y) => y.why),
+      // 圖卡每格只看自己有沒有講到同意／授權；條件可以寫在同一列的左格（前一格）
+      nodes.filter((s) => ASK.test(s)).map((s) => nodes[nodes.indexOf(s) - 1] + "→" + s));
+    units.forEach((u) => { if (ASK.test(u) && !OK.test(u)) bad.push("第" + (ci + 1) + "張：" + u); });
+    const all = units.join("");
+    if (/一定要先(得到|取得)/.test(all)) bad.push("第" + (ci + 1) + "張：仍有無條件「一定要先得到同意」");
+    if (!/合理引用/.test(all) || !/不用先問/.test(all)) bad.push("第" + (ci + 1) + "張：沒講到合理引用不用先問");
+  });
+  assert.deepEqual(bad, []);
+});
