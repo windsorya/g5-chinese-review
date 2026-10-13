@@ -17,7 +17,8 @@ RESULTS = []
 SITES = {"https://windsorya.github.io/g5-sci-review/": "五上自然複習",
          "https://windsorya.github.io/g5-math-review/": "五上數學複習",
          "https://windsorya.github.io/g5-help/": "難題解說",
-         "https://windsorya.github.io/g5-social-review/": "五上社會複習"}
+         "https://windsorya.github.io/g5-social-review/": "五上社會複習",
+         "https://windsorya.github.io/g5-wrong-review/": "錯題複習"}
 SELF_NAME = "五上國語複習"
 
 
