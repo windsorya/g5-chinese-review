@@ -17,13 +17,15 @@
 //         與各自用到的屬性、XML 五個內建 entity 和 &#十進位; &#x十六進位;、自閉合標籤。註解、CDATA、DOCTYPE、XML 宣告、
 //         不認得的元素／屬性／entity、沒加引號的屬性值、重複屬性、控制字元、根元素以外的東西……一律丟錯（測試就紅）。
 //         <text>／<tspan> 記完整 textContent（含 <tspan> 的字），有子元素時另記 children；元素之間的縮排忽略。
+//         屬性值逐字保留（只做 NFC，不折疊空白）：數值、座標、樣式字串裡的每個字都算內容（規則版本 2，Codex 審 6c732ff）。
+//   物件鍵 正規化後的物件無原型（Object.create(null)）：鍵名 __proto__ 也是一般欄位，不會在正規化時消失（規則版本 2）。
 // 快照不涵蓋網站成品：index.html 由 build.py 內嵌 src 產生，成品一致性不在這裡檢查。
 "use strict";
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 
-const RULES_VERSION = "cr-snapshot/1";
+const RULES_VERSION = "cr-snapshot/2";
 const SNAPSHOT_FILE = path.join(__dirname, "cr_approved_snapshot.json");
 const SNAPSHOT_REL = "tests/cr_approved_snapshot.json";
 
@@ -138,7 +140,7 @@ function parseSvg(src) {
     const sc = has(SVG_SCHEMA, tag) ? SVG_SCHEMA[tag] : null;
     if (!sc) fail("不認得的元素 <" + tag + ">");
     if (parent ? parent.children.indexOf(tag) < 0 : tag !== "svg") fail("<" + tag + "> 不能放在" + (parent ? "這個元素裡" : "最外層"));
-    const attrs = {};
+    const attrs = Object.create(null);
     for (;;) {
       const spaced = skipSpace();
       if (s.startsWith("/>", i)) { i += 2; return { tag, attrs, kids: [] }; }
@@ -199,8 +201,9 @@ const textContent = (n) => n.kids.map((k) => (has(k, "tag") ? textContent(k) : k
 // 正規化後的元素：{ tag, attrs（名稱排序）, text（只有 text／tspan：完整 textContent）, children（svg 一定有；text／tspan 有子元素時才有） }
 function normNode(n) {
   const sc = SVG_SCHEMA[n.tag];
-  const attrs = {};
-  Object.keys(n.attrs).sort().forEach((k) => { attrs[k] = normalizeText(n.attrs[k]); });
+  const attrs = Object.create(null);
+  // 屬性值逐字保留（只做 NFC）：數值、座標、樣式裡的空白都是內容（Codex 審 6c732ff：width="270 .0" 被折疊成 270.0 而假通過）
+  Object.keys(n.attrs).sort().forEach((k) => { attrs[k] = n.attrs[k].normalize("NFC"); });
   const o = { tag: n.tag, attrs };
   if (sc.text) {
     o.text = normalizeText(textContent(n));
@@ -224,7 +227,7 @@ function normData(v, at) {
   if (typeof v === "string") return normalizeText(v);
   if (Array.isArray(v)) { checkDense(v, at); return v.map((x, n) => normData(x, at + "[" + n + "]")); }
   if (isPlainObject(v)) {
-    const o = {};
+    const o = Object.create(null);   // 無原型：鍵名 __proto__ 也照樣保留成欄位（Codex 審 6c732ff）
     Object.keys(v).sort().forEach((k) => { o[k] = normData(v[k], at + "." + k); });
     return o;
   }
@@ -242,7 +245,7 @@ function normalize(cr) {
   return cr.map((card, n) => {
     const at = "cr[" + n + "]";
     if (!isPlainObject(card)) throw new ContentError(at, "卡片不是一般物件，而是 " + kindOf(card));
-    const o = {};
+    const o = Object.create(null);
     Object.keys(card).sort().forEach((k) => {
       if (k !== "svg") { o[k] = normData(card[k], at + "." + k); return; }
       if (typeof card.svg !== "function") throw new ContentError(at + ".svg", "不是函式（網站會呼叫 ex.svg()），而是 " + kindOf(card.svg));

@@ -351,6 +351,15 @@ const T21_ROWS = [   // 設計檔 (d) 18 列；hit＝[種類, 位置, 訊息裡�
     hit: [["snapshot", "cr[1].lines[0]", "→ \"合理引用要先\\u200b問作者。\""]] },
   { id: "18", what: "過度正規化：第一張 examples[0].s「我畫好了一張圖。」→「我畫好了一張圖？」", mutate: (C) => { C[0].examples[0].s = rep1(C[0].examples[0].s, "我畫好了一張圖。", "我畫好了一張圖？"); },
     hit: [["snapshot", "cr[0].examples[0].s", "→ \"「我畫好了一張圖？」\""]] },
+  // 以下兩列：Codex 審 6c732ff（規則版本 1 在這兩列假通過）
+  { id: "19", what: "屬性值過度正規化：第一張圖卡 width=\"270.0\" →「270 .0」", mutate: (C) => svgEdit(C[0], (s) => s.replace('width="270.0"', 'width="270 .0"')),   // 只換第一個（根下第一個元素）
+    hit: [["snapshot", "cr[0].svg.children[0].attrs.width", "270 .0"]] },
+  { id: "20", what: "schema 擴張（__proto__）：第二張新增自有欄位 __proto__「合理引用要先詢問作者。」",
+    mutate: (C) => { Object.defineProperty(C[1], "__proto__", { value: "合理引用要先詢問作者。", enumerable: true, writable: true, configurable: true }); },
+    hit: [["snapshot", "cr[1].__proto__", "合理引用要先詢問作者"]] },
+  { id: "21", what: "schema 擴張（例句裡的 __proto__）：第一張 examples[0] 新增自有欄位 __proto__「合理引用要先詢問作者。」",
+    mutate: (C) => { Object.defineProperty(C[0].examples[0], "__proto__", { value: "合理引用要先詢問作者。", enumerable: true, writable: true, configurable: true }); },
+    hit: [["snapshot", "cr[0].examples[0].__proto__", "合理引用要先詢問作者"]] },
 ];
 const T21_LEGACY = [   // abb1c94 以前的自檢反例（Codex 審 9daba41、899b730），新版照樣要紅
   ["分號", "合理引用要先取得同意；用自己的話寫心得不用先問。"],
@@ -441,7 +450,8 @@ test("㉑自檢-解析器：<tspan> 與 entity 都收進文字；不認得的語
   const wrap = (body) => '<svg class="fig" viewBox="0 0 10 10" role="img" aria-label="圖">' + body + "</svg>";
   const t0 = SNAP.normalizeSvg(wrap('<text x="1" y="2">&#21512;<tspan>理</tspan>&amp;&lt;&gt;&quot;&apos;&#x5f15;</text>')).children[0];
   assert.equal(t0.text, "合理&<>\"'引");
-  assert.deepEqual(t0.children, [{ "#text": "合" }, { tag: "tspan", attrs: {}, text: "理" }, { "#text": "&<>\"'引" }]);
+  // 正規化後的物件無原型（規則版本 2），比結構前先轉成一般物件
+  assert.deepEqual(JSON.parse(JSON.stringify(t0.children)), [{ "#text": "合" }, { tag: "tspan", attrs: {}, text: "理" }, { "#text": "&<>\"'引" }]);
   // 底稿本身必須能過，下面每個壞例子才是「只壞在那一處」
   assert.doesNotThrow(() => SNAP.parseSvg(wrap("")));
   assert.doesNotThrow(() => SNAP.parseSvg(wrap('<rect x="1" y="1" width="1" height="1"/><text x="1" y="2">合理</text>')));

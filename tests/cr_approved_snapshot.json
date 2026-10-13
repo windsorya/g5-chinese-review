@@ -7,7 +7,7 @@
     "看不見的字元（零寬字、方向控制字、全形空白、不換行空白等）一律寫成 \\uXXXX。規則見 tests/cr_snapshot.js 檔頭。",
     "依據：docs/test21-snapshot-codex-designer-20261013.md（Codex 設計者結論）。"
   ],
-  "規則版本": "cr-snapshot/1",
+  "規則版本": "cr-snapshot/2",
   "sha256": "f58addbd489365f43e0337d06dd222bf23ffc21074921d03b84b34c8bef63276",
   "cr": [
     {
