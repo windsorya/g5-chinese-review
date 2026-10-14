@@ -31,6 +31,11 @@ test("走過＝長葉了以上（BLOOM 2）：題目全部做過就算，發芽�
   assert.equal(M.trail({ cids: CIDS, stages: sprout, on }).walked, 0);
 });
 
+test("地圖寫得出放書（蓋房子、點亮）規則：本科有 RULE 與 DONE，規則講「每一題都做過一次」", () => {
+  assert.match(M.RULE || "", /每一題都做過一次/);
+  assert.ok(typeof M.DONE === "string" && M.DONE.length >= 2 && M.DONE.length <= 6, "DONE：" + M.DONE);
+});
+
 test("每一階的圖都比上一階多畫東西，最後一階有新部位可播動畫", () => {
   let prev = -1;
   for (let n = 0; n <= CIDS.length; n++) {

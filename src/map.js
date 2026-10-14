@@ -12,7 +12,8 @@
 // 三科成長圖（數學蓋房子／國語書架／社會臺灣地圖）。每科：NAMES[0]＝空的、NAMES[n]＝走過 n 站；art(level, part, col)
   var ARTS = {
   math: {
-    title: "房子", empty: "一塊空地，走過第一站就打地基",
+    title: "房子", empty: "一塊空地，做完一站的題目就打地基",
+    rule: "怎麼蓋房子：一站的題目，每一題都做過一次，房子就多蓋一部分。", done: "蓋好一部分",
     NAMES: ["一塊空地", "打好地基", "左邊的牆", "右邊的牆", "裝上門", "左邊窗戶", "右邊窗戶", "加上煙囪", "蓋好屋頂", "圍上籬笆", "種一棵樹", "插上旗子"],
     art: function (level, part, col) {
       var s = '<rect x="0" y="130" width="120" height="20" rx="4" fill="' + col("var(--grass)") + '"/>';
@@ -33,6 +34,7 @@
   },
   chi: {
     title: "書架", empty: "一個空書架，做完一站的題目就放上一本書",
+    rule: "怎麼放書：一站的題目，每一題都做過一次，就放上一本書。", done: "放了一本書",
     // 2026-10-14 國語加第一課字形、多音字三站與國練第二課五站（10 → 18 站）：一層放 9 本、書變窄，一站一本
     NAMES: ["空書架", "第 1 本書", "第 2 本書", "第 3 本書", "第 4 本書", "第 5 本書", "第 6 本書", "第 7 本書", "第 8 本書", "第 9 本書",
             "第 10 本書", "第 11 本書", "第 12 本書", "第 13 本書", "第 14 本書", "第 15 本書", "第 16 本書", "第 17 本書", "書架放滿了"],
@@ -49,7 +51,8 @@
     }
   },
   soc: {
-    title: "臺灣地圖", empty: "一張還沒點亮的臺灣地圖，走過第一站就點亮最北邊",
+    title: "臺灣地圖", empty: "一張還沒點亮的臺灣地圖，做完一站的題目就點亮最北邊",
+    rule: "怎麼點亮地圖：一站的題目，每一題都做過一次，就點亮一塊。", done: "點亮一塊",
     NAMES: ["還沒點亮的臺灣地圖", "點亮第 1 塊", "點亮第 2 塊", "點亮第 3 塊", "點亮第 4 塊", "點亮第 5 塊", "點亮第 6 塊", "點亮第 7 塊", "整個臺灣都亮了"],
     art: function (level, part, col) {
       // 主島海岸線（經緯度概略點，由北往東、南、西繞一圈）；投影 x=(lon-119.95)*38+14、y=(25.35-lat)*38*1.1+3（南端 y≈147，不超出 viewBox 150；Codex 審 8066e66）
@@ -121,6 +124,6 @@
       (ghost ? ' opacity=".4"' : "") + ">" + ART.art(level, part, col) + "</svg>";
   }
 
-  var api = { SEEN_KEY: SEEN_KEY, BLOOM: BLOOM, PLANT: PLANT, TITLE: ART.title, EMPTY: ART.empty, trail: trail, readSeen: readSeen, writeSeen: writeSeen, growth: growth, plantSvg: plantSvg };
+  var api = { SEEN_KEY: SEEN_KEY, BLOOM: BLOOM, PLANT: PLANT, TITLE: ART.title, EMPTY: ART.empty, RULE: ART.rule, DONE: ART.done, trail: trail, readSeen: readSeen, writeSeen: writeSeen, growth: growth, plantSvg: plantSvg };
   if (typeof module !== "undefined" && module.exports) module.exports = api; else root.G5Map = api;
 })(typeof window !== "undefined" ? window : this);

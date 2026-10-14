@@ -448,7 +448,7 @@ function renderMap(){
     var state=s.done?'走過了':s.now?'現在在這裡':!s.on?'還沒開放':'還沒走到';
     var tag=s.now?'<span class="tag">現在在這裡</span>':!s.on?'<span class="tag">還沒開放</span>':'';
     // pt：手機版（一站一行）的完整說法；ps：寬版（一列 7 站）的短寫，已放書的站靠打勾表示、不另寫
-    var p=prog[s.cid], pt=s.on&&p?(s.done?'放了一本書':'做過 '+p.seen+'／'+p.n+' 題'):'', ps=s.on&&p&&!s.done?p.seen+'／'+p.n+' 題':'';
+    var p=prog[s.cid], pt=s.on&&p?(s.done?esc(MAPX.DONE):'做過 '+p.seen+'／'+p.n+' 題'):'', ps=s.on&&p&&!s.done?p.seen+'／'+p.n+' 題':'';
     return '<li'+(s.n%MAP_COLS===0?' class="eol"':'')+'><button type="button" class="stn'+cls+'" data-cid="'+s.cid+'"'+(s.now?' aria-current="step"':'')+(s.on?'':' aria-disabled="true"')+
       ' aria-label="第 '+s.n+' 站 '+esc(c.short)+'（'+esc(UNITS[c.unit])+'）：'+state+(pt?'，'+pt:'')+'"><span class="dot">'+mark+'</span><span class="meta"><span class="nm">'+(c.short.length>5?esc(c.short.slice(0,Math.ceil(c.short.length/2)))+'<wbr>'+esc(c.short.slice(Math.ceil(c.short.length/2))):esc(c.short))+'</span><span class="u">'+esc(UNITS[c.unit])+'</span>'+(pt?'<span class="pg pgl">'+pt+'</span>':'')+(ps?'<span class="pg pgs">'+ps+'</span>':'')+tag+'</span></button></li>';
   }).join("")+
@@ -458,7 +458,7 @@ function renderMap(){
     '<div class="stage">'+(t.level?'第 '+t.level+' 階：'+nm:MAPX.EMPTY)+'</div>'+
     (t.allDone?'<div class="mapwin" role="status">探險地圖全部走完了！去跟爸媽說</div>'+(fx.celebrate&&!reduce?MAP_STARS.replace('class="stars"','class="stars go"'):''):
      t.level<MAPX.PLANT.length-1?'<div class="next"><span class="ghostbox">'+MAPX.plantSvg(t.level+1,{ghost:true})+'<b aria-hidden="true">？</b></span><span>再做完一站的題目，看看它會變成什麼</span></div>':'')+'</div>';
-  box.innerHTML='<div class="maphead"><h2 id="mapT">探險地圖</h2><span id="mapCount">'+head+'</span></div><p class="small muted" id="mapRule" style="margin:4px 0 10px">怎麼放書：一站的題目，每一題都做過一次，就放上一本書。</p><div class="mapbody"><ol class="trail'+(MAP_COLS<CIDS.length+1?' rows':'')+'" style="--n:'+MAP_COLS+'" aria-label="'+CIDS.length+' 個觀念的路線">'+lis+'</ol>'+plant+'</div>';
+  box.innerHTML='<div class="maphead"><h2 id="mapT">探險地圖</h2><span id="mapCount">'+head+'</span></div><p class="small muted" id="mapRule" style="margin:4px 0 10px">'+esc(MAPX.RULE)+'</p><div class="mapbody"><ol class="trail'+(MAP_COLS<CIDS.length+1?' rows':'')+'" style="--n:'+MAP_COLS+'" aria-label="'+CIDS.length+' 個觀念的路線">'+lis+'</ol>'+plant+'</div>';
   mapAnim=anim?{at:Date.now(),prev:seen}:null;
   mapKey=key; mapSeenMem=t.level; MAPX.writeSeen(seenStorage(),t.level);
   box.querySelectorAll("button.stn").forEach(function(b){b.onclick=function(){
