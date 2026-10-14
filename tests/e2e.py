@@ -96,7 +96,7 @@ def flow_main(browser, label, device=None):
     check(f"{label} 換一題確認：同一個觀念、不同的題", "同觀念換一題確認" in head and c3 and c3["concept"] == c2["concept"] and c3["id"] != c2["id"], {"head": head, "c2": c2["id"], "c3": c3 and c3["id"]})
     saved = json.loads(pg.evaluate("localStorage.getItem('g5chi.v1')") or "null")
     check(f"{label} 存檔在 g5chi.v1，作答都記到", saved and len(saved.get("log", [])) >= 2, (saved or {}).get("log"))
-    other = pg.evaluate("Object.keys(localStorage).filter(k=>k!=='g5chi.v1')")
+    other = pg.evaluate("Object.keys(localStorage).filter(k=>k!=='g5chi.v1'&&k!=='g5chi.mapSeen')")   # mapSeen＝探險地圖看過第幾階（本站自己的 key）
     check(f"{label} 只寫自己的 key（不碰 g5math／g5sci／g5help）", other == [], other)
     pg.reload(); pg.wait_for_selector("#main .btn, #main .done")
     saved2 = json.loads(pg.evaluate("localStorage.getItem('g5chi.v1')") or "null")
