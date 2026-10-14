@@ -26,6 +26,13 @@ test("①每題：選擇題、至少 2 個選項、選項不重複、答案編�
   assert.deepEqual(bad, []);
 });
 
+// 2026-10-14：tests/e2e.py 用題目文字反查題庫（current_card），題目文字重複就會拿錯答案（第一課四題「找錯字」曾同一句）
+test("②-b 題目文字不重複", () => {
+  const seen = {}, dup = [];
+  B.CARDS.forEach((c) => { if (seen[c.q]) dup.push(seen[c.q] + "／" + c.id + "：" + c.q); else seen[c.q] = c.id; });
+  assert.deepEqual(dup, []);
+});
+
 test("②每個錯誤選項都有 wrongWhy（非空），正解那格是空字串；id 不重複", () => {
   const bad = [];
   const ids = new Set();
@@ -56,10 +63,133 @@ test("④每個觀念都有題，8～15 題；每題的觀念都存在；每題�
   const n = {};
   B.CARDS.forEach((c) => { n[c.concept] = (n[c.concept] || 0) + 1; });
   const bad = Object.keys(B.CONCEPTS).filter((k) => !(n[k] >= 8 && n[k] <= 15)).map((k) => k + "：" + (n[k] || 0) + " 題");
-  B.CARDS.forEach((c) => { if (!B.CONCEPTS[c.concept]) bad.push(c.id + " 觀念不存在：" + c.concept); if (c.page !== "自編題（未對課本）") bad.push(c.id + " page 不對"); });
+  // 國練第二課（單元 k6）的題目出處寫「國練第二課第 6 頁的字詞（題目自編）」：字詞照抄國練，題目是自己出的
+  B.CARDS.forEach((c) => {
+    if (!B.CONCEPTS[c.concept]) { bad.push(c.id + " 觀念不存在：" + c.concept); return; }
+    const ok = B.CONCEPTS[c.concept].unit === "k6" ? c.page === B.P6_PAGE : c.page === "自編題（未對課本）";
+    if (!ok) bad.push(c.id + " page 不對：" + c.page);
+  });
   Object.keys(B.CONCEPTS).forEach((k) => { if (!B.UNITS[B.CONCEPTS[k].unit]) bad.push(k + " 單元不存在"); if (B.CONCEPTS[k].unit === "3") bad.push(k + " 單元代號不可用 \"3\"（core.js 會當成待開放單元）"); });
   assert.deepEqual(bad, []);
-  assert.ok(B.CARDS.length >= 90 && B.CARDS.length <= 130, "總題數 " + B.CARDS.length);
+  // 2026-10-14 加第一課字形、多音字三個觀念（34 題）與國練第二課五個觀念（64 題）後，上限 130 → 230
+  assert.ok(B.CARDS.length >= 90 && B.CARDS.length <= 230, "總題數 " + B.CARDS.length);
+});
+
+// ㉒ 字形（zx*、w2a–w2c）、字音（dy*、w2d）、字義（w2e）：每題對 tests/fixtures/dict_l1.json（tests/build_dict_fixture.py 產生，教育部兩本辭典的查詢結果）
+//    與 src/chibank.js 的 P6／SHU（國練第二課第 6 頁照抄）。
+//    讀音一律以《國語辭典簡編本》（concised）為準：國練 38 個字的注音和它逐字一致；《重編本》另列語音／讀音／又音（例如熟另有讀音ㄕㄨˊ），不拿來判讀音。
+//    「沒有這個詞」要《重編國語辭典修訂本》（收詞最多）與簡編本都查無。
+//    填字題：正確的詞查得到（國練題：是國練這一頁的詞）、錯字組成的詞兩本都查無；國練題的錯項必須是國練同一組的形近字。
+//    讀音題：正解＝國練標的注音＝簡編本的讀音；錯項讀音不能也是這個字的讀音；錯法說明「X是「Y」的讀音」要真的是 Y 在國練的注音。
+//    字義題：正解是國練列的意思，詞真的列在那個意思底下。
+const DICT_L1 = JSON.parse(fs.readFileSync(path.join(__dirname, "fixtures", "dict_l1.json"), "utf8")).words;
+const PAGE = {};
+(B.P6 || []).forEach((g) => g.forEach((e) => { PAGE[e[0]] = { read: e[1], words: e[2], group: g.map((x) => x[0]) }; }));
+const PAGE_WORDS = new Set(Object.values(PAGE).flatMap((p) => p.words));
+function l1Problems(cards, dict) {
+  const bad = [], known = (w) => !!dict[w], con = (w) => (dict[w] && dict[w].concised) || [];
+  const inDict = (w) => known(w) && (dict[w].revised.length > 0 || dict[w].concised.length > 0);
+  const syl = (w, ch) => { const r = (con(w)[0] || "").split(" "); return r.length === w.length ? r[w.indexOf(ch)] : null; };
+  const S = B.SHU, shuOf = (w) => S.findIndex((s) => s[1].indexOf(w) >= 0);
+  cards.forEach((c) => {
+    const id = c.id;
+    if (c.zx && c.zx.word) {
+      if (c.zx.page) {
+        const p = PAGE[c.zx.ch];
+        if (!p || p.words.indexOf(c.zx.word) < 0) bad.push(id + "「" + c.zx.word + "」不是國練這一頁的詞");
+        c.opts.forEach((o, i) => { if (i !== c.a && !(p && p.group.indexOf(o) >= 0)) bad.push(id + " 錯項「" + o + "」不是國練同一組的形近字"); });
+      } else if (!inDict(c.zx.word)) bad.push(id + " 辭典查不到「" + c.zx.word + "」");
+      if (c.opts[c.a] !== c.zx.ch) bad.push(id + " 正解不是「" + c.zx.ch + "」");
+      c.zx.wrong.forEach((w) => {
+        if (!known(w)) bad.push(id + "「" + w + "」沒查過");
+        else if (inDict(w)) bad.push(id + " 錯項「" + w + "」辭典其實有");
+        else if (PAGE_WORDS.has(w)) bad.push(id + " 錯項「" + w + "」是國練上的詞");
+      });
+    } else if (c.zx) {
+      if (c.opts[c.a] !== c.zx.bad) bad.push(id + " 正解不是錯的詞");
+      if (!known(c.zx.bad) || inDict(c.zx.bad)) bad.push(id + "「" + c.zx.bad + "」沒查過或辭典其實有");
+      [c.zx.good].concat(c.zx.ok).forEach((w) => { if (!inDict(w)) bad.push(id + " 辭典查不到「" + w + "」"); });
+    }
+    if (c.dy) {
+      c.dy.words.forEach((w) => { if (con(w).length !== 1) bad.push(id + "「" + w + "」簡編本查無或不只一種讀法：" + JSON.stringify(con(w))); });
+      if (bad.some((b) => b.indexOf(id + " ") === 0 || b.indexOf(id + "「") === 0)) return;
+      const [first, ...rest] = c.dy.words;
+      if (syl(first, c.dy.ch) !== c.dy.read) bad.push(id + "「" + first + "」的「" + c.dy.ch + "」簡編本讀 " + syl(first, c.dy.ch) + "，題目說 " + c.dy.read);
+      if (c.opts[c.a] !== (/怎麼讀/.test(c.q) ? c.dy.read : first)) bad.push(id + " 正解和 dy 欄位對不上");
+      if (/怎麼讀/.test(c.q)) {
+        const other = c.opts.filter((o, i) => i !== c.a);
+        if (other.length !== 1 || syl(rest[0], c.dy.ch) !== other[0]) bad.push(id + " 另一個讀音和例詞「" + rest[0] + "」對不上");
+      } else rest.forEach((w) => { if (syl(w, c.dy.ch) === c.dy.read) bad.push(id + " 錯項「" + w + "」其實也讀 " + c.dy.read); });
+    }
+    if (c.yin) {
+      const y = c.yin;
+      if (c.opts[c.a] !== y.read) bad.push(id + " 正解和 yin.read 對不上");
+      if (y.word) { if (con(y.word).length !== 1 || syl(y.word, y.ch) !== y.read) bad.push(id + "「" + y.word + "」的「" + y.ch + "」簡編本讀 " + syl(y.word, y.ch)); }
+      else {
+        if (!PAGE[y.ch] || PAGE[y.ch].read !== y.read) bad.push(id + "「" + y.ch + "」和國練標的注音不同");
+        if (con(y.ch).indexOf(y.read) < 0) bad.push(id + "「" + y.ch + "」簡編本沒有 " + y.read + "：" + JSON.stringify(con(y.ch)));
+      }
+      y.others.forEach((o) => { if (con(y.ch).indexOf(o) >= 0) bad.push(id + " 錯項讀音 " + o + " 其實也是「" + y.ch + "」的讀音"); });
+      c.opts.forEach((o, i) => {
+        const m = /^(.+)是「(.)」的讀音/.exec(c.wrongWhy[i] || "");
+        if (m && (m[1] !== o || !PAGE[m[2]] || PAGE[m[2]].read !== o)) bad.push(id + " 錯法說明對不上國練：" + c.wrongWhy[i]);
+      });
+    }
+    if (c.yinPick) {
+      const y = c.yinPick;
+      if (c.opts[c.a] !== y.ch || !PAGE[y.ch] || PAGE[y.ch].read !== y.read || con(y.ch).indexOf(y.read) < 0) bad.push(id + "「" + y.ch + "」不讀 " + y.read);
+      y.others.forEach((o) => { if (!PAGE[o] || PAGE[o].read === y.read || con(o).indexOf(y.read) >= 0) bad.push(id + " 錯項「" + o + "」其實也讀 " + y.read); });
+    }
+    if (c.yi) {
+      if (shuOf(c.yi.word) !== c.yi.n || c.opts[c.a] !== S[c.yi.n][0]) bad.push(id + "「" + c.yi.word + "」不在國練「" + c.opts[c.a] + "」底下");
+      c.opts.forEach((o, i) => { if (i !== c.a && S.findIndex((s) => s[0] === o) < 0) bad.push(id + " 錯項「" + o + "」不是國練列的意思"); });
+    }
+    if (c.yiPick) {
+      const y = c.yiPick;
+      if (c.opts[c.a] !== y.word || shuOf(y.word) !== y.n) bad.push(id + "「" + y.word + "」不在國練「" + S[y.n][0] + "」底下");
+      y.others.forEach((w) => { const k = shuOf(w); if (k < 0 || k === y.n) bad.push(id + " 錯項「" + w + "」不是國練列的詞或其實是同一個意思"); });
+    }
+  });
+  return bad;
+}
+test("㉒字形、字音、字義題，逐題對得上教育部辭典與國練原頁", () => {
+  const l1 = B.CARDS.filter((c) => c.zx || c.dy || c.yin || c.yinPick || c.yi || c.yiPick);
+  assert.ok(l1.length >= 90, "字形字音字義題只有 " + l1.length + " 題");
+  assert.deepEqual(l1Problems(l1, DICT_L1), []);
+});
+// 照片抄錯注音的防線：國練第 6 頁每個字的注音，簡編本必須有；國練每個詞若簡編本有收，那個字的讀音要一樣
+test("㉒國練第 6 頁的注音（從照片抄的）和簡編本一致", () => {
+  const bad = [], con = (w) => (DICT_L1[w] && DICT_L1[w].concised) || null;
+  Object.keys(PAGE).forEach((ch) => {
+    const r = con(ch);
+    if (!r) bad.push(ch + " 沒查過"); else if (r.indexOf(PAGE[ch].read) < 0) bad.push(ch + "：國練 " + PAGE[ch].read + "，簡編本 " + JSON.stringify(r));
+    PAGE[ch].words.forEach((w) => {
+      const wr = con(w);
+      if (!wr || !wr.length) return;   // 簡編本沒收的詞（例如繞境）只能以國練為準
+      const ok = wr.some((x) => { const s = x.split(" "); return s.length === w.length && s[w.indexOf(ch)] === PAGE[ch].read; });
+      if (!ok) bad.push(w + "：國練的「" + ch + "」標 " + PAGE[ch].read + "，簡編本 " + JSON.stringify(wr));
+    });
+  });
+  assert.deepEqual(bad, []);
+});
+test("㉒自檢-反例：把讀音改錯、把錯項換成辭典有的詞、把字義放錯，都要抓到", () => {
+  const clone = (x) => JSON.parse(JSON.stringify(x));
+  const d1 = clone(B.CARDS.find((c) => c.id === "dy1")); d1.dy.read = "ㄍㄨㄥˋ"; d1.opts[d1.a] = "ㄍㄨㄥˋ";
+  assert.ok(l1Problems([d1], DICT_L1).length > 0, "讀音改錯沒抓到");
+  const z = clone(B.CARDS.find((c) => c.id === "zx7")); z.zx.wrong[0] = "跳繩";
+  assert.ok(l1Problems([z], DICT_L1).length > 0, "錯項換成辭典有的詞沒抓到");
+  const d7 = clone(B.CARDS.find((c) => c.id === "dy7")); d7.dy.words.push("間隔");
+  assert.ok(l1Problems([d7], DICT_L1).length > 0, "錯項其實也讀ㄐㄧㄢˋ沒抓到");
+  const r2 = clone(B.CARDS.find((c) => c.id === "w2d2")); r2.yin.read = "ㄖㄠˋ"; r2.opts[r2.a] = "ㄖㄠˋ";
+  assert.ok(l1Problems([r2], DICT_L1).length > 0, "國練讀音改錯沒抓到");
+  const s13 = clone(B.CARDS.find((c) => c.id === "w2d13")); s13.yin.read = "ㄕㄠˋ"; s13.opts[s13.a] = "ㄕㄠˋ";
+  assert.ok(l1Problems([s13], DICT_L1).length > 0, "稍息改成ㄕㄠˋ沒抓到");
+  const f = clone(B.CARDS.find((c) => c.id === "w2b4")); f.zx.wrong = ["燒水"];
+  assert.ok(l1Problems([f], DICT_L1.燒水 ? DICT_L1 : Object.assign({ 燒水: { revised: ["ㄕㄠ ㄕㄨㄟˇ"], concised: [] } }, DICT_L1)).length > 0, "燒水（真的詞）當錯項沒抓到");
+  const g = clone(B.CARDS.find((c) => c.id === "w2a1")); g.opts.push("秦");
+  assert.ok(l1Problems([g], DICT_L1).length > 0, "錯項不是同一組的形近字沒抓到");
+  const m = clone(B.CARDS.find((c) => c.id === "w2e6")); m.yi.word = "熟人";
+  assert.ok(l1Problems([m], DICT_L1).length > 0, "字義放錯沒抓到");
 });
 
 // ⑤ 反義／近義：src 是國語辭典簡編本的條目網址；正解在該條目的相反詞（或相似詞）欄；其他選項都不在同一欄；

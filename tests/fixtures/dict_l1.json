@@ -1,0 +1,1752 @@
+{
+ "checked": "2026-10-14",
+ "source": {
+  "revised": "https://dict.revised.moe.edu.tw/search.jsp?md=1&word=",
+  "concised": "https://dict.concised.moe.edu.tw/search.jsp?md=1&word="
+ },
+ "note": "讀音以 concised（簡編本，和現行課本一致）為準；錯字詞要 revised、concised 都查無",
+ "words": {
+  "中間": {
+   "revised": [
+    "ㄓㄨㄥ ㄐㄧㄢ"
+   ],
+   "concised": [
+    "ㄓㄨㄥ ㄐㄧㄢ"
+   ]
+  },
+  "伴奏": {
+   "revised": [
+    "ㄅㄢˋ ㄗㄡˋ"
+   ],
+   "concised": [
+    "ㄅㄢˋ ㄗㄡˋ"
+   ]
+  },
+  "伴秦": {
+   "revised": [],
+   "concised": []
+  },
+  "供品": {
+   "revised": [
+    "ㄍㄨㄥˋ ㄆㄧㄣˇ"
+   ],
+   "concised": [
+    "ㄍㄨㄥˋ ㄆㄧㄣˇ"
+   ]
+  },
+  "供桌": {
+   "revised": [
+    "ㄍㄨㄥˋ ㄓㄨㄛ"
+   ],
+   "concised": [
+    "ㄍㄨㄥˋ ㄓㄨㄛ"
+   ]
+  },
+  "供給": {
+   "revised": [
+    "ㄍㄨㄥ ㄐㄧˇ"
+   ],
+   "concised": [
+    "ㄍㄨㄥ ㄐㄧˇ"
+   ]
+  },
+  "偕": {
+   "revised": [
+    "ㄐㄧㄝ",
+    "ㄒㄧㄝˊ"
+   ],
+   "concised": [
+    "ㄒㄧㄝˊ"
+   ]
+  },
+  "偕同": {
+   "revised": [
+    "ㄒㄧㄝˊ ㄊㄨㄥˊ"
+   ],
+   "concised": [
+    "ㄒㄧㄝˊ ㄊㄨㄥˊ"
+   ]
+  },
+  "偕音": {
+   "revised": [],
+   "concised": []
+  },
+  "允滿": {
+   "revised": [],
+   "concised": []
+  },
+  "充滿": {
+   "revised": [
+    "ㄔㄨㄥ ㄇㄢˇ"
+   ],
+   "concised": [
+    "ㄔㄨㄥ ㄇㄢˇ"
+   ]
+  },
+  "凸顯": {
+   "revised": [
+    "ㄊㄨˊ ㄒㄧㄢˇ"
+   ],
+   "concised": [
+    "ㄊㄨˊ ㄒㄧㄢˇ"
+   ]
+  },
+  "凹顯": {
+   "revised": [],
+   "concised": []
+  },
+  "刪牙": {
+   "revised": [],
+   "concised": []
+  },
+  "刷子": {
+   "revised": [
+    "ㄕㄨㄚ ˙ㄗ"
+   ],
+   "concised": [
+    "ㄕㄨㄚ ˙ㄗ"
+   ]
+  },
+  "刷牙": {
+   "revised": [
+    "ㄕㄨㄚ ㄧㄚˊ"
+   ],
+   "concised": [
+    "ㄕㄨㄚ ㄧㄚˊ"
+   ]
+  },
+  "刺渭": {
+   "revised": [],
+   "concised": []
+  },
+  "刺胃": {
+   "revised": [],
+   "concised": []
+  },
+  "刺蝟": {
+   "revised": [
+    "ㄘˋ ㄨㄟˋ"
+   ],
+   "concised": [
+    "ㄘˋ ㄨㄟˋ"
+   ]
+  },
+  "刺謂": {
+   "revised": [],
+   "concised": []
+  },
+  "勁助": {
+   "revised": [],
+   "concised": []
+  },
+  "勞軍": {
+   "revised": [
+    "ㄌㄠˋ ㄐㄩㄣ"
+   ],
+   "concised": [
+    "ㄌㄠˋ ㄐㄩㄣ"
+   ]
+  },
+  "勤勞": {
+   "revised": [
+    "ㄑㄧㄣˊ ㄌㄠˊ"
+   ],
+   "concised": [
+    "ㄑㄧㄣˊ ㄌㄠˊ"
+   ]
+  },
+  "協助": {
+   "revised": [
+    "ㄒㄧㄝˊ ㄓㄨˋ"
+   ],
+   "concised": [
+    "ㄒㄧㄝˊ ㄓㄨˋ"
+   ]
+  },
+  "占顯": {
+   "revised": [],
+   "concised": []
+  },
+  "古顯": {
+   "revised": [],
+   "concised": []
+  },
+  "合奏": {
+   "revised": [
+    "ㄏㄜˊ ㄗㄡˋ"
+   ],
+   "concised": [
+    "ㄏㄜˊ ㄗㄡˋ"
+   ]
+  },
+  "周糟": {
+   "revised": [],
+   "concised": []
+  },
+  "周遭": {
+   "revised": [
+    "ㄓㄡ ㄗㄠ"
+   ],
+   "concised": [
+    "ㄓㄡ ㄗㄠ"
+   ]
+  },
+  "和諧": {
+   "revised": [
+    "ㄏㄜˊ ㄒㄧㄝˊ"
+   ],
+   "concised": [
+    "ㄏㄜˊ ㄒㄧㄝˊ"
+   ]
+  },
+  "唰牙": {
+   "revised": [],
+   "concised": []
+  },
+  "嗝洽": {
+   "revised": [],
+   "concised": []
+  },
+  "堅定": {
+   "revised": [
+    "ㄐㄧㄢ ㄉㄧㄥˋ"
+   ],
+   "concised": [
+    "ㄐㄧㄢ ㄉㄧㄥˋ"
+   ]
+  },
+  "壅抱": {
+   "revised": [],
+   "concised": []
+  },
+  "多元": {
+   "revised": [],
+   "concised": [
+    "ㄉㄨㄛ ㄩㄢˊ"
+   ]
+  },
+  "多完": {
+   "revised": [],
+   "concised": []
+  },
+  "多玩": {
+   "revised": [],
+   "concised": []
+  },
+  "多阮": {
+   "revised": [],
+   "concised": []
+  },
+  "夜鶯": {
+   "revised": [
+    "ㄧㄝˋ ㄧㄥ"
+   ],
+   "concised": [
+    "ㄧㄝˋ ㄧㄥ"
+   ]
+  },
+  "奈勞": {
+   "revised": [],
+   "concised": []
+  },
+  "奏": {
+   "revised": [
+    "ㄗㄡˋ"
+   ],
+   "concised": [
+    "ㄗㄡˋ"
+   ]
+  },
+  "奏朝": {
+   "revised": [],
+   "concised": []
+  },
+  "威": {
+   "revised": [
+    "ㄨㄟ"
+   ],
+   "concised": [
+    "ㄨㄟ"
+   ]
+  },
+  "威風": {
+   "revised": [
+    "ㄨㄟ ㄈㄥ"
+   ],
+   "concised": [
+    "ㄨㄟ ㄈㄥ"
+   ]
+  },
+  "子女": {
+   "revised": [
+    "ㄗˇ ㄋㄩˇ"
+   ],
+   "concised": [
+    "ㄗˇ ㄋㄩˇ"
+   ]
+  },
+  "廊": {
+   "revised": [
+    "ㄌㄤˊ"
+   ],
+   "concised": [
+    "ㄌㄤˊ"
+   ]
+  },
+  "建": {
+   "revised": [
+    "ㄐㄧㄢˋ"
+   ],
+   "concised": [
+    "ㄐㄧㄢˋ"
+   ]
+  },
+  "建建有味": {
+   "revised": [],
+   "concised": []
+  },
+  "建挺": {
+   "revised": [],
+   "concised": []
+  },
+  "建立": {
+   "revised": [
+    "ㄐㄧㄢˋ ㄌㄧˋ"
+   ],
+   "concised": [
+    "ㄐㄧㄢˋ ㄌㄧˋ"
+   ]
+  },
+  "建設": {
+   "revised": [
+    "ㄐㄧㄢˋ ㄕㄜˋ"
+   ],
+   "concised": [
+    "ㄐㄧㄢˋ ㄕㄜˋ"
+   ]
+  },
+  "彼此": {
+   "revised": [
+    "ㄅㄧˇ ㄘˇ"
+   ],
+   "concised": [
+    "ㄅㄧˇ ㄘˇ"
+   ]
+  },
+  "律": {
+   "revised": [
+    "ㄌㄩˋ"
+   ],
+   "concised": [
+    "ㄌㄩˋ"
+   ]
+  },
+  "律師": {
+   "revised": [
+    "ㄌㄩˋ ㄕ"
+   ],
+   "concised": [
+    "ㄌㄩˋ ㄕ"
+   ]
+  },
+  "律律有味": {
+   "revised": [],
+   "concised": []
+  },
+  "律挺": {
+   "revised": [],
+   "concised": []
+  },
+  "律設": {
+   "revised": [],
+   "concised": []
+  },
+  "悄": {
+   "revised": [
+    "ㄑㄧㄠˇ"
+   ],
+   "concised": [
+    "ㄑㄧㄠˇ"
+   ]
+  },
+  "悲威": {
+   "revised": [],
+   "concised": []
+  },
+  "悲戚": {
+   "revised": [
+    "ㄅㄟ ㄑㄧ"
+   ],
+   "concised": [
+    "ㄅㄟ ㄑㄧ"
+   ]
+  },
+  "慰勞": {
+   "revised": [
+    "ㄨㄟˋ ㄌㄠˋ"
+   ],
+   "concised": [
+    "ㄨㄟˋ ㄌㄠˋ"
+   ]
+  },
+  "成熟": {
+   "revised": [
+    "ㄔㄥˊ ㄕㄨˊ"
+   ],
+   "concised": [
+    "ㄔㄥˊ ㄕㄡˊ"
+   ]
+  },
+  "戚": {
+   "revised": [
+    "ㄑㄧ",
+    "ㄘㄨˋ"
+   ],
+   "concised": [
+    "ㄑㄧ"
+   ]
+  },
+  "房間": {
+   "revised": [
+    "ㄈㄤˊ ㄐㄧㄢ"
+   ],
+   "concised": [
+    "ㄈㄤˊ ㄐㄧㄢ"
+   ]
+  },
+  "披此": {
+   "revised": [],
+   "concised": []
+  },
+  "捎": {
+   "revised": [
+    "ㄕㄠ",
+    "ㄕㄠˋ"
+   ],
+   "concised": [
+    "ㄕㄠ",
+    "ㄕㄠˋ"
+   ]
+  },
+  "捎來": {
+   "revised": [
+    "ㄕㄠ ㄌㄞˊ"
+   ],
+   "concised": [
+    "ㄕㄠ ㄌㄞˊ"
+   ]
+  },
+  "捎信": {
+   "revised": [
+    "ㄕㄠ ㄒㄧㄣˋ"
+   ],
+   "concised": []
+  },
+  "捎失": {
+   "revised": [],
+   "concised": []
+  },
+  "捎微": {
+   "revised": [],
+   "concised": []
+  },
+  "推捎": {
+   "revised": [],
+   "concised": []
+  },
+  "推梢": {
+   "revised": [],
+   "concised": []
+  },
+  "推消": {
+   "revised": [],
+   "concised": []
+  },
+  "推銷": {
+   "revised": [
+    "ㄊㄨㄟ ㄒㄧㄠ"
+   ],
+   "concised": [
+    "ㄊㄨㄟ ㄒㄧㄠ"
+   ]
+  },
+  "提供": {
+   "revised": [
+    "ㄊㄧˊ ㄍㄨㄥ"
+   ],
+   "concised": [
+    "ㄊㄧˊ ㄍㄨㄥ"
+   ]
+  },
+  "提恭": {
+   "revised": [],
+   "concised": []
+  },
+  "提拱": {
+   "revised": [],
+   "concised": []
+  },
+  "提洪": {
+   "revised": [],
+   "concised": []
+  },
+  "揭曉": {
+   "revised": [
+    "ㄐㄧㄝ ㄒㄧㄠˇ"
+   ],
+   "concised": [
+    "ㄐㄧㄝ ㄒㄧㄠˇ"
+   ]
+  },
+  "揭澆": {
+   "revised": [],
+   "concised": []
+  },
+  "揭燒": {
+   "revised": [],
+   "concised": []
+  },
+  "揭饒": {
+   "revised": [],
+   "concised": []
+  },
+  "擁抱": {
+   "revised": [
+    "ㄩㄥˇ ㄅㄠˋ"
+   ],
+   "concised": [
+    "ㄩㄥˇ ㄅㄠˋ"
+   ]
+  },
+  "時間": {
+   "revised": [
+    "ㄕˊ ㄐㄧㄢ"
+   ],
+   "concised": [
+    "ㄕˊ ㄐㄧㄢ"
+   ]
+  },
+  "晶營": {
+   "revised": [],
+   "concised": []
+  },
+  "晶瑩": {
+   "revised": [
+    "ㄐㄧㄥ ㄧㄥˊ"
+   ],
+   "concised": [
+    "ㄐㄧㄥ ㄧㄥˊ"
+   ]
+  },
+  "晶縈": {
+   "revised": [],
+   "concised": []
+  },
+  "晶螢": {
+   "revised": [],
+   "concised": []
+  },
+  "曉": {
+   "revised": [
+    "ㄒㄧㄠˇ"
+   ],
+   "concised": [
+    "ㄒㄧㄠˇ"
+   ]
+  },
+  "曉灌": {
+   "revised": [],
+   "concised": []
+  },
+  "曉烤": {
+   "revised": [],
+   "concised": []
+  },
+  "末梢": {
+   "revised": [
+    "ㄇㄛˋ ㄕㄠ"
+   ],
+   "concised": [
+    "ㄇㄛˋ ㄕㄠ"
+   ]
+  },
+  "柳紫": {
+   "revised": [],
+   "concised": []
+  },
+  "柳絮": {
+   "revised": [
+    "ㄌㄧㄡˇ ㄒㄩˋ"
+   ],
+   "concised": [
+    "ㄌㄧㄡˇ ㄒㄩˋ"
+   ]
+  },
+  "柳緊": {
+   "revised": [],
+   "concised": []
+  },
+  "桌子": {
+   "revised": [
+    "ㄓㄨㄛ ˙ㄗ"
+   ],
+   "concised": [
+    "ㄓㄨㄛ ˙ㄗ"
+   ]
+  },
+  "梢": {
+   "revised": [
+    "ㄕㄠ"
+   ],
+   "concised": [
+    "ㄕㄠ"
+   ]
+  },
+  "梢信": {
+   "revised": [],
+   "concised": []
+  },
+  "梢微": {
+   "revised": [],
+   "concised": []
+  },
+  "榔": {
+   "revised": [
+    "ㄌㄤˊ"
+   ],
+   "concised": [
+    "ㄌㄤˊ"
+   ]
+  },
+  "榔頭": {
+   "revised": [
+    "ㄌㄤˊ ˙ㄊㄡ"
+   ],
+   "concised": [
+    "ㄌㄤˊ ˙ㄊㄡ"
+   ]
+  },
+  "檳廊": {
+   "revised": [],
+   "concised": []
+  },
+  "檳榔": {
+   "revised": [
+    "ㄅㄧㄣ ㄌㄤˊ"
+   ],
+   "concised": [
+    "ㄅㄧㄣ ㄌㄤˊ"
+   ]
+  },
+  "檳瑯": {
+   "revised": [],
+   "concised": []
+  },
+  "檳螂": {
+   "revised": [],
+   "concised": []
+  },
+  "毛筆": {
+   "revised": [
+    "ㄇㄠˊ ㄅㄧˇ"
+   ],
+   "concised": [
+    "ㄇㄠˊ ㄅㄧˇ"
+   ]
+  },
+  "波此": {
+   "revised": [],
+   "concised": []
+  },
+  "津": {
+   "revised": [
+    "ㄐㄧㄣ"
+   ],
+   "concised": [
+    "ㄐㄧㄣ"
+   ]
+  },
+  "津挺": {
+   "revised": [],
+   "concised": []
+  },
+  "津津有味": {
+   "revised": [
+    "ㄐㄧㄣ ㄐㄧㄣ ㄧㄡˇ ㄨㄟˋ"
+   ],
+   "concised": [
+    "ㄐㄧㄣ ㄐㄧㄣ ㄧㄡˇ ㄨㄟˋ"
+   ]
+  },
+  "津設": {
+   "revised": [],
+   "concised": []
+  },
+  "津貼": {
+   "revised": [
+    "ㄐㄧㄣ ㄊㄧㄝ"
+   ],
+   "concised": [
+    "ㄐㄧㄣ ㄊㄧㄝ"
+   ]
+  },
+  "消": {
+   "revised": [
+    "ㄒㄧㄠ"
+   ],
+   "concised": [
+    "ㄒㄧㄠ"
+   ]
+  },
+  "消信": {
+   "revised": [],
+   "concised": []
+  },
+  "消失": {
+   "revised": [
+    "ㄒㄧㄠ ㄕ"
+   ],
+   "concised": [
+    "ㄒㄧㄠ ㄕ"
+   ]
+  },
+  "消除": {
+   "revised": [
+    "ㄒㄧㄠ ㄔㄨˊ"
+   ],
+   "concised": [
+    "ㄒㄧㄠ ㄔㄨˊ"
+   ]
+  },
+  "涮牙": {
+   "revised": [],
+   "concised": []
+  },
+  "澆": {
+   "revised": [
+    "ㄐㄧㄠ"
+   ],
+   "concised": [
+    "ㄐㄧㄠ"
+   ]
+  },
+  "澆命": {
+   "revised": [],
+   "concised": []
+  },
+  "澆水": {
+   "revised": [
+    "ㄐㄧㄠ ㄕㄨㄟˇ"
+   ],
+   "concised": [
+    "ㄐㄧㄠ ㄕㄨㄟˇ"
+   ]
+  },
+  "澆灌": {
+   "revised": [
+    "ㄐㄧㄠ ㄍㄨㄢˋ"
+   ],
+   "concised": [
+    "ㄐㄧㄠ ㄍㄨㄢˋ"
+   ]
+  },
+  "澆烤": {
+   "revised": [],
+   "concised": []
+  },
+  "澆道": {
+   "revised": [],
+   "concised": []
+  },
+  "熟": {
+   "revised": [
+    "ㄕㄡˊ",
+    "ㄕㄨˊ"
+   ],
+   "concised": [
+    "ㄕㄡˊ"
+   ]
+  },
+  "熟睡": {
+   "revised": [
+    "ㄕㄨˊ ㄕㄨㄟˋ"
+   ],
+   "concised": [
+    "ㄕㄡˊ ㄕㄨㄟˋ"
+   ]
+  },
+  "熟門": {
+   "revised": [],
+   "concised": []
+  },
+  "熱": {
+   "revised": [
+    "ㄖㄜˋ"
+   ],
+   "concised": [
+    "ㄖㄜˋ"
+   ]
+  },
+  "熱心": {
+   "revised": [
+    "ㄖㄜˋ ㄒㄧㄣ"
+   ],
+   "concised": [
+    "ㄖㄜˋ ㄒㄧㄣ"
+   ]
+  },
+  "熱睡": {
+   "revised": [],
+   "concised": []
+  },
+  "熱門": {
+   "revised": [
+    "ㄖㄜˋ ㄇㄣˊ"
+   ],
+   "concised": [
+    "ㄖㄜˋ ㄇㄣˊ"
+   ]
+  },
+  "燒": {
+   "revised": [
+    "ㄕㄠ"
+   ],
+   "concised": [
+    "ㄕㄠ"
+   ]
+  },
+  "燒命": {
+   "revised": [],
+   "concised": []
+  },
+  "燒杯": {
+   "revised": [
+    "ㄕㄠ ㄅㄟ"
+   ],
+   "concised": [
+    "ㄕㄠ ㄅㄟ"
+   ]
+  },
+  "燒灌": {
+   "revised": [],
+   "concised": []
+  },
+  "燒烤": {
+   "revised": [
+    "ㄕㄠ ㄎㄠˇ"
+   ],
+   "concised": [
+    "ㄕㄠ ㄎㄠˇ"
+   ]
+  },
+  "燒道": {
+   "revised": [],
+   "concised": []
+  },
+  "營": {
+   "revised": [
+    "ㄧㄥˊ"
+   ],
+   "concised": [
+    "ㄧㄥˊ"
+   ]
+  },
+  "營利": {
+   "revised": [
+    "ㄧㄥˊ ㄌㄧˋ"
+   ],
+   "concised": [
+    "ㄧㄥˊ ㄌㄧˋ"
+   ]
+  },
+  "營幕": {
+   "revised": [],
+   "concised": []
+  },
+  "營聲燕語": {
+   "revised": [],
+   "concised": []
+  },
+  "營隊": {
+   "revised": [
+    "ㄧㄥˊ ㄉㄨㄟˋ"
+   ],
+   "concised": [
+    "ㄧㄥˊ ㄉㄨㄟˋ"
+   ]
+  },
+  "牙搞": {
+   "revised": [],
+   "concised": []
+  },
+  "牙稿": {
+   "revised": [],
+   "concised": []
+  },
+  "牙篙": {
+   "revised": [],
+   "concised": []
+  },
+  "牙膏": {
+   "revised": [
+    "ㄧㄚˊ ㄍㄠ"
+   ],
+   "concised": [
+    "ㄧㄚˊ ㄍㄠ"
+   ]
+  },
+  "琳廊滿目": {
+   "revised": [],
+   "concised": []
+  },
+  "琳榔滿目": {
+   "revised": [],
+   "concised": []
+  },
+  "琳瑯滿目": {
+   "revised": [
+    "ㄌㄧㄣˊ ㄌㄤˊ ㄇㄢˇ ㄇㄨˋ"
+   ],
+   "concised": [
+    "ㄌㄧㄣˊ ㄌㄤˊ ㄇㄢˇ ㄇㄨˋ"
+   ]
+  },
+  "琳螂滿目": {
+   "revised": [],
+   "concised": []
+  },
+  "琺瑯": {
+   "revised": [
+    "ㄈㄚˋ ㄌㄤˊ"
+   ],
+   "concised": [
+    "ㄈㄚˋ ㄌㄤˊ"
+   ]
+  },
+  "瑩": {
+   "revised": [
+    "ㄧㄥˊ"
+   ],
+   "concised": [
+    "ㄧㄥˊ"
+   ]
+  },
+  "瑩幕": {
+   "revised": [],
+   "concised": []
+  },
+  "瑩聲燕語": {
+   "revised": [],
+   "concised": []
+  },
+  "瑩隊": {
+   "revised": [],
+   "concised": []
+  },
+  "瑯": {
+   "revised": [
+    "ㄌㄤˊ"
+   ],
+   "concised": [
+    "ㄌㄤˊ"
+   ]
+  },
+  "畫廊": {
+   "revised": [
+    "ㄏㄨㄚˋ ㄌㄤˊ"
+   ],
+   "concised": [
+    "ㄏㄨㄚˋ ㄌㄤˊ"
+   ]
+  },
+  "相偕": {
+   "revised": [
+    "ㄒㄧㄤ ㄒㄧㄝˊ"
+   ],
+   "concised": [
+    "ㄒㄧㄤ ㄒㄧㄝˊ"
+   ]
+  },
+  "眉捎": {
+   "revised": [],
+   "concised": []
+  },
+  "眉梢": {
+   "revised": [
+    "ㄇㄟˊ ㄕㄠ"
+   ],
+   "concised": []
+  },
+  "眉消": {
+   "revised": [],
+   "concised": []
+  },
+  "眉稍": {
+   "revised": [],
+   "concised": []
+  },
+  "真啼": {
+   "revised": [],
+   "concised": []
+  },
+  "真締": {
+   "revised": [],
+   "concised": []
+  },
+  "真蒂": {
+   "revised": [],
+   "concised": []
+  },
+  "真諦": {
+   "revised": [
+    "ㄓㄣ ㄉㄧˋ"
+   ],
+   "concised": [
+    "ㄓㄣ ㄉㄧˋ"
+   ]
+  },
+  "破曉": {
+   "revised": [
+    "ㄆㄛˋ ㄒㄧㄠˇ"
+   ],
+   "concised": [
+    "ㄆㄛˋ ㄒㄧㄠˇ"
+   ]
+  },
+  "示威": {
+   "revised": [
+    "ㄕˋ ㄨㄟ"
+   ],
+   "concised": [
+    "ㄕˋ ㄨㄟ"
+   ]
+  },
+  "示戚": {
+   "revised": [],
+   "concised": []
+  },
+  "秦": {
+   "revised": [
+    "ㄑㄧㄣˊ"
+   ],
+   "concised": [
+    "ㄑㄧㄣˊ"
+   ]
+  },
+  "秦國": {
+   "revised": [
+    "ㄑㄧㄣˊ ㄍㄨㄛˊ"
+   ],
+   "concised": []
+  },
+  "秦朝": {
+   "revised": [
+    "ㄑㄧㄣˊ ㄔㄠˊ"
+   ],
+   "concised": []
+  },
+  "稍": {
+   "revised": [
+    "ㄕㄠ",
+    "ㄕㄠˋ"
+   ],
+   "concised": [
+    "ㄕㄠ"
+   ]
+  },
+  "稍信": {
+   "revised": [],
+   "concised": []
+  },
+  "稍失": {
+   "revised": [],
+   "concised": []
+  },
+  "稍微": {
+   "revised": [
+    "ㄕㄠ ㄨㄟˊ"
+   ],
+   "concised": [
+    "ㄕㄠ ㄨㄟˊ"
+   ]
+  },
+  "稍息": {
+   "revised": [
+    "ㄕㄠ ㄒㄧˊ"
+   ],
+   "concised": [
+    "ㄕㄠ ㄒㄧˊ"
+   ]
+  },
+  "空間": {
+   "revised": [
+    "ㄎㄨㄥ ㄐㄧㄢ"
+   ],
+   "concised": [
+    "ㄎㄨㄥ ㄐㄧㄢ"
+   ]
+  },
+  "笛": {
+   "revised": [
+    "ㄉㄧˊ"
+   ],
+   "concised": [
+    "ㄉㄧˊ"
+   ]
+  },
+  "笛條": {
+   "revised": [],
+   "concised": []
+  },
+  "笛聲": {
+   "revised": [
+    "ㄉㄧˊ ㄕㄥ"
+   ],
+   "concised": [
+    "ㄉㄧˊ ㄕㄥ"
+   ]
+  },
+  "筆": {
+   "revised": [
+    "ㄅㄧˇ"
+   ],
+   "concised": [
+    "ㄅㄧˇ"
+   ]
+  },
+  "筆挺": {
+   "revised": [
+    "ㄅㄧˇ ㄊㄧㄥˇ"
+   ],
+   "concised": [
+    "ㄅㄧˇ ㄊㄧㄥˇ"
+   ]
+  },
+  "筆筆有味": {
+   "revised": [],
+   "concised": []
+  },
+  "筆設": {
+   "revised": [],
+   "concised": []
+  },
+  "紫": {
+   "revised": [
+    "ㄗˇ"
+   ],
+   "concised": [
+    "ㄗˇ"
+   ]
+  },
+  "紫外線": {
+   "revised": [
+    "ㄗˇ ㄨㄞˋ ㄒㄧㄢˋ"
+   ],
+   "concised": [
+    "ㄗˇ ㄨㄞˋ ㄒㄧㄢˋ"
+   ]
+  },
+  "紫菜": {
+   "revised": [
+    "ㄗˇ ㄘㄞˋ"
+   ],
+   "concised": []
+  },
+  "絮": {
+   "revised": [
+    "ㄒㄩˋ"
+   ],
+   "concised": [
+    "ㄒㄩˋ"
+   ]
+  },
+  "絮外線": {
+   "revised": [],
+   "concised": []
+  },
+  "絮煩": {
+   "revised": [
+    "ㄒㄩˋ ˙ㄈㄢ"
+   ],
+   "concised": [
+    "ㄒㄩˋ ㄈㄢˊ"
+   ]
+  },
+  "統滿": {
+   "revised": [],
+   "concised": []
+  },
+  "緊": {
+   "revised": [
+    "ㄐㄧㄣˇ"
+   ],
+   "concised": [
+    "ㄐㄧㄣˇ"
+   ]
+  },
+  "緊外線": {
+   "revised": [],
+   "concised": []
+  },
+  "緊定": {
+   "revised": [],
+   "concised": []
+  },
+  "緊張": {
+   "revised": [
+    "ㄐㄧㄣˇ ㄓㄤ"
+   ],
+   "concised": [
+    "ㄐㄧㄣˇ ㄓㄤ"
+   ]
+  },
+  "縈": {
+   "revised": [
+    "ㄧㄥˊ"
+   ],
+   "concised": [
+    "ㄧㄥˊ"
+   ]
+  },
+  "縈幕": {
+   "revised": [],
+   "concised": []
+  },
+  "繞": {
+   "revised": [
+    "ㄖㄠˋ"
+   ],
+   "concised": [
+    "ㄖㄠˋ"
+   ]
+  },
+  "繞命": {
+   "revised": [],
+   "concised": []
+  },
+  "繞境": {
+   "revised": [
+    "ㄖㄠˋ ㄐㄧㄥˋ"
+   ],
+   "concised": [
+    "ㄖㄠˋ ㄐㄧㄥˋ"
+   ]
+  },
+  "繞烤": {
+   "revised": [],
+   "concised": []
+  },
+  "繞道": {
+   "revised": [
+    "ㄖㄠˋ ㄉㄠˋ"
+   ],
+   "concised": [
+    "ㄖㄠˋ ㄉㄠˋ"
+   ]
+  },
+  "繩子": {
+   "revised": [
+    "ㄕㄥˊ ˙ㄗ"
+   ],
+   "concised": [
+    "ㄕㄥˊ ˙ㄗ"
+   ]
+  },
+  "而勞": {
+   "revised": [],
+   "concised": []
+  },
+  "耐勞": {
+   "revised": [
+    "ㄋㄞˋ ㄌㄠˊ"
+   ],
+   "concised": [
+    "ㄋㄞˋ ㄌㄠˊ"
+   ]
+  },
+  "脅助": {
+   "revised": [],
+   "concised": []
+  },
+  "腎定": {
+   "revised": [],
+   "concised": []
+  },
+  "臃抱": {
+   "revised": [],
+   "concised": []
+  },
+  "苗": {
+   "revised": [
+    "ㄇㄧㄠˊ"
+   ],
+   "concised": [
+    "ㄇㄧㄠˊ"
+   ]
+  },
+  "苗條": {
+   "revised": [
+    "ㄇㄧㄠˊ ˙ㄊㄧㄠ"
+   ],
+   "concised": [
+    "ㄇㄧㄠˊ ㄊㄧㄠˊ"
+   ]
+  },
+  "荔助": {
+   "revised": [],
+   "concised": []
+  },
+  "螂": {
+   "revised": [
+    "ㄌㄤˊ"
+   ],
+   "concised": [
+    "ㄌㄤˊ"
+   ]
+  },
+  "融恰": {
+   "revised": [],
+   "concised": []
+  },
+  "融拾": {
+   "revised": [],
+   "concised": []
+  },
+  "融洽": {
+   "revised": [
+    "ㄖㄨㄥˊ ㄑㄧㄚˋ"
+   ],
+   "concised": [
+    "ㄖㄨㄥˊ ㄑㄧㄚˋ"
+   ]
+  },
+  "融給": {
+   "revised": [],
+   "concised": []
+  },
+  "螢": {
+   "revised": [
+    "ㄧㄥˊ"
+   ],
+   "concised": [
+    "ㄧㄥˊ"
+   ]
+  },
+  "螢光": {
+   "revised": [
+    "ㄧㄥˊ ㄍㄨㄤ"
+   ],
+   "concised": [
+    "ㄧㄥˊ ㄍㄨㄤ"
+   ]
+  },
+  "螢幕": {
+   "revised": [
+    "ㄧㄥˊ ㄇㄨˋ"
+   ],
+   "concised": [
+    "ㄧㄥˊ ㄇㄨˋ"
+   ]
+  },
+  "螢聲燕語": {
+   "revised": [],
+   "concised": []
+  },
+  "螢隊": {
+   "revised": [],
+   "concised": []
+  },
+  "螳廊": {
+   "revised": [],
+   "concised": []
+  },
+  "螳榔": {
+   "revised": [],
+   "concised": []
+  },
+  "螳瑯": {
+   "revised": [],
+   "concised": []
+  },
+  "螳螂": {
+   "revised": [
+    "ㄊㄤˊ ㄌㄤˊ"
+   ],
+   "concised": [
+    "ㄊㄤˊ ㄌㄤˊ"
+   ]
+  },
+  "蟑螂": {
+   "revised": [
+    "ㄓㄤ ㄌㄤˊ"
+   ],
+   "concised": [
+    "ㄓㄤ ㄌㄤˊ"
+   ]
+  },
+  "被此": {
+   "revised": [],
+   "concised": []
+  },
+  "要紫": {
+   "revised": [],
+   "concised": []
+  },
+  "要絮": {
+   "revised": [],
+   "concised": []
+  },
+  "要緊": {
+   "revised": [
+    "ㄧㄠˋ ㄐㄧㄣˇ"
+   ],
+   "concised": [
+    "ㄧㄠˋ ㄐㄧㄣˇ"
+   ]
+  },
+  "規建": {
+   "revised": [],
+   "concised": []
+  },
+  "規律": {
+   "revised": [
+    "ㄍㄨㄟ ㄌㄩˋ"
+   ],
+   "concised": [
+    "ㄍㄨㄟ ㄌㄩˋ"
+   ]
+  },
+  "規津": {
+   "revised": [],
+   "concised": []
+  },
+  "規筆": {
+   "revised": [],
+   "concised": []
+  },
+  "親戚": {
+   "revised": [
+    "ㄑㄧㄣ ㄑㄧ"
+   ],
+   "concised": [
+    "ㄑㄧㄣ ㄑㄧ"
+   ]
+  },
+  "討勞": {
+   "revised": [],
+   "concised": []
+  },
+  "諧": {
+   "revised": [
+    "ㄒㄧㄝˊ"
+   ],
+   "concised": [
+    "ㄒㄧㄝˊ"
+   ]
+  },
+  "諧同": {
+   "revised": [],
+   "concised": []
+  },
+  "諧音": {
+   "revised": [
+    "ㄒㄧㄝˊ ㄧㄣ"
+   ],
+   "concised": [
+    "ㄒㄧㄝˊ ㄧㄣ"
+   ]
+  },
+  "豆苗": {
+   "revised": [
+    "ㄉㄡˋ ㄇㄧㄠˊ"
+   ],
+   "concised": [
+    "ㄉㄡˋ ㄇㄧㄠˊ"
+   ]
+  },
+  "賢定": {
+   "revised": [],
+   "concised": []
+  },
+  "跳澠": {
+   "revised": [],
+   "concised": []
+  },
+  "跳繩": {
+   "revised": [
+    "ㄊㄧㄠˋ ㄕㄥˊ"
+   ],
+   "concised": [
+    "ㄊㄧㄠˋ ㄕㄥˊ"
+   ]
+  },
+  "跳蠅": {
+   "revised": [],
+   "concised": []
+  },
+  "跳黽": {
+   "revised": [],
+   "concised": []
+  },
+  "辛勞": {
+   "revised": [
+    "ㄒㄧㄣ ㄌㄠˊ"
+   ],
+   "concised": [
+    "ㄒㄧㄣ ㄌㄠˊ"
+   ]
+  },
+  "辛榮": {
+   "revised": [],
+   "concised": []
+  },
+  "辛營": {
+   "revised": [],
+   "concised": []
+  },
+  "辛螢": {
+   "revised": [],
+   "concised": []
+  },
+  "迴廊": {
+   "revised": [
+    "ㄏㄨㄟˊ ㄌㄤˊ"
+   ],
+   "concised": [
+    "ㄏㄨㄟˊ ㄌㄤˊ"
+   ]
+  },
+  "迴榔": {
+   "revised": [],
+   "concised": []
+  },
+  "迴瑯": {
+   "revised": [],
+   "concised": []
+  },
+  "迴螂": {
+   "revised": [],
+   "concised": []
+  },
+  "進偕": {
+   "revised": [],
+   "concised": []
+  },
+  "進諧": {
+   "revised": [],
+   "concised": []
+  },
+  "進階": {
+   "revised": [
+    "ㄐㄧㄣˋ ㄐㄧㄝ"
+   ],
+   "concised": [
+    "ㄐㄧㄣˋ ㄐㄧㄝ"
+   ]
+  },
+  "銃滿": {
+   "revised": [],
+   "concised": []
+  },
+  "銷": {
+   "revised": [
+    "ㄒㄧㄠ"
+   ],
+   "concised": [
+    "ㄒㄧㄠ"
+   ]
+  },
+  "銷失": {
+   "revised": [],
+   "concised": []
+  },
+  "銷微": {
+   "revised": [],
+   "concised": []
+  },
+  "開銷": {
+   "revised": [
+    "ㄎㄞ ㄒㄧㄠ"
+   ],
+   "concised": [
+    "ㄎㄞ ㄒㄧㄠ"
+   ]
+  },
+  "間斷": {
+   "revised": [
+    "ㄐㄧㄢˋ ㄉㄨㄢˋ"
+   ],
+   "concised": [
+    "ㄐㄧㄢˋ ㄉㄨㄢˋ"
+   ]
+  },
+  "間隔": {
+   "revised": [
+    "ㄐㄧㄢˋ ㄍㄜˊ"
+   ],
+   "concised": [
+    "ㄐㄧㄢˋ ㄍㄜˊ"
+   ]
+  },
+  "關係": {
+   "revised": [
+    "ㄍㄨㄢ ㄒㄧˋ"
+   ],
+   "concised": [
+    "ㄍㄨㄢ ㄒㄧˋ"
+   ]
+  },
+  "關孫": {
+   "revised": [],
+   "concised": []
+  },
+  "關縣": {
+   "revised": [],
+   "concised": []
+  },
+  "關遜": {
+   "revised": [],
+   "concised": []
+  },
+  "階": {
+   "revised": [
+    "ㄐㄧㄝ"
+   ],
+   "concised": [
+    "ㄐㄧㄝ"
+   ]
+  },
+  "階同": {
+   "revised": [],
+   "concised": []
+  },
+  "階層": {
+   "revised": [
+    "ㄐㄧㄝ ㄘㄥˊ"
+   ],
+   "concised": [
+    "ㄐㄧㄝ ㄘㄥˊ"
+   ]
+  },
+  "階音": {
+   "revised": [],
+   "concised": []
+  },
+  "隔洽": {
+   "revised": [],
+   "concised": []
+  },
+  "雍抱": {
+   "revised": [],
+   "concised": []
+  },
+  "靜悄悄": {
+   "revised": [
+    "ㄐㄧㄥˋ ㄑㄧㄠˇ ㄑㄧㄠˇ"
+   ],
+   "concised": [
+    "ㄐㄧㄥˋ ㄑㄧㄠˇ ㄑㄧㄠˇ"
+   ]
+  },
+  "靜梢梢": {
+   "revised": [],
+   "concised": []
+  },
+  "靜消消": {
+   "revised": [],
+   "concised": []
+  },
+  "靜稍稍": {
+   "revised": [],
+   "concised": []
+  },
+  "饒": {
+   "revised": [
+    "ㄖㄠˊ"
+   ],
+   "concised": [
+    "ㄖㄠˊ"
+   ]
+  },
+  "饒命": {
+   "revised": [
+    "ㄖㄠˊ ㄇㄧㄥˋ"
+   ],
+   "concised": [
+    "ㄖㄠˊ ㄇㄧㄥˋ"
+   ]
+  },
+  "饒灌": {
+   "revised": [],
+   "concised": []
+  },
+  "饒舌": {
+   "revised": [
+    "ㄖㄠˊ ㄕㄜˊ"
+   ],
+   "concised": [
+    "ㄖㄠˊ ㄕㄜˊ"
+   ]
+  },
+  "饒道": {
+   "revised": [],
+   "concised": []
+  },
+  "鬲洽": {
+   "revised": [],
+   "concised": []
+  },
+  "魂牽夢營": {
+   "revised": [],
+   "concised": []
+  },
+  "魂牽夢瑩": {
+   "revised": [],
+   "concised": []
+  },
+  "魂牽夢縈": {
+   "revised": [
+    "ㄏㄨㄣˊ ㄑㄧㄢ ㄇㄥˋ ㄧㄥˊ"
+   ],
+   "concised": [
+    "ㄏㄨㄣˊ ㄑㄧㄢ ㄇㄥˋ ㄧㄥˊ"
+   ]
+  },
+  "魂牽夢螢": {
+   "revised": [],
+   "concised": []
+  },
+  "鳴笛": {
+   "revised": [
+    "ㄇㄧㄥˊ ㄉㄧˊ"
+   ],
+   "concised": [
+    "ㄇㄧㄥˊ ㄉㄧˊ"
+   ]
+  },
+  "鳴苗": {
+   "revised": [],
+   "concised": []
+  },
+  "鶯": {
+   "revised": [
+    "ㄧㄥ"
+   ],
+   "concised": [
+    "ㄧㄥ"
+   ]
+  },
+  "鶯聲燕語": {
+   "revised": [
+    "ㄧㄥ ㄕㄥ ㄧㄢˋ ㄩˇ"
+   ],
+   "concised": [
+    "ㄧㄥ ㄕㄥ ㄧㄢˋ ㄩˇ"
+   ]
+  },
+  "鶯隊": {
+   "revised": [],
+   "concised": []
+  }
+ }
+}

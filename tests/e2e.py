@@ -61,8 +61,12 @@ def flow_main(browser, label, device=None):
     ctx, pg, errors = open_page(browser, device)
     n_concepts = pg.evaluate("Object.keys(G5ChiBank.CONCEPTS).length")
     check(f"{label} 首頁標題與倒數", SELF_NAME in pg.title() and pg.locator("#days").inner_text().strip().isdigit(), pg.title())
-    check(f"{label} {n_concepts} 個觀念入口", n_concepts == 10 and pg.locator("#concepts .ccard").count() == n_concepts, pg.locator("#concepts .ccard").count())
-    check(f"{label} 小考複習列出四組", all(pg.locator(f'button[data-rv="u{u}"]').count() == 1 for u in ["k1", "k2", "k3", "k4"]))
+    # 2026-10-14：加第一課字形、多音字三個觀念與國練第二課五個觀念，10 → 18
+    check(f"{label} {n_concepts} 個觀念入口", n_concepts == 18 and pg.locator("#concepts .ccard").count() == n_concepts, pg.locator("#concepts .ccard").count())
+    check(f"{label} 小考複習列出六組", all(pg.locator(f'button[data-rv="u{u}"]').count() == 1 for u in ["k1", "k2", "k3", "k4", "k5", "k6"]))
+    # 10/15 小考的國練第二課要排在「小考前想全部練一次」第一個
+    check(f"{label} 國練第二課排第一個", pg.locator("button[data-rv]").first.get_attribute("data-rv") == "uk6",
+          pg.locator("button[data-rv]").first.get_attribute("data-rv"))
     check(f"{label} 沒有水平捲動", no_overflow(pg))
     nav = pg.evaluate("[...document.querySelectorAll('#siteNav a')].map(a=>[a.getAttribute('href'),a.textContent.trim()])")
     check(f"{label} 切換列：連到其他每一站、目前站是「{SELF_NAME}」",
@@ -290,6 +294,16 @@ def flow_review(browser):
     c = current_card(pg)
     check("小考複習：修辭與句型只出 rh1／rh2／sp 的題", c and c["concept"] in ("rh1", "rh2", "sp"), c)
     check("小考複習沒有 JS 錯誤", not errors, errors)
+    ctx.close()
+    # 2026-10-14：10/15 小考的國練第二課，按「練一段」只出 w2a–w2e 的題，答一題看得到解說
+    ctx, pg, errors = open_page(browser)
+    check("小考複習按鈕寫「國練第二課」", "國練第二課" in pg.locator("#main .review").inner_text(), pg.locator("#main .review").inner_text()[:200])
+    pg.locator('button[data-rv="uk6"]').click(); pg.wait_for_selector("#main .q")
+    c = current_card(pg)
+    check("小考複習：國練第二課只出 w2a～w2e 的題", c and c["concept"] in ("w2a", "w2b", "w2c", "w2d", "w2e"), c)
+    answer(pg, True); pg.wait_for_selector("#main .fb")
+    check("國練第二課答完一題：回饋框標出處「國練第二課第 6 頁」", "國練第二課第 6 頁" in pg.locator("#main .fb").first.inner_text(), pg.locator("#main .fb").first.inner_text()[:300])
+    check("國練第二課小考複習沒有 JS 錯誤", not errors, errors)
     ctx.close()
 
 
