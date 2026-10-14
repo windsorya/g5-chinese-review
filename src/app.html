@@ -203,6 +203,8 @@ textarea{width:100%;min-height:120px;font-size:16px;border:1px solid var(--line)
 .stn .pg{font-size:15px;line-height:1.25;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
 .stn.done .pg{color:var(--leaf);font-weight:700}
 .stn .pgl{display:none}
+/* 2026-10-14 律師：「雖然年級不同……請加上備註，避免誤會」：影片下面的年級／對象備註 */
+.vid .fitnote{color:var(--sun-deep);font-weight:700}
 .stn .tag{font-size:15px;line-height:1.25;font-weight:700;color:var(--sun-deep);background:var(--sun-soft);border-radius:8px;padding:2px 6px;max-width:4.6em}
 .stn.done .dot{background:var(--leaf);border-color:var(--leaf);color:var(--on-leaf)}
 .stn.now .dot{background:var(--sunball);border-color:var(--sun-deep);color:var(--on-sun);box-shadow:0 0 0 6px var(--sun-soft)}
@@ -785,11 +787,13 @@ function exBlock(ex,alt){
 }
 function videoBlock(tp){
   var vs=(tp&&MV.V[tp])||[];
-  if(!vs.length) return (tp&&MV.NO_VIDEO[tp])?'<div class="vids small"><strong>影片</strong><span class="muted">給爸媽：這個觀念沒有放影片。'+esc(MV.NO_VIDEO[tp])+'</span></div>':'';
+  // NO_VIDEO 只收律師核可的 { reason, ownerApproved }（tests/standard.test.js 標準①；2026-10-14 起只寫理由字串不過）
+  var nv=tp&&MV.NO_VIDEO[tp], nvr=nv&&typeof nv==="object"?nv.reason:nv;
+  if(!vs.length) return nvr?'<div class="vids small"><strong>影片</strong><span class="muted">給爸媽：這個觀念沒有放影片。'+esc(nvr)+'</span></div>':'';
   return '<div class="vids"><strong>看影片，聽老師講一次</strong>'+vs.map(function(v){
     var st=v.start||0, len=v.end?Math.max(1,Math.round((v.end-st)/60)):null;
     return '<div class="vid"><button class="btn ghost" type="button" data-play="'+esc(v.id)+'" data-start="'+st+'" data-end="'+(v.end||"")+'">播放：'+esc(v.title)+'</button>'+
-      '<span class="small muted">'+esc(v.channel)+(st?'・從 '+mmss(st)+' 開始':'')+(len?'・約 '+len+' 分鐘':'')+(v.note?'・'+esc(v.note):'')+
+      '<span class="small muted">'+esc(v.channel)+(st?'・從 '+mmss(st)+' 開始':'')+(len?'・約 '+len+' 分鐘':'')+(v.note?'・'+esc(v.note):'')+(v.fitNote?'<br><span class="fitnote">備註：'+esc(v.fitNote)+'</span>':'')+
       '・<a href="https://www.youtube.com/watch?v='+encodeURIComponent(v.id)+(st?'&t='+st:'')+'" target="_blank" rel="noopener">在 YouTube 開啟</a></span></div>';
   }).join("")+'</div>';
 }

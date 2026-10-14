@@ -39,8 +39,13 @@ const isNum = (x) => typeof x === "number" && Number.isFinite(x);
 function videoProblems(videos, noVideoReason, opt) {
   const endNullable = !!(opt && opt.endNullable);
   if (!Array.isArray(videos) || !videos.length) {
-    const r = typeof noVideoReason === "string" ? noVideoReason.replace(/\s/g, "") : "";
-    return r.length >= 20 ? [] : ["沒有影片，也沒有寫明理由（去空白後要 ≥20 字）"];
+    // 2026-10-14 律師：「為何漏附影片……請日後避免再犯」——國語站 8 個新觀念我只寫一句理由就沒放影片，測試照放行。
+    // ⇒ 沒有影片只認律師核可：{ reason: 理由（去空白 ≥20 字）, ownerApproved: "YYYY-MM-DD 律師原話：「…」" }；只寫理由字串一律不過，去找影片
+    const o = noVideoReason;
+    if (typeof o === "string") return ["沒有影片：只寫理由不算，要律師核可（{ reason, ownerApproved: \"YYYY-MM-DD 律師原話：「…」\" }），否則就去找影片"];
+    const r = o && typeof o.reason === "string" ? o.reason.replace(/\s/g, "") : "";
+    const ok = !!o && typeof o.ownerApproved === "string" && /^\d{4}-\d{2}-\d{2} 律師原話：「[^」]+」/.test(o.ownerApproved);
+    return r.length >= 20 && ok ? [] : ["沒有影片：要寫理由（去空白 ≥20 字）並附律師核可原話（ownerApproved）"];
   }
   const bad = [];
   videos.forEach((v, i) => {
@@ -121,8 +126,25 @@ const kidTexts = (emap, vmap) => units.map((k) => (emap[k] || []).map((ex) => ex
   .concat((vmap[k] || []).map((v) => v && v.note)).map((t) => [k, t])).flat();
 const longSentences = (emap, vmap) => kidTexts(emap, vmap).map(([k, t]) => tooLong(t).map((s) => k + "：" + s)).flat();
 
-test("標準①影片：每個會出題的觀念至少一段驗證過的影片，或寫明沒放的理由", () => {
+test("標準①影片：每個會出題的觀念至少一段驗證過的影片（沒有影片只認律師核可）", () => {
   assert.deepEqual(videoMissing(V), []);
+});
+
+// 2026-10-14 律師「雖然年級不同，但如果你判斷合適的話，請加上備註，避免誤會」：標題看得出不是五年級（小二／小三／小四／小六、3上…）
+// 或是給老師看的備課影片，就要有 fitNote（畫面顯示「備註：…」）
+const OTHER_GRADE = /小[一二三四六]|[一二三四六]年級|國小國語[1-46][上下]|備課/;
+const fitMissing = (vmap) => Object.entries(vmap).flatMap(([k, a]) => (a || []).filter((v) => OTHER_GRADE.test(v.title || "") && !(v.fitNote || "").trim()).map((v) => k + "：" + v.title));
+test("標準①-c 年級或對象和五上不同的影片都有備註（fitNote）", () => {
+  assert.deepEqual(fitMissing(V), []);
+  assert.deepEqual(fitMissing({ x: [{ title: "小三國語｜文本｜記敘文概說" }] }), ["x：小三國語｜文本｜記敘文概說"], "自檢：小三影片沒備註要抓到");
+});
+// 2026-10-14 律師「請日後避免再犯」：標準①的例外口必須真的關住——突變自檢（只寫理由／缺律師原話都要擋）
+test("標準①-自檢：沒有影片時，只寫理由字串不過、缺律師原話不過、理由＋律師原話才過", () => {
+  const why = "這個觀念找不到合適的影片，先看圖解和例句練習就好。";
+  assert.ok(videoProblems([], why).length > 0, "只寫理由字串卻放行");
+  assert.ok(videoProblems([], { reason: why }).length > 0, "缺律師原話卻放行");
+  assert.ok(videoProblems([], { reason: why, ownerApproved: "律師說可以" }).length > 0, "核可沒有日期與原話卻放行");
+  assert.deepEqual(videoProblems([], { reason: why, ownerApproved: "2026-10-14 律師原話：「這個觀念不用放影片」" }), []);
 });
 
 test("標準②圖：每個觀念的每一種說法都有圖", () => {

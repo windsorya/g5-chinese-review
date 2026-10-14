@@ -66,7 +66,7 @@ test("④每個觀念都有題，8～15 題；每題的觀念都存在；每題�
   // 國練第二課（單元 k6）的題目出處寫「國練第二課第 6 頁的字詞（題目自編）」：字詞照抄國練，題目是自己出的
   B.CARDS.forEach((c) => {
     if (!B.CONCEPTS[c.concept]) { bad.push(c.id + " 觀念不存在：" + c.concept); return; }
-    const ok = B.CONCEPTS[c.concept].unit === "k6" ? c.page === B.P6_PAGE : c.page === "自編題（未對課本）";
+    const ok = B.CONCEPTS[c.concept].unit === "k6" ? (c.page === B.P6_PAGE || c.page === B.P7_PAGE) : c.page === "自編題（未對課本）";
     if (!ok) bad.push(c.id + " page 不對：" + c.page);
   });
   Object.keys(B.CONCEPTS).forEach((k) => { if (!B.UNITS[B.CONCEPTS[k].unit]) bad.push(k + " 單元不存在"); if (B.CONCEPTS[k].unit === "3") bad.push(k + " 單元代號不可用 \"3\"（core.js 會當成待開放單元）"); });
