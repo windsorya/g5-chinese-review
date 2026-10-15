@@ -307,6 +307,42 @@ def flow_redo_after_external_clear(browser):
     ctx.close()
 
 
+def flow_lab_after_external_clear(browser):
+    """Codex 審 c28888ed（#1541）：看例句中途存檔被別處清掉（別的分頁清除、同步換檔）→ 切回頁面 → 再按例句頁的按鈕，
+    核心回 NO_RUN；舊版留在例句頁、按了沒反應也沒有任何提示。新版照磁碟現況回首頁。另驗正常按「看完了」仍到完成畫面。"""
+    clear = "localStorage.removeItem('g5chi.v1'); document.dispatchEvent(new Event('visibilitychange')); 0"
+
+    def open_lab(pg):
+        pg.locator("#concepts .ccard").first.click(); pg.wait_for_selector("#cLab")
+        pg.locator("#cLab").click(); pg.wait_for_selector("#labPredict button[data-g]")
+
+    def open_lab_wrong(pg):   # 答錯後補救進來的例句頁（完成鈕是「我看懂了，換一題確認」）
+        pg.locator("#goAll").click(); pg.wait_for_selector("#main .q")
+        answer(pg, False); pg.locator('#errq button[data-k="concept"]').click()
+        pg.wait_for_selector("#toLab"); pg.locator("#toLab").click(); pg.wait_for_selector("#labPredict button[data-g]")
+
+    def see_all(pg):
+        pg.locator("#labPredict button[data-g]").first.click()
+        n = 0
+        while pg.locator("#mNext").is_visible() and n < 12:
+            pg.locator("#mNext").click(); n += 1
+
+    ctx, pg, errors = open_page(browser, {"viewport": {"width": 390, "height": 844}})
+    open_lab(pg); see_all(pg); pg.locator("#labDone").click()
+    check("看例句（觀念頁進來）：正常按「看完了」到完成畫面", pg.locator("#main .done").count() == 1 and "看完了" in pg.inner_text("#main"), pg.inner_text("#main")[:120])
+    ctx.close()
+    for name, opener, before, press in [("例句都看完後按「看完了」", open_lab, see_all, "#labDone"),
+                                        ("（答錯補救進來）例句都看完後按「我看懂了，換一題確認」", open_lab_wrong, see_all, "#labDone"),
+                                        ("看到一半按「下一個例句」", open_lab, lambda p: p.locator("#labPredict button[data-g]").first.click(), "#mNext"),
+                                        ("還沒猜就點猜測選項", open_lab, lambda p: None, "#labPredict button[data-g] >> nth=0")]:
+        ctx, pg, errors = open_page(browser, {"viewport": {"width": 390, "height": 844}})
+        opener(pg); before(pg)
+        pg.evaluate(clear); pg.locator(press).click()
+        check(f"看例句中存檔被別處清掉後{name}：回到首頁、沒有 JS 錯誤",
+              not errors and pg.locator("#labNav").count() == 0 and pg.locator("#goAll").count() == 1, errors or pg.inner_text("#main")[:120])
+        ctx.close()
+
+
 def flow_review(browser):
     ctx, pg, errors = open_page(browser)
     check("小考複習按鈕寫「修辭與句型」", "修辭與句型" in pg.locator("#main .review").inner_text(), pg.locator("#main .review").inner_text()[:200])
@@ -402,6 +438,7 @@ def main():
         flow_nav_click(cr, "手機390", {"viewport": {"width": 390, "height": 844}, "is_mobile": True, "has_touch": True})
         flow_review(cr)
         flow_redo_after_external_clear(cr)
+        flow_lab_after_external_clear(cr)
         flow_upload(cr, "國語", "g5-chinese-review", "G5ChiBank")
         cr.close()
         wk = p.webkit.launch()
