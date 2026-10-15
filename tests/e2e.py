@@ -331,13 +331,16 @@ def flow_lab_after_external_clear(browser):
     open_lab(pg); see_all(pg); pg.locator("#labDone").click()
     check("看例句（觀念頁進來）：正常按「看完了」到完成畫面", pg.locator("#main .done").count() == 1 and "看完了" in pg.inner_text("#main"), pg.inner_text("#main")[:120])
     ctx.close()
-    for name, opener, before, press in [("例句都看完後按「看完了」", open_lab, see_all, "#labDone"),
-                                        ("（答錯補救進來）例句都看完後按「我看懂了，換一題確認」", open_lab_wrong, see_all, "#labDone"),
-                                        ("看到一半按「下一個例句」", open_lab, lambda p: p.locator("#labPredict button[data-g]").first.click(), "#mNext"),
-                                        ("還沒猜就點猜測選項", open_lab, lambda p: None, "#labPredict button[data-g] >> nth=0")]:
+    bg = "localStorage.removeItem('g5chi.v1'); 0"   # 沒切換頁面（同步在背景換檔）：記憶體還有這次例句，存檔時核心才回 NO_RUN
+    mid = lambda p: p.locator("#labPredict button[data-g]").first.click()
+    for name, opener, before, js, press in [("例句都看完後按「看完了」", open_lab, see_all, clear, "#labDone"),
+                                            ("（答錯補救進來）例句都看完後按「我看懂了，換一題確認」", open_lab_wrong, see_all, clear, "#labDone"),
+                                            ("看到一半按「下一個例句」", open_lab, mid, clear, "#mNext"),
+                                            ("（沒切換頁面）看到一半按「下一個例句」", open_lab, mid, bg, "#mNext"),
+                                            ("還沒猜就點猜測選項", open_lab, lambda p: None, clear, "#labPredict button[data-g] >> nth=0")]:
         ctx, pg, errors = open_page(browser, {"viewport": {"width": 390, "height": 844}})
         opener(pg); before(pg)
-        pg.evaluate(clear); pg.locator(press).click()
+        pg.evaluate(js); pg.locator(press).click()
         check(f"看例句中存檔被別處清掉後{name}：回到首頁、沒有 JS 錯誤",
               not errors and pg.locator("#labNav").count() == 0 and pg.locator("#goAll").count() == 1, errors or pg.inner_text("#main")[:120])
         ctx.close()
