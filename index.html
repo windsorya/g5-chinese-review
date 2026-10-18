@@ -1254,9 +1254,9 @@ textarea{width:100%;min-height:120px;font-size:16px;border:1px solid var(--line)
   ]);
   // 部首題（Codex 審 1e41707：用字串找「X是Y部」比對，認不出說的是哪個字 ⇒ 改成解說、錯法說明一律由部首表 bs.rad 產生，
   // tests ㉕ 用辭典重算部首、照同一個模板重產文字逐字比對；bs.rad 也要等於辭典）。
-  // [id, 題目, 正解, 錯項, 補充（接在解說後面，可空）, 提示, bs]；bs.kind＝same（和 target 同部首）／pair（部首相同的一組）／common（兩字共同的部首）
-  function bsTexts(b, right, wrong, tail) {
-    var R = function (ch) { return b.rad[ch]; }, t = tail ? "，" + tail : "", why, ww;
+  // [id, 題目, 正解, 錯項, 提示, bs]（Codex 審 44a8dd4：補充說明是自由文字、可夾帶錯的部首說法 ⇒ 拿掉，解說只由模板產生）；bs.kind＝same（和 target 同部首）／pair（部首相同的一組）／common（兩字共同的部首）
+  function bsTexts(b, right, wrong) {
+    var R = function (ch) { return b.rad[ch]; }, t = "", why, ww;
     if (b.kind === "same") {
       why = "「" + b.target + "」和「" + right + "」都是" + R(b.target) + "部" + t + "。";
       ww = wrong.map(function (w) { return "「" + w + "」是" + R(w) + "部，和「" + b.target + "」不同。"; });
@@ -1272,17 +1272,17 @@ textarea{width:100%;min-height:120px;font-size:16px;border:1px solid var(--line)
   }
   function ybBs(list) {
     list.forEach(function (p) {
-      var tx = bsTexts(p[6], p[2], p[3], p[4]);
-      CARDS.push(mk(p[0], "yb", p[1], p[2], p[3].map(function (w, i) { return [w, tx.wrongWhy[i]]; }), tx.why, p[5],
-        { src: CON + encodeURIComponent(p[6].chars[0]), bs: p[6] }));
+      var tx = bsTexts(p[5], p[2], p[3]);
+      CARDS.push(mk(p[0], "yb", p[1], p[2], p[3].map(function (w, i) { return [w, tx.wrongWhy[i]]; }), tx.why, p[4],
+        { src: CON + encodeURIComponent(p[5].chars[0]), bs: p[5] }));
     });
   }
   ybBs([
-    ["yb8", "下面哪一個字和「紡」的部首相同？", "織", ["坊", "訪", "仿"], "都和絲線有關", "紡織要用絲線。",
+    ["yb8", "下面哪一個字和「紡」的部首相同？", "織", ["坊", "訪", "仿"], "紡織要用絲線。",
       { kind: "same", target: "紡", chars: ["紡", "織", "坊", "訪", "仿"], rad: { "紡": "糸", "織": "糸", "坊": "土", "訪": "言", "仿": "人" } }],
-    ["yb9", "下面哪一組字的部首相同？", "培、壞", ["筍、勾", "炒、吵", "超、連"], "", "看看左邊，哪一組一樣？",
+    ["yb9", "下面哪一組字的部首相同？", "培、壞", ["筍、勾", "炒、吵", "超、連"], "看看左邊，哪一組一樣？",
       { kind: "pair", chars: ["培", "壞", "筍", "勾", "炒", "吵", "超", "連"], rad: { "培": "土", "壞": "土", "筍": "竹", "勾": "勹", "炒": "火", "吵": "口", "超": "走", "連": "辵" } }],
-    ["yb10", "「恥」和「愧」，部首都是哪一個？", "心", ["耳", "鬼", "止"], "心在恥的右邊、愧的左邊", "羞恥、慚愧都是心裡的感覺。",
+    ["yb10", "「恥」和「愧」，部首都是哪一個？", "心", ["耳", "鬼", "止"], "羞恥、慚愧都是心裡的感覺。",
       { kind: "common", chars: ["恥", "愧"], rad: { "恥": "心", "愧": "心" } }]
   ]);
 

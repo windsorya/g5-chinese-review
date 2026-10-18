@@ -100,8 +100,10 @@ const POS = { "下面": "下", "上面": "上", "外面": "外", "左邊": "左"
 function radClaims(text) {
   const out = [], t = String(text);
   const push = (i, rad, pos) => { if (!/沒有|不是/.test(t.slice(Math.max(0, i - 4), i))) out.push({ rad, pos }); };
-  for (const m of t.matchAll(/(提手|豎心|三點水|立刀|單人|雙人|寶蓋)(旁|頭)?|([扌忄氵刂亻艹辶犭])/g)) push(m.index, RAD_ALIAS[m[1] || m[3]], null);
-  for (const m of t.matchAll(/(.)字(旁|頭)/g)) if (!/[手心點刀人]/.test(m[1])) push(m.index, RAD_ALIAS[m[1]] || m[1], null);
+  // 偏旁名稱也帶位置（Codex 審 44a8dd4：撲的 radPos 改成「右」仍綠）：X字旁／提手旁等＝左、立刀＝右、X字頭＝上（广、尸字頭包在外面＝外）、寶蓋頭＝上
+  const NAME_POS = { "提手": "左", "豎心": "左", "三點水": "左", "單人": "左", "雙人": "左", "立刀": "右", "寶蓋": "上", "扌": "左", "忄": "左", "氵": "左", "亻": "左", "刂": "右", "艹": "上" };
+  for (const m of t.matchAll(/(提手|豎心|三點水|立刀|單人|雙人|寶蓋)(旁|頭)?|([扌忄氵刂亻艹辶犭])/g)) push(m.index, RAD_ALIAS[m[1] || m[3]], NAME_POS[m[1] || m[3]] || null);
+  for (const m of t.matchAll(/(.)字(旁|頭)/g)) if (!/[手心點刀人]/.test(m[1])) push(m.index, RAD_ALIAS[m[1]] || m[1], m[2] === "旁" ? "左" : /[广尸]/.test(m[1]) ? "外" : "上");
   for (const m of t.matchAll(/(下面|上面|外面|左邊|右邊|裡面)是「(.)」/g)) { const r = RAD_ALIAS[m[2]] || m[2]; if (RAD_CHARS.has(r)) push(m.index, r, POS[m[1]]); }
   return out;
 }
@@ -246,6 +248,10 @@ test("㉒自檢-反例：把讀音改錯、把錯項換成辭典有的詞、把�
   assert.ok(l1Problems([r10], DICT_L1).length > 0, "radPos 是 null 卻講了部首沒抓到");
   const r11 = clone(B.ALL_CARDS.find((c) => c.id === "zx3a")); delete r11.zx.radPos;
   assert.ok(l1Problems([r11], DICT_L1).length > 0, "沒寫 radPos 沒抓到");
+  const r12 = clone(B.ALL_CARDS.find((c) => c.id === "zx3f")); r12.zx.radPos = "右";
+  assert.ok(l1Problems([r12], DICT_L1).length > 0, "撲的 radPos 改成右（Codex 反例）沒抓到");
+  const r13 = clone(B.ALL_CARDS.find((c) => c.id === "zx3e")); r13.zx.radPos = "下";
+  assert.ok(l1Problems([r13], DICT_L1).length > 0, "筍（竹字頭）radPos 改成下沒抓到");
 });
 
 // ㉓ 填字題的句子：把正確的字填回括號，句子裡要出現那個詞（Codex 審 aaa3dbe：zx14「圖書館（　）供」挖錯位置，填回去變「供供」）
@@ -750,17 +756,17 @@ test("㉔成語題：選項都在 CY 表、白話說法的關鍵字在教育部�
 //    錯法說明若寫「X是Y部」，Y 要等於 X 的部首。
 // Codex 審 c8f6d18：查無部首時 undefined === undefined 會被當成同部首 ⇒ 每個字都要查得到部首才比較。
 // Codex 審 1e41707：用字串找「X是Y部」認不出說的是哪個字 ⇒ 解說與錯法說明改由 bs.rad 產生（src/chibank.js bsTexts）；
-// 這裡用辭典部首照同一個模板重產一次，逐字比對；bs.rad 也要等於辭典。補充說明（解說最後一個逗號後）照抄進重產結果，它不講部首。
+// 這裡用辭典部首照同一個模板重產一次，逐字比對；bs.rad 也要等於辭典。
+// Codex 審 44a8dd4：原本允許照抄的補充說明可夾帶「坊是提手旁」⇒ 補充說明拿掉，解說必須和模板完全相同；提示不得有任何部首說法。
 function bsExpect(c, R) {
   const b = c.bs, right = c.opts[c.a], wrong = c.opts.filter((o, i) => i !== c.a);
   const head = b.kind === "pair" ? "「" + right.split("、")[0] + "」和「" + right.split("、")[1] + "」都是" + R(right.split("、")[0]) + "部"
     : b.kind === "same" ? "「" + b.target + "」和「" + right + "」都是" + R(b.target) + "部"
     : "「" + b.chars[0] + "」和「" + b.chars[1] + "」的部首都是" + R(b.chars[0]);
-  const rest = c.why.startsWith(head) ? c.why.slice(head.length) : "。", tail = /^(，[^，。部]+)?。$/.test(rest) ? rest : "。";
   const ww = b.kind === "same" ? wrong.map((w) => "「" + w + "」是" + R(w) + "部，和「" + b.target + "」不同。")
     : b.kind === "pair" ? wrong.map((w) => { const x = w.split("、"); return "「" + x[0] + "」是" + R(x[0]) + "部，「" + x[1] + "」是" + R(x[1]) + "部。"; })
     : wrong.map((w) => "「" + w + "」不是這兩個字的部首；「" + b.chars[0] + "」「" + b.chars[1] + "」的部首都是" + R(b.chars[0]) + "。");
-  return { why: head + tail, ww };
+  return { why: head + "。", ww };
 }
 function bsProblems(cards, dict) {
   const bad = [], R = (ch) => (dict[ch] || {}).concised_radical;
@@ -773,6 +779,7 @@ function bsProblems(cards, dict) {
     b.chars.forEach((ch) => { if (!b.rad || b.rad[ch] !== R(ch)) bad.push(c.id + " bs.rad「" + ch + "」寫 " + (b.rad || {})[ch] + "，簡編本是 " + R(ch)); });
     const e = bsExpect(c, R);
     if (c.why !== e.why) bad.push(c.id + " 解說和用辭典部首重產的不同：" + c.why + " ≠ " + e.why);
+    if (/部/.test(c.hint) || radClaims(c.hint).length) bad.push(c.id + " 提示不能講部首（只由模板產生的解說講）：" + c.hint);
     wrong.forEach((w, i) => { const got = c.wrongWhy[c.opts.indexOf(w)]; if (got !== e.ww[i]) bad.push(c.id + " 錯法說明和重產的不同：" + got + " ≠ " + e.ww[i]); });
     if (b.kind === "same") {
       if (R(right) !== R(b.target)) bad.push(c.id + " 正解「" + right + "」和「" + b.target + "」部首不同");
@@ -811,6 +818,10 @@ test("㉕部首題：正解、錯項、錯法說明裡的部首，都和教育�
   assert.ok(bsProblems([h], DICT_L1).length > 0, "自檢：培和壞寫成木部要抓到");
   const k = clone(card("yb8")); k.bs.rad["坊"] = "糸";
   assert.ok(bsProblems([k], DICT_L1).length > 0, "自檢：bs.rad 寫錯要抓到");
+  // Codex 審 44a8dd4 的反例：解說後面夾帶「坊是提手旁」「坊是糸字旁」；提示寫「坊的部首是糸」
+  [ "，坊是提手旁。", "，坊是糸字旁。", "，坊也是糸部。" ].forEach((x) => { const m = clone(card("yb8")); m.why = m.why.replace(/。$/, x); assert.ok(bsProblems([m], DICT_L1).length > 0, "自檢：解說夾帶" + x + "要抓到"); });
+  const n2 = clone(card("yb8")); n2.hint = "坊的部首是糸。";
+  assert.ok(bsProblems([n2], DICT_L1).length > 0, "自檢：提示講部首要抓到");
 });
 
 module.exports = { T21_ROWS, T21_LEGACY, T21_POSITIVE, crClone, crPrint, t21Check, crSnapshot };
