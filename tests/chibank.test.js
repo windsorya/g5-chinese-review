@@ -289,10 +289,15 @@ test("⑨每個觀念兩種說法、第一種有例句；先猜題答案在選�
   assert.deepEqual(bad, []);
 });
 
-// ⑩ 隱私：網頁（index.html，含內嵌的程式碼與註解）不出現學校名稱
-test("⑩index.html 不出現學校名稱", () => {
+// ⑩ 隱私：網頁（index.html，含內嵌的程式碼與註解）不出現學校名稱等不公開字詞。
+//    字詞清單在本機不公開的 ~/Documents/g5-curriculum/curriculum.json（2026-10-18 起；舊版把校名直接寫在這裡＝公開 repo 自己洩漏）。
+//    六站全部檔案與 push 的 commit 訊息另由那裡的 check.py 在 git pre-push 擋。
+const PRIVATE = path.join(require("os").homedir(), "Documents", "g5-curriculum", "curriculum.json");
+test("⑩index.html 不出現學校名稱等不公開字詞", { skip: !fs.existsSync(PRIVATE) && "這台沒有不公開字詞清單（pre-push 的 check.py 才是主閘）" }, () => {
   const html = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
-  assert.ok(!/忠孝/.test(html), "index.html 出現學校名稱");
+  const terms = JSON.parse(fs.readFileSync(PRIVATE, "utf8")).private_terms;
+  assert.ok(terms.length > 0, "不公開字詞清單是空的");
+  assert.deepEqual(terms.filter((t) => html.includes(t)).map((t) => terms.indexOf(t) + 1), [], "index.html 出現第幾個不公開字詞");
 });
 
 // ⑪～⑳：Codex 審 e0ad0ad8（2026-10-13）逐項 FAIL 的回歸測試。每條先在舊內容上紅，再改內容到綠。

@@ -12,6 +12,10 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parent.parent
+# 不公開字詞（學校名稱等）放本機 ~/Documents/g5-curriculum/curriculum.json，不寫進公開 repo（2026-10-18）；
+# 讀不到就讓那一項判失敗（量不到≠乾淨）
+_PRIV = Path.home() / "Documents" / "g5-curriculum" / "curriculum.json"
+PRIVATE_TERMS = json.loads(_PRIV.read_text(encoding="utf-8")).get("private_terms", []) if _PRIV.exists() else []
 BASE = sys.argv[sys.argv.index("--base") + 1].rstrip("/") + "/" if "--base" in sys.argv else ROOT.as_uri() + "/"
 URL = BASE + "index.html"
 RESULTS = []
@@ -71,7 +75,8 @@ def flow_main(browser, label, device=None):
     nav = pg.evaluate("[...document.querySelectorAll('#siteNav a')].map(a=>[a.getAttribute('href'),a.textContent.trim()])")
     check(f"{label} 切換列：連到其他每一站、目前站是「{SELF_NAME}」",
           dict(nav) == SITES and pg.locator('#siteNav [aria-current="page"]').inner_text() == SELF_NAME, nav)
-    check(f"{label} 畫面不出現學校名稱", "忠孝" not in pg.locator("body").inner_text())
+    body = pg.locator("body").inner_text()
+    check(f"{label} 畫面不出現學校名稱等不公開字詞", bool(PRIVATE_TERMS) and not [t for t in PRIVATE_TERMS if t in body])
     pg.locator("#goAll").click()
     pg.wait_for_selector("#main .q")
     c, _ = answer(pg, True)
