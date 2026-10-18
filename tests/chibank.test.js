@@ -17,7 +17,7 @@ const DICT_URL = /^https:\/\/dict\.concised\.moe\.edu\.tw\/dictView\.jsp\?ID=\d+
 
 test("①每題：選擇題、至少 2 個選項、選項不重複、答案編號在選項內", () => {
   const bad = [];
-  B.CARDS.forEach((c) => {
+  B.ALL_CARDS.forEach((c) => {
     if (c.type !== "choice") bad.push(c.id + " 不是選擇題");
     if (!Array.isArray(c.opts) || c.opts.length < 2) bad.push(c.id + " 選項少於 2 個");
     if (new Set(c.opts).size !== c.opts.length) bad.push(c.id + " 選項重複");
@@ -29,14 +29,14 @@ test("①每題：選擇題、至少 2 個選項、選項不重複、答案編�
 // 2026-10-14：tests/e2e.py 用題目文字反查題庫（current_card），題目文字重複就會拿錯答案（第一課四題「找錯字」曾同一句）
 test("②-b 題目文字不重複", () => {
   const seen = {}, dup = [];
-  B.CARDS.forEach((c) => { if (seen[c.q]) dup.push(seen[c.q] + "／" + c.id + "：" + c.q); else seen[c.q] = c.id; });
+  B.ALL_CARDS.forEach((c) => { if (seen[c.q]) dup.push(seen[c.q] + "／" + c.id + "：" + c.q); else seen[c.q] = c.id; });
   assert.deepEqual(dup, []);
 });
 
 test("②每個錯誤選項都有 wrongWhy（非空），正解那格是空字串；id 不重複", () => {
   const bad = [];
   const ids = new Set();
-  B.CARDS.forEach((c) => {
+  B.ALL_CARDS.forEach((c) => {
     if (ids.has(c.id)) bad.push(c.id + " id 重複"); ids.add(c.id);
     if (!Array.isArray(c.wrongWhy) || c.wrongWhy.length !== c.opts.length) { bad.push(c.id + " wrongWhy 長度不對"); return; }
     c.opts.forEach((o, i) => {
@@ -51,7 +51,7 @@ test("②每個錯誤選項都有 wrongWhy（非空），正解那格是空字�
 
 test("③句長：題目、選項、提示、解說、錯法說明，每句 ≤40 字", () => {
   const bad = [];
-  B.CARDS.forEach((c) => [c.q, c.why, c.hint].concat(c.opts, c.wrongWhy).forEach((t) => long(t).forEach((s) => bad.push(c.id + "（" + s.length + "）：" + s))));
+  B.ALL_CARDS.forEach((c) => [c.q, c.why, c.hint].concat(c.opts, c.wrongWhy).forEach((t) => long(t).forEach((s) => bad.push(c.id + "（" + s.length + "）：" + s))));
   Object.keys(B.CONCEPTS).forEach((k) => [B.CONCEPTS[k].exit, B.CONCEPTS[k].exitAns].forEach((t) => long(t).forEach((s) => bad.push(k + " 出口題：" + s))));
   Object.keys(X.EXPLAIN).forEach((k) => X.EXPLAIN[k].forEach((ex) => ex.lines.concat([ex.task, ex.ask], (ex.examples || []).map((e) => e.s + "。" + e.why))
     .forEach((t) => long(t).forEach((s) => bad.push(k + " 說明：" + s)))));
@@ -61,10 +61,10 @@ test("③句長：題目、選項、提示、解說、錯法說明，每句 ≤4
 
 test("④每個觀念都有題，8～15 題；每題的觀念都存在；每題標「自編題（未對課本）」", () => {
   const n = {};
-  B.CARDS.forEach((c) => { n[c.concept] = (n[c.concept] || 0) + 1; });
+  B.ALL_CARDS.forEach((c) => { n[c.concept] = (n[c.concept] || 0) + 1; });
   const bad = Object.keys(B.CONCEPTS).filter((k) => !(n[k] >= 8 && n[k] <= 15)).map((k) => k + "：" + (n[k] || 0) + " 題");
   // 國練第二課（單元 k6）的題目出處寫「國練第二課第 6 頁的字詞（題目自編）」：字詞照抄國練，題目是自己出的
-  B.CARDS.forEach((c) => {
+  B.ALL_CARDS.forEach((c) => {
     if (!B.CONCEPTS[c.concept]) { bad.push(c.id + " 觀念不存在：" + c.concept); return; }
     const ok = B.CONCEPTS[c.concept].unit === "k6" ? (c.page === B.P6_PAGE || c.page === B.P7_PAGE) : c.page === "自編題（未對課本）";
     if (!ok) bad.push(c.id + " page 不對：" + c.page);
@@ -72,7 +72,7 @@ test("④每個觀念都有題，8～15 題；每題的觀念都存在；每題�
   Object.keys(B.CONCEPTS).forEach((k) => { if (!B.UNITS[B.CONCEPTS[k].unit]) bad.push(k + " 單元不存在"); if (B.CONCEPTS[k].unit === "3") bad.push(k + " 單元代號不可用 \"3\"（core.js 會當成待開放單元）"); });
   assert.deepEqual(bad, []);
   // 2026-10-14 加第一課字形、多音字三個觀念（34 題）與國練第二課五個觀念（64 題）後，上限 130 → 230
-  assert.ok(B.CARDS.length >= 90 && B.CARDS.length <= 230, "總題數 " + B.CARDS.length);
+  assert.ok(B.ALL_CARDS.length >= 90 && B.ALL_CARDS.length <= 230, "總題數 " + B.ALL_CARDS.length);
 });
 
 // ㉒ 字形（zx*、w2a–w2c）、字音（dy*、w2d）、字義（w2e）：每題對 tests/fixtures/dict_l1.json（tests/build_dict_fixture.py 產生，教育部兩本辭典的查詢結果）
@@ -153,7 +153,7 @@ function l1Problems(cards, dict) {
   return bad;
 }
 test("㉒字形、字音、字義題，逐題對得上教育部辭典與國練原頁", () => {
-  const l1 = B.CARDS.filter((c) => c.zx || c.dy || c.yin || c.yinPick || c.yi || c.yiPick);
+  const l1 = B.ALL_CARDS.filter((c) => c.zx || c.dy || c.yin || c.yinPick || c.yi || c.yiPick);
   assert.ok(l1.length >= 90, "字形字音字義題只有 " + l1.length + " 題");
   assert.deepEqual(l1Problems(l1, DICT_L1), []);
 });
@@ -174,21 +174,21 @@ test("㉒國練第 6 頁的注音（從照片抄的）和簡編本一致", () =>
 });
 test("㉒自檢-反例：把讀音改錯、把錯項換成辭典有的詞、把字義放錯，都要抓到", () => {
   const clone = (x) => JSON.parse(JSON.stringify(x));
-  const d1 = clone(B.CARDS.find((c) => c.id === "dy1")); d1.dy.read = "ㄍㄨㄥˋ"; d1.opts[d1.a] = "ㄍㄨㄥˋ";
+  const d1 = clone(B.ALL_CARDS.find((c) => c.id === "dy1")); d1.dy.read = "ㄍㄨㄥˋ"; d1.opts[d1.a] = "ㄍㄨㄥˋ";
   assert.ok(l1Problems([d1], DICT_L1).length > 0, "讀音改錯沒抓到");
-  const z = clone(B.CARDS.find((c) => c.id === "zx7")); z.zx.wrong[0] = "跳繩";
+  const z = clone(B.ALL_CARDS.find((c) => c.id === "zx7")); z.zx.wrong[0] = "跳繩";
   assert.ok(l1Problems([z], DICT_L1).length > 0, "錯項換成辭典有的詞沒抓到");
-  const d7 = clone(B.CARDS.find((c) => c.id === "dy7")); d7.dy.words.push("間隔");
+  const d7 = clone(B.ALL_CARDS.find((c) => c.id === "dy7")); d7.dy.words.push("間隔");
   assert.ok(l1Problems([d7], DICT_L1).length > 0, "錯項其實也讀ㄐㄧㄢˋ沒抓到");
-  const r2 = clone(B.CARDS.find((c) => c.id === "w2d2")); r2.yin.read = "ㄖㄠˋ"; r2.opts[r2.a] = "ㄖㄠˋ";
+  const r2 = clone(B.ALL_CARDS.find((c) => c.id === "w2d2")); r2.yin.read = "ㄖㄠˋ"; r2.opts[r2.a] = "ㄖㄠˋ";
   assert.ok(l1Problems([r2], DICT_L1).length > 0, "國練讀音改錯沒抓到");
-  const s13 = clone(B.CARDS.find((c) => c.id === "w2d13")); s13.yin.read = "ㄕㄠˋ"; s13.opts[s13.a] = "ㄕㄠˋ";
+  const s13 = clone(B.ALL_CARDS.find((c) => c.id === "w2d13")); s13.yin.read = "ㄕㄠˋ"; s13.opts[s13.a] = "ㄕㄠˋ";
   assert.ok(l1Problems([s13], DICT_L1).length > 0, "稍息改成ㄕㄠˋ沒抓到");
-  const f = clone(B.CARDS.find((c) => c.id === "w2b4")); f.zx.wrong = ["燒水"];
+  const f = clone(B.ALL_CARDS.find((c) => c.id === "w2b4")); f.zx.wrong = ["燒水"];
   assert.ok(l1Problems([f], DICT_L1.燒水 ? DICT_L1 : Object.assign({ 燒水: { revised: ["ㄕㄠ ㄕㄨㄟˇ"], concised: [] } }, DICT_L1)).length > 0, "燒水（真的詞）當錯項沒抓到");
-  const g = clone(B.CARDS.find((c) => c.id === "w2a1")); g.opts.push("秦");
+  const g = clone(B.ALL_CARDS.find((c) => c.id === "w2a1")); g.opts.push("秦");
   assert.ok(l1Problems([g], DICT_L1).length > 0, "錯項不是同一組的形近字沒抓到");
-  const m = clone(B.CARDS.find((c) => c.id === "w2e6")); m.yi.word = "熟人";
+  const m = clone(B.ALL_CARDS.find((c) => c.id === "w2e6")); m.yi.word = "熟人";
   assert.ok(l1Problems([m], DICT_L1).length > 0, "字義放錯沒抓到");
 });
 
@@ -196,7 +196,7 @@ test("㉒自檢-反例：把讀音改錯、把錯項換成辭典有的詞、把�
 //    錯法說明若說某選項「意思相近／是近義詞」或「是反義詞」，該選項必須真的在辭典的另一欄（防止解說亂講）
 test("⑤反義詞、近義詞題都有辭典 src，正解在辭典欄位裡、其他選項不在", () => {
   const bad = [];
-  B.CARDS.filter((c) => c.concept === "an" || c.concept === "sy").forEach((c) => {
+  B.ALL_CARDS.filter((c) => c.concept === "an" || c.concept === "sy").forEach((c) => {
     const d = c.dict;
     if (!d) { if (/反義詞是哪一個|近義詞是哪一個|哪一組/.test(c.q)) bad.push(c.id + " 沒有 dict"); return; }
     if (!DICT_URL.test(c.src || "")) bad.push(c.id + " src 不是辭典條目網址：" + c.src);
@@ -233,7 +233,7 @@ const CLUE = {
 const quoted = (q) => { const m = /^「(.+)」用了哪一種修辭/.exec(q); return m ? m[1] : null; };
 test("⑥修辭題：有明顯線索的修辭只在正解出現（「像」→譬喻、「說：」→引用、問號→設問）", () => {
   const bad = [];
-  B.CARDS.filter((c) => c.concept === "rh1" || c.concept === "rh2").forEach((c) => {
+  B.ALL_CARDS.filter((c) => c.concept === "rh1" || c.concept === "rh2").forEach((c) => {
     const right = c.opts[c.a], s = quoted(c.q);
     if (s) {
       Object.keys(CLUE).forEach((k) => { if (k !== right && c.opts.indexOf(k) >= 0 && CLUE[k](s)) bad.push(c.id + "：句子有「" + k + "」的線索，選項卻把它當錯的"); });
@@ -245,7 +245,7 @@ test("⑥修辭題：有明顯線索的修辭只在正解出現（「像」→�
   assert.deepEqual(bad, []);
 });
 test("⑥-b 線索檢查器自檢：把譬喻句的正解改成擬人，要抓到", () => {
-  const c = JSON.parse(JSON.stringify(B.CARDS.find((x) => x.id === "rh1a")));
+  const c = JSON.parse(JSON.stringify(B.ALL_CARDS.find((x) => x.id === "rh1a")));
   const i = c.opts.indexOf("擬人"); c.a = i;
   const s = quoted(c.q);
   assert.ok(CLUE["譬喻"](s) && c.opts.indexOf("譬喻") >= 0 && c.opts[c.a] !== "譬喻");
@@ -255,7 +255,7 @@ test("⑥-b 線索檢查器自檢：把譬喻句的正解改成擬人，要抓�
 test("⑦史實與著作權題都有 src，且每題 id 都列在 tests/FACTCHECK.md", () => {
   const fc = fs.readFileSync(path.join(__dirname, "FACTCHECK.md"), "utf8");
   const bad = [];
-  B.CARDS.filter((c) => c.concept === "hs" || c.concept === "cr").forEach((c) => {
+  B.ALL_CARDS.filter((c) => c.concept === "hs" || c.concept === "cr").forEach((c) => {
     if (!/^https:\/\//.test(c.src || "")) bad.push(c.id + " 沒有 src");
     if (!new RegExp("\\b" + c.id + "\\b").test(fc)) bad.push(c.id + " 沒列在 FACTCHECK.md");
   });
@@ -265,7 +265,7 @@ test("⑦史實與著作權題都有 src，且每題 id 都列在 tests/FACTCHEC
 // ⑧ 出口題（app.html 對家長說「這些題目在練習裡沒出現過」）不得和練習題、先猜題、說明例句同題
 const norm = (s) => String(s).replace(/^(說說看|先猜猜看)[：:]?/, "").replace(/[^一-鿿]/g, "");
 test("⑧出口題不和練習題、先猜題、例句同題", () => {
-  const seen = B.CARDS.map((c) => [c.id, c.q]).concat(Object.keys(X.PREDICT).map((k) => ["先猜 " + k, X.PREDICT[k].q]),
+  const seen = B.ALL_CARDS.map((c) => [c.id, c.q]).concat(Object.keys(X.PREDICT).map((k) => ["先猜 " + k, X.PREDICT[k].q]),
     ...Object.keys(X.EXPLAIN).map((k) => X.EXPLAIN[k].flatMap((ex) => [[k + " 跟著做", ex.task], [k + " 問", ex.ask]])));
   const bad = [];
   Object.keys(B.CONCEPTS).forEach((k) => {
@@ -301,14 +301,14 @@ test("⑩index.html 不出現學校名稱等不公開字詞", { skip: !fs.exists
 });
 
 // ⑪～⑳：Codex 審 e0ad0ad8（2026-10-13）逐項 FAIL 的回歸測試。每條先在舊內容上紅，再改內容到綠。
-const card = (id) => B.CARDS.find((c) => c.id === id);
+const card = (id) => B.ALL_CARDS.find((c) => c.id === id);
 const optWhy = (c, o) => c.wrongWhy[c.opts.indexOf(o)];
 const GENRES = ["詩歌", "說明文", "記敘文", "歷史故事", "童話", "寓言"];
 const FC = fs.readFileSync(path.join(__dirname, "FACTCHECK.md"), "utf8");
 
 test("⑪文體題：錯項是文體名稱時，不能拿「分不分行」當排除理由（排版不是文體的充分條件）", () => {
   const bad = [];
-  B.CARDS.filter((c) => c.concept === "ga").forEach((c) => c.opts.forEach((o, i) => {
+  B.ALL_CARDS.filter((c) => c.concept === "ga").forEach((c) => c.opts.forEach((o, i) => {
     if (i !== c.a && GENRES.indexOf(o) >= 0 && /短短的行|一行一行|分成.{0,4}行|分行/.test(c.wrongWhy[i])) bad.push(c.id + "「" + o + "」：" + c.wrongWhy[i]);
   }));
   assert.deepEqual(bad, []);
@@ -339,7 +339,7 @@ test("⑭譬喻解說：不能把譬喻縮成「有『像』」；要分明喻�
 
 test("⑮rh2d：把「譬喻」當錯項的引用題，引文不能是用比喻講道理的俗語", () => {
   const METAPHOR_PROVERBS = /耕耘|收穫|鐵杵|磨成針|滴水穿石|種瓜得瓜/;
-  const bad = B.CARDS.filter((c) => c.opts[c.a] === "引用" && c.opts.indexOf("譬喻") >= 0 && METAPHOR_PROVERBS.test(c.q)).map((c) => c.id + "：" + c.q);
+  const bad = B.ALL_CARDS.filter((c) => c.opts[c.a] === "引用" && c.opts.indexOf("譬喻") >= 0 && METAPHOR_PROVERBS.test(c.q)).map((c) => c.id + "：" + c.q);
   assert.deepEqual(bad, []);
 });
 
@@ -353,7 +353,7 @@ test("⑯設問「提問」例句：問號後面要真的回答問題（不能�
 });
 
 test("⑰「安靜」的白話釋義不寫成「沒有聲音」（辭典相反詞是喧鬧、吵鬧；改「沒有吵鬧聲、很平靜」）", () => {
-  const bad = B.CARDS.flatMap((c) => c.wrongWhy.filter((w) => /「安靜」是沒有聲音/.test(w)).map((w) => c.id + "：" + w));
+  const bad = B.ALL_CARDS.flatMap((c) => c.wrongWhy.filter((w) => /「安靜」是沒有聲音/.test(w)).map((w) => c.id + "：" + w));
   assert.deepEqual(bad, []);
   assert.match(FC, /安靜[^\n]*39717/, "FACTCHECK 沒有「安靜」辭典條目");
 });
@@ -622,3 +622,25 @@ test("㉑自檢-解析器：<tspan> 與 entity 都收進文字；不認得的語
   BAD.forEach(([name, markup, why]) => assert.throws(() => SNAP.parseSvg(markup), (e) => e instanceof Error && e.message.indexOf(why) >= 0, name + "：沒有因為「" + why + "」丟錯"));
 });
 module.exports = { T21_ROWS, T21_LEGACY, T21_POSITIVE, crClone, crPrint, t21Check, crSnapshot };
+
+// 2026-10-18 重複題只留一題（律師：「重複是指a題可以答對，也能夠答對b或c題，那b、c題就可能是重複觀念題」）
+test("重複題合併表：被併的題存在、留下的題存在且沒被併（不接龍）、同一個觀念、寫了理由；出題＝全部扣掉被併的", () => {
+  const byId = {}; B.ALL_CARDS.forEach((c) => { byId[c.id] = c; });
+  const bad = [];
+  Object.keys(B.MERGED).forEach((id) => {
+    const m = B.MERGED[id], c = byId[id];
+    if (!c) { bad.push(id + " 不在題庫"); return; }
+    if (!Array.isArray(m.keep) || !m.keep.length || typeof m.why !== "string" || m.why.length < 8) bad.push(id + " 缺 keep／why");
+    (m.keep || []).forEach((k) => {
+      if (!byId[k]) bad.push(id + " → " + k + " 不在題庫");
+      else if (B.MERGED[k]) bad.push(id + " → " + k + " 自己也被併掉了（不能接龍）");
+      else if (byId[k].concept !== c.concept) bad.push(id + " → " + k + " 跨觀念");
+    });
+  });
+  assert.deepEqual(bad, []);
+  assert.deepEqual(B.CARDS.map((c) => c.id), B.ALL_CARDS.filter((c) => !B.MERGED[c.id]).map((c) => c.id));
+  assert.equal(B.CARDS.length, 197);
+  const n = {}; B.CARDS.forEach((c) => { n[c.concept] = (n[c.concept] || 0) + 1; });
+  const thin = Object.keys(B.CONCEPTS).filter((k) => !(n[k] >= 4)).map((k) => k + "=" + (n[k] || 0));
+  assert.deepEqual(thin, [], "每個觀念合併後至少 4 題");
+});
