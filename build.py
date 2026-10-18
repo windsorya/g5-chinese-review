@@ -44,10 +44,15 @@ def build() -> str:
 
 def main() -> None:
     out = build()
-    # --check：只在記憶體重建、和現有 index.html 逐字比，不寫檔（tests/chibank.test.js ㉖-b 用；Codex 審 83067be：只比內嵌 js 會漏掉 app.html 本身）
+    # --check：只在記憶體重建、和現有 index.html 逐「位元組」比，不寫檔（tests/chibank.test.js ㉖-b 用；Codex 審 83067be：只比內嵌 js 會漏掉 app.html 本身）。
+    # Codex 審 2fe4bbb：read_text 會把 CRLF 正規化成 LF ⇒ 讀 bytes、預期值 encode 成 UTF-8 bytes 再比（CRLF、BOM 都算不同）
     if "--check" in sys.argv:
-        cur = (ROOT / "index.html").read_text(encoding="utf-8")
-        if cur != out:
+        try:
+            cur = (ROOT / "index.html").read_bytes()
+        except OSError as e:
+            print("讀不到 index.html：" + str(e))
+            sys.exit(1)
+        if cur != out.encode("utf-8"):
             print("index.html 和 src 重建結果不同：請執行 python3 build.py")
             sys.exit(1)
         print("index.html 和 src 一致")

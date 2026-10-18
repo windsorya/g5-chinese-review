@@ -782,12 +782,16 @@ test("㉕部首題：正解、錯項、錯法說明裡的部首，都和教育�
 // 改成：k7 產題後的完整內容（每張卡每個欄位、解說每種說法與圖、先猜題、觀念、影片說明）等於審定快照 tests/k7_approved_snapshot.json；
 // 一個字不同就 REVIEW_REQUIRED（不判斷「錯在哪」，只說「沒審過」）。快照只能由人審過差異、送審 PASS 後手動 node tests/k7_snapshot.js --write。
 const K7S = require("./k7_snapshot.js");
+// 審定版的雜湊另釘在這裡（4agent 4B-20261018-chi-k7 Phase 3 證實：改錯內容後重產快照，測試照樣全綠）。
+// 改第三～六課內容＝重產快照＋改這一行，兩處都會出現在 diff 裡，送審時一定看得到；本值對應 Codex 逐題審過的內容（c8f6d18 起到 b1ae58f 各輪修正）。
+const K7_APPROVED_SHA256 = "4455a63c34c2a84efa29749dd3cd1a4df401814810a9a4e454a5ff22b5f70f03";
 const k7Snap = () => JSON.parse(fs.readFileSync(K7S.SNAPSHOT_FILE, "utf8"));
 function k7Check(cur, snap) {
   const bad = [];
   if (!snap || !snap.content) return ["審定快照沒有 content"];
   if (snap["規則版本"] !== K7S.RULES_VERSION) bad.push("審定快照規則版本不同：" + snap["規則版本"]);
   if (snap.sha256 !== K7S.sha256Of(snap.content)) bad.push("審定快照的 content 和記的 sha256 對不上（被手改過？只能用 --write 產生）");
+  if (snap.sha256 !== K7_APPROVED_SHA256) bad.push("審定快照不是釘住的審定版（K7_APPROVED_SHA256）：內容改了要重審，審過才改這個常數");
   K7S.diff(snap.content, cur).forEach((d) => bad.push("REVIEW_REQUIRED " + d.path + "：" + d.text));
   return bad;
 }
@@ -835,6 +839,11 @@ test("㉖自檢：前 4 輪 Codex 的反例（含否定句、追加句、零寬�
   // 快照檔手改（content 改了 sha256 沒改）要紅
   const hand = JSON.parse(JSON.stringify(snap)); hand.content.cards.zx3a.hint = "改過";
   assert.ok(k7Check(base, hand).some((b) => /sha256/.test(b)), "手改快照沒被抓到");
+  // 4agent Phase 3 證實的破口：內容改錯後重產快照（content 和 sha256 自洽）——要因為不是釘住的審定版而紅
+  const regen = JSON.parse(JSON.stringify(base)); regen.cards.zx3a.why = "璧是土做的寶物，所以下面是「土」。";
+  const fake = { "規則版本": K7S.RULES_VERSION, sha256: K7S.sha256Of(regen), content: regen };
+  const rb = k7Check(regen, fake);
+  assert.ok(rb.some((b) => /K7_APPROVED_SHA256/.test(b)), "改錯內容後重產快照沒被抓到：" + rb.join(" | "));
 });
 // T27 成品一致：index.html 裡內嵌的每一支 src 檔，和 src 逐字相同（改了 src 沒 build 會紅）
 test("㉖-b 成品 index.html 內嵌的 src 檔和來源逐字相同（build.py 的 <script>\\n…\\n</script> 包法），而且整份等於 build.py 重建結果（含 app.html 本身）", () => {
@@ -847,7 +856,7 @@ test("㉖-b 成品 index.html 內嵌的 src 檔和來源逐字相同（build.py 
   const r = require("child_process").spawnSync("python3", [path.join(ROOT, "build.py"), "--check"], { encoding: "utf8" });
   assert.equal(r.status, 0, "build.py --check：" + (r.stdout || "") + (r.stderr || ""));
 });
-test("㉖-c 自檢：審定檔只重排鍵不算被手改；build.py --check 對改過的 app.html 會紅", () => {
+test("㉖-c 自檢：審定檔只重排鍵不算被手改；build.py --check 對改過的 app.html、CRLF、BOM、缺檔都會紅", () => {
   const snap = k7Snap(), rev = (o) => (Array.isArray(o) ? o.map(rev) : o && typeof o === "object" ? Object.fromEntries(Object.entries(o).reverse().map(([k, x]) => [k, rev(x)])) : o);
   const s2 = Object.assign({}, snap, { content: rev(snap.content) });
   assert.deepEqual(k7Check(K7S.view(), s2), [], "審定檔只重排鍵被誤擋（Codex 反例 F1）");
@@ -862,6 +871,15 @@ test("㉖-c 自檢：審定檔只重排鍵不算被手改；build.py --check 對
     assert.equal(ok.status, 0, "複本未改應一致：" + ok.stdout);
     const app = fs.readFileSync(path.join(tmp, "src", "app.html"), "utf8");
     assert.ok(app.indexOf('"提示："+c.hint') >= 0, "app.html 找不到提示顯示的程式（自檢前提）");
+    // Codex 審 2fe4bbb 的反例：index.html 首個換行改 CRLF、開頭加 BOM、刪掉 index.html，--check 都要紅
+    const idx = fs.readFileSync(path.join(tmp, "index.html"));
+    const variant = (name, buf) => { if (buf === null) fs.rmSync(path.join(tmp, "index.html")); else fs.writeFileSync(path.join(tmp, "index.html"), buf);
+      const r = require("child_process").spawnSync("python3", [path.join(tmp, "build.py"), "--check"], { encoding: "utf8" });
+      fs.writeFileSync(path.join(tmp, "index.html"), idx); assert.notEqual(r.status, 0, "--check 沒抓到：" + name); };
+    const nl = idx.indexOf(10);
+    variant("首個換行改 CRLF", Buffer.concat([idx.subarray(0, nl), Buffer.from([13]), idx.subarray(nl)]));
+    variant("開頭加 UTF-8 BOM", Buffer.concat([Buffer.from([0xef, 0xbb, 0xbf]), idx]));
+    variant("index.html 不見", null);
     fs.writeFileSync(path.join(tmp, "src", "app.html"), app.replace('"提示："+c.hint', '"提示：坊不是土字旁。"'));
     const bad = require("child_process").spawnSync("python3", [path.join(tmp, "build.py"), "--check"], { encoding: "utf8" });
     assert.notEqual(bad.status, 0, "只改 app.html 的提示顯示、沒重建 index.html，--check 沒紅（Codex 反例 F2）");
