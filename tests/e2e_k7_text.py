@@ -3,8 +3,11 @@
 
 為什麼：㉖ 鎖的是資料（題庫產出的每個欄位），不保證瀏覽器畫出來的字就是那些欄位（模板綁錯欄位、跳脫、只載入部分題庫都不改資料）。
 做法：每個 k7 觀念從觀念頁按「練這個觀念的全部 N 題」，逐題實際作答；預期值一律讀 tests/k7_approved_snapshot.json（不是讀頁面上的題庫），
-  ① 題目、選項＝快照；② 按提示＝「提示：」＋快照 hint；③ 單數題答對：回饋含快照 why；④ 雙數題答錯：回饋含「正確答案是「…」」
-  與「你選的「X」錯在：快照 wrongWhy」與 why；⑤ 這個觀念出到的題＝快照裡這個觀念、沒被合併的每一題；⑥ 沒有 JS 錯誤。
+  ① 題目、選項＝快照；② 按提示＝「提示：」＋快照 hint；③④ 回饋框（#ansBox 第一個 .fb）的每一個子節點（含裸文字節點）＝[標籤, class, 文字]
+  必須「完全等於」用快照組出來的清單（Codex 審 ab43de7：原本只查子字串，解說後面多塞一句「璧的部首是土」也會過）：
+    答對（有按提示）：[strong「答對了！你有勾「不太確定」或用了提示，明天再確認一次。」, span why, div.src「出處：page」]
+    答錯：[strong「正確答案是「正解」」, span「你選的「X」錯在：wrongWhy」, span why, div.src「出處：page」]
+  ⑤ 這個觀念出到的題＝快照裡這個觀念、沒被合併的每一題；⑥ 沒有 JS 錯誤。
 Chromium 桌機＋WebKit iPad。執行：python3.12 tests/e2e_k7_text.py
 """
 import json
@@ -17,6 +20,11 @@ ROOT = Path(__file__).resolve().parent.parent
 URL = (ROOT / "index.html").as_uri()
 SNAP = json.loads((ROOT / "tests" / "k7_approved_snapshot.json").read_text(encoding="utf-8"))["content"]
 RESULTS = []
+# 答對時的標題（本測試每題都先按提示＝「用了提示」，所以一定是這一句；src/app.html feedback()）
+SHAKY_OK = "答對了！你有勾「不太確定」或用了提示，明天再確認一次。"
+# 回饋框第一個 .fb 的子節點：元素＝[標籤小寫, class, textContent]；文字節點＝["#text", "", 文字]（空白也算，不修剪）
+NODES_JS = """() => [...document.querySelector('#ansBox .fb').childNodes].map((n) => n.nodeType === 1
+  ? [n.tagName.toLowerCase(), n.className || '', n.textContent] : ['#text', '', n.textContent])"""
 
 
 def check(name, ok, info=""):
@@ -38,28 +46,29 @@ def run(browser, label, device):
         seen, bad, n = [], [], 0
         while pg.locator("#main .q").count() and n < 60:
             n += 1
-            q = pg.locator("#main .q").inner_text().strip()
+            q = pg.locator("#main .q").text_content()
             c = by_q.get(q)
             if not c:
                 bad.append("題目不在快照：" + q)
                 break
             seen.append(c["id"])
-            opts = [x.strip() for x in pg.locator("#main .opt").all_inner_texts()]
+            opts = pg.locator("#main .opt").all_text_contents()
             if opts != c["opts"]:
                 bad.append(c["id"] + " 選項 " + json.dumps(opts, ensure_ascii=False))
             pg.locator("#hintBtn").click()
-            hint = pg.locator("#hintBox").inner_text().strip()
+            hint = pg.locator("#hintBox").text_content()
             if hint != "提示：" + c["hint"]:
                 bad.append(c["id"] + " 提示：" + hint)
             right = len(seen) % 2 == 1
             i = c["a"] if right else (c["a"] + 1) % len(c["opts"])
             pg.locator(f'#main .opt[data-i="{i}"]').click()
             pg.wait_for_selector("#ansBox .fb")
-            box = pg.locator("#ansBox").inner_text()
-            need = [c["why"]] if right else ["正確答案是「" + c["opts"][c["a"]] + "」", "你選的「" + c["opts"][i] + "」錯在：" + c["wrongWhy"][i], c["why"]]
-            miss = [t for t in need if t not in box]
-            if miss:
-                bad.append(c["id"] + (" 答對" if right else " 答錯") + " 回饋缺：" + " / ".join(miss))
+            got = pg.evaluate(NODES_JS)
+            src = ["div", "src", "出處：" + c["page"]]
+            want = ([["strong", "", SHAKY_OK], ["span", "", c["why"]], src] if right else
+                    [["strong", "", "正確答案是「" + c["opts"][c["a"]] + "」"], ["span", "", "你選的「" + c["opts"][i] + "」錯在：" + c["wrongWhy"][i]], ["span", "", c["why"]], src])
+            if got != want:
+                bad.append(c["id"] + (" 答對" if right else " 答錯") + " 回饋框和快照組出來的不同：" + json.dumps(got, ensure_ascii=False))
             if not right:
                 pg.locator('#errq button[data-k=""]').click()
             pg.locator("#next").click()
