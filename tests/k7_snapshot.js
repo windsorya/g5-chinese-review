@@ -50,7 +50,9 @@ function diff(want, got, p, out) {
   } else if (want !== got) out.push({ path: p, text: show(want) + " → " + show(got) });
   return out;
 }
-const sha256Of = (content) => crypto.createHash("sha256").update(JSON.stringify(content)).digest("hex");
+// 完整性雜湊用鍵排序後的標準形（Codex 審 83067be：未排序就雜湊，只是重排審定檔的鍵也會被判「被手改過」）；雜湊只驗完整性，不代表內容審過
+function canon(v) { return Array.isArray(v) ? v.map(canon) : v && typeof v === "object" ? Object.fromEntries(Object.keys(v).sort().map((k) => [k, canon(v[k])])) : v; }
+const sha256Of = (content) => crypto.createHash("sha256").update(JSON.stringify(canon(content))).digest("hex");
 
 module.exports = { SNAPSHOT_FILE, RULES_VERSION, view, diff, plain, sha256Of, show };
 

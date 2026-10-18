@@ -6,6 +6,7 @@
 讓孩子的 iPad 不登入就能開；Pages 需要自己帶 viewport 與 noindex。
 """
 import re
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -36,11 +37,23 @@ def inline(body: str) -> str:
     return out
 
 
-def main() -> None:
+def build() -> str:
     app_src = (ROOT / "src" / "app.html").read_text(encoding="utf-8")
-    body = inline(app_src)
-    (ROOT / "index.html").write_text(HEAD + body + "</body></html>", encoding="utf-8")
-    print(f"built index.html ({len(body)} chars)")
+    return HEAD + inline(app_src) + "</body></html>"
+
+
+def main() -> None:
+    out = build()
+    # --check：只在記憶體重建、和現有 index.html 逐字比，不寫檔（tests/chibank.test.js ㉖-b 用；Codex 審 83067be：只比內嵌 js 會漏掉 app.html 本身）
+    if "--check" in sys.argv:
+        cur = (ROOT / "index.html").read_text(encoding="utf-8")
+        if cur != out:
+            print("index.html 和 src 重建結果不同：請執行 python3 build.py")
+            sys.exit(1)
+        print("index.html 和 src 一致")
+        return
+    (ROOT / "index.html").write_text(out, encoding="utf-8")
+    print(f"built index.html ({len(out) - len(HEAD) - len('</body></html>')} chars)")
 
 
 if __name__ == "__main__":

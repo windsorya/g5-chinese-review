@@ -837,12 +837,35 @@ test("㉖自檢：前 4 輪 Codex 的反例（含否定句、追加句、零寬�
   assert.ok(k7Check(base, hand).some((b) => /sha256/.test(b)), "手改快照沒被抓到");
 });
 // T27 成品一致：index.html 裡內嵌的每一支 src 檔，和 src 逐字相同（改了 src 沒 build 會紅）
-test("㉖-b 成品 index.html 內嵌的 src 檔和來源逐字相同（build.py 的 <script>\\n…\\n</script> 包法）", () => {
+test("㉖-b 成品 index.html 內嵌的 src 檔和來源逐字相同（build.py 的 <script>\\n…\\n</script> 包法），而且整份等於 build.py 重建結果（含 app.html 本身）", () => {
   const app = fs.readFileSync(path.join(ROOT, "src", "app.html"), "utf8"), html = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
   const files = [...app.matchAll(/<!--@INLINE (src\/[A-Za-z0-9_.-]+\.js)-->/g)].map((m) => m[1]);
   assert.ok(files.indexOf("src/chibank.js") >= 0 && files.indexOf("src/chiexplain.js") >= 0 && files.indexOf("src/chivideos.js") >= 0, "app.html 沒有內嵌題庫三支檔：" + files.join("、"));
   const stale = files.filter((f) => html.indexOf("<script>\n" + fs.readFileSync(path.join(ROOT, f), "utf8") + "\n</script>") < 0);
   assert.deepEqual(stale, [], "這些 src 檔改了但 index.html 沒重新 build");
+  // Codex 審 83067be：只查內嵌 js 會漏掉 app.html（畫面怎麼顯示提示、解說）⇒ 整份用 build.py --check 在記憶體重建後逐字比
+  const r = require("child_process").spawnSync("python3", [path.join(ROOT, "build.py"), "--check"], { encoding: "utf8" });
+  assert.equal(r.status, 0, "build.py --check：" + (r.stdout || "") + (r.stderr || ""));
+});
+test("㉖-c 自檢：審定檔只重排鍵不算被手改；build.py --check 對改過的 app.html 會紅", () => {
+  const snap = k7Snap(), rev = (o) => (Array.isArray(o) ? o.map(rev) : o && typeof o === "object" ? Object.fromEntries(Object.entries(o).reverse().map(([k, x]) => [k, rev(x)])) : o);
+  const s2 = Object.assign({}, snap, { content: rev(snap.content) });
+  assert.deepEqual(k7Check(K7S.view(), s2), [], "審定檔只重排鍵被誤擋（Codex 反例 F1）");
+  // 在暫存資料夾複製一份站台，只改 app.html 的提示顯示，index.html 不重建：--check 要紅
+  const os = require("os"), tmp = fs.mkdtempSync(path.join(os.tmpdir(), "chi-check-"));
+  try {
+    fs.mkdirSync(path.join(tmp, "src"));
+    fs.copyFileSync(path.join(ROOT, "build.py"), path.join(tmp, "build.py"));
+    fs.copyFileSync(path.join(ROOT, "index.html"), path.join(tmp, "index.html"));
+    fs.readdirSync(path.join(ROOT, "src")).filter((f) => /\.(js|html)$/.test(f)).forEach((f) => fs.copyFileSync(path.join(ROOT, "src", f), path.join(tmp, "src", f)));
+    const ok = require("child_process").spawnSync("python3", [path.join(tmp, "build.py"), "--check"], { encoding: "utf8" });
+    assert.equal(ok.status, 0, "複本未改應一致：" + ok.stdout);
+    const app = fs.readFileSync(path.join(tmp, "src", "app.html"), "utf8");
+    assert.ok(app.indexOf('"提示："+c.hint') >= 0, "app.html 找不到提示顯示的程式（自檢前提）");
+    fs.writeFileSync(path.join(tmp, "src", "app.html"), app.replace('"提示："+c.hint', '"提示：坊不是土字旁。"'));
+    const bad = require("child_process").spawnSync("python3", [path.join(tmp, "build.py"), "--check"], { encoding: "utf8" });
+    assert.notEqual(bad.status, 0, "只改 app.html 的提示顯示、沒重建 index.html，--check 沒紅（Codex 反例 F2）");
+  } finally { fs.rmSync(tmp, { recursive: true, force: true }); }
 });
 
 module.exports = { T21_ROWS, T21_LEGACY, T21_POSITIVE, crClone, crPrint, t21Check, crSnapshot };
