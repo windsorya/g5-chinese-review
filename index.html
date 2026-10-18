@@ -1190,7 +1190,7 @@ textarea{width:100%;min-height:120px;font-size:16px;border:1px solid var(--line)
    * 「沒有這個詞」要《重編國語辭典修訂本》與《國語辭典簡編本》都查無（tests/fixtures/dict_l1.json，tests ㉒）。 */
   var PEDIA = "https://pedia.cloud.edu.tw/Bookmark/TCollection?TextNameId=01010511501";
   // 填字題：[id, 句子（括號是要填的字）, 詞, 正確的字, 形近的錯字, 解說, 提示, 第幾課, 正確的字的部首（簡編本）, 部首在字的哪個位置（上下左右外；null＝解說不講部首）]
-  // tests ㉒：解說／提示裡的偏旁名稱要等於部首；「X面是「Y」」（帶引號）講到部首時，位置要等於 radPos；radPos 有值就至少要講一次部首（Codex 審 1e41707）
+  // tests ㉒：zx.rad 等於簡編本、radPos 是上下左右外裡或 null；解說與提示（自由文字）講得對不對由 ㉖ 審定快照釘住（改字＝重審），不用句型比對（Codex 設計者 L20261018080918-e4f31c）
   function zxL(list, concept) {
     list.forEach(function (p) {
       var word = p[2], ch = p[3];

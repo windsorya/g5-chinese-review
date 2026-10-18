@@ -87,37 +87,11 @@ const DICT_L1 = JSON.parse(fs.readFileSync(path.join(__dirname, "fixtures", "dic
 const PAGE = {};
 (B.P6 || []).forEach((g) => g.forEach((e) => { PAGE[e[0]] = { read: e[1], words: e[2], group: g.map((x) => x[0]) }; }));
 const PAGE_WORDS = new Set(Object.values(PAGE).flatMap((p) => p.words));
-// 2026-10-18 Codex 審 c8f6d18：zx.rad 只比欄位不比畫面文字 ⇒ 從 why／hint 抽出「部首說法」逐一比對。
-// Codex 審 1e41707：把部件位置（裡面是土）也當成部首說法、又認不出位置錯（璧上面是玉）⇒ 只認兩種說法：
-//   ①偏旁名稱（提手旁、豎心旁、竹字頭、立刀、扌……）＝講部首是哪個；②「下面／上面／外面／左邊／右邊／裡面 是「X」」（X 帶引號且是部首字）＝講部首在哪。
-//   ①②的部首要等於 zx.rad；②的位置要等於 zx.radPos；radPos 有值＝至少要有一個說法；radPos 是 null＝解說不講部首（一個說法都不能有）。
-//   前面有「沒有、不是」的不算（否定說法）。不帶引號的「裡面有土和凵」「下面是三個人」是部件說明，不在這條判準（由人審）。
+// 第三～六課字形題的部首欄位（結構檢查）：zx.rad 必填且等於簡編本；zx.radPos 必填，值是 上下左右外裡 或 null（解說不講部首）。
+// 2026-10-18 連 4 輪 Codex FAIL 後（設計者 L20261018080918-e4f31c 方案②）：解說／提示這些自由文字「講得對不對」不再用句型比對判斷
+// （有限句型永遠追不上任意中文敘述），改由 ㉖ 審定快照釘住每一個字，改字就要重審。
 const K7_ZX = new Set(["zxc", "zxd"]);
-const RAD_ALIAS = { "提手": "手", "扌": "手", "豎心": "心", "忄": "心", "三點水": "水", "氵": "水", "立刀": "刀", "刂": "刀", "單人": "人", "亻": "人", "雙人": "彳",
-  "草": "艸", "艹": "艸", "寶蓋": "宀", "辶": "辵", "犭": "犬", "月": "肉", "王": "玉" };
-const RAD_CHARS = new Set("手心水刀人彳艸宀辵犬肉玉竹木火土言女糸食金耒广尸目气釆齒虫力口禾走勹頁穴鬼耳止".split(""));
-const POS = { "下面": "下", "上面": "上", "外面": "外", "左邊": "左", "右邊": "右", "裡面": "裡" };
-function radClaims(text) {
-  const out = [], t = String(text);
-  const push = (i, rad, pos) => { if (!/沒有|不是/.test(t.slice(Math.max(0, i - 4), i))) out.push({ rad, pos }); };
-  // 偏旁名稱也帶位置（Codex 審 44a8dd4：撲的 radPos 改成「右」仍綠）：X字旁／提手旁等＝左、立刀＝右、X字頭＝上（广、尸字頭包在外面＝外）、寶蓋頭＝上
-  const NAME_POS = { "提手": "左", "豎心": "左", "三點水": "左", "單人": "左", "雙人": "左", "立刀": "右", "寶蓋": "上", "扌": "左", "忄": "左", "氵": "左", "亻": "左", "刂": "右", "艹": "上" };
-  for (const m of t.matchAll(/(提手|豎心|三點水|立刀|單人|雙人|寶蓋)(旁|頭)?|([扌忄氵刂亻艹辶犭])/g)) push(m.index, RAD_ALIAS[m[1] || m[3]], NAME_POS[m[1] || m[3]] || null);
-  for (const m of t.matchAll(/(.)字(旁|頭)/g)) if (!/[手心點刀人]/.test(m[1])) push(m.index, RAD_ALIAS[m[1]] || m[1], m[2] === "旁" ? "左" : /[广尸]/.test(m[1]) ? "外" : "上");
-  for (const m of t.matchAll(/(下面|上面|外面|左邊|右邊|裡面)是「(.)」/g)) { const r = RAD_ALIAS[m[2]] || m[2]; if (RAD_CHARS.has(r)) push(m.index, r, POS[m[1]]); }
-  return out;
-}
-function radProblems(c) {
-  const bad = [], cl = radClaims(c.why + "。" + c.hint), z = c.zx;
-  if (!("radPos" in z)) return [c.id + " 要寫 zx.radPos（部首位置；不講部首寫 null）"];
-  if (z.radPos === null) { if (cl.length) bad.push(c.id + " radPos 是 null，解說卻講了部首：" + JSON.stringify(cl)); return bad; }
-  if (!cl.length) bad.push(c.id + " 解說與提示沒有講到部首（radPos=" + z.radPos + "）");
-  cl.forEach((x) => {
-    if (x.rad !== z.rad) bad.push(c.id + " 解說／提示說偏旁是「" + x.rad + "」，簡編本部首是「" + z.rad + "」");
-    if (x.pos && x.pos !== z.radPos) bad.push(c.id + " 解說說部首在「" + x.pos + "」，radPos 是「" + z.radPos + "」");
-  });
-  return bad;
-}
+const RAD_POS = new Set(["上", "下", "左", "右", "外", "裡"]);
 function l1Problems(cards, dict) {
   const bad = [], known = (w) => !!dict[w], con = (w) => (dict[w] && dict[w].concised) || [];
   const inDict = (w) => known(w) && (dict[w].revised.length > 0 || dict[w].concised.length > 0);
@@ -135,7 +109,7 @@ function l1Problems(cards, dict) {
       // 2026-10-18 第三～六課字形題：解說講的偏旁（zx.rad）要等於簡編本的部首
       if (c.zx.rad && (dict[c.zx.ch] || {}).concised_radical !== c.zx.rad) bad.push(id + "「" + c.zx.ch + "」部首寫 " + c.zx.rad + "，簡編本是 " + (dict[c.zx.ch] || {}).concised_radical);
       if (K7_ZX.has(c.concept) && !c.zx.rad) bad.push(id + " 第三～六課字形題要寫 zx.rad（部首）");
-      if (c.zx.rad) radProblems(c).forEach((x) => bad.push(x));
+      if (K7_ZX.has(c.concept) && !(c.zx.radPos === null || RAD_POS.has(c.zx.radPos))) bad.push(id + " zx.radPos 要是上下左右外裡或 null：" + c.zx.radPos);
       c.zx.wrong.forEach((w) => {
         if (!known(w)) bad.push(id + "「" + w + "」沒查過");
         else if (inDict(w)) bad.push(id + " 錯項「" + w + "」辭典其實有");
@@ -228,30 +202,12 @@ test("㉒自檢-反例：把讀音改錯、把錯項換成辭典有的詞、把�
   assert.ok(l1Problems([m], DICT_L1).length > 0, "字義放錯沒抓到");
   const r3 = clone(B.ALL_CARDS.find((c) => c.id === "zx3a")); r3.zx.rad = "土";
   assert.ok(l1Problems([r3], DICT_L1).length > 0, "部首寫錯（璧寫成土部）沒抓到");
-  // Codex 審 c8f6d18 的反例：欄位不動、畫面解說改成「下面是土」；刪掉 zx.rad
-  const r4 = clone(B.ALL_CARDS.find((c) => c.id === "zx3a")); r4.why = "璧是土做的寶物，所以下面是土。";
-  assert.ok(l1Problems([r4], DICT_L1).length > 0, "解說把璧講成下面是土沒抓到");
-  const r5 = clone(B.ALL_CARDS.find((c) => c.id === "zx4c")); r5.hint = "找東西要用眼睛，找目字旁。";
-  assert.ok(l1Problems([r5], DICT_L1).length > 0, "提示把搜講成目字旁沒抓到");
   const r6 = clone(B.ALL_CARDS.find((c) => c.id === "zx3a")); delete r6.zx.rad;
   assert.ok(l1Problems([r6], DICT_L1).length > 0, "第三～六課字形題沒寫 zx.rad 沒抓到");
-  // 否定說法不算：zx4a 提示「沒有提手旁、沒有三撇、沒有草字頭」不能被當成部首是手
-  assert.deepEqual(radClaims("沒有提手旁、沒有草字頭的那一個。"), []);
-  // Codex 審 1e41707 的反例：部首位置講錯（上面是玉）、只剩不帶引號的說法（radPos 有值卻沒講部首）；部件說明（裡面是土和凵）不能誤擋；radPos=null 卻講部首
-  const r7 = clone(B.ALL_CARDS.find((c) => c.id === "zx3a")); r7.why = "璧是玉做的寶物，所以上面是「玉」。";
-  assert.ok(l1Problems([r7], DICT_L1).length > 0, "部首位置講錯（上面是玉）沒抓到");
-  const r8 = clone(B.ALL_CARDS.find((c) => c.id === "zx3a")); r8.why = "璧是玉做的寶物，所以上面是玉。"; r8.hint = "和氏璧是玉。";
-  assert.ok(l1Problems([r8], DICT_L1).length > 0, "radPos 有值卻沒有任何部首說法沒抓到");
-  const r9 = clone(B.ALL_CARDS.find((c) => c.id === "zx4i")); r9.why = "屆是一次一次的次序，外面是「尸」，裡面是土和凵。";
-  assert.deepEqual(l1Problems([r9], DICT_L1), [], "部件說明（裡面是土和凵）被誤擋");
-  const r10 = clone(B.ALL_CARDS.find((c) => c.id === "zx4a")); r10.why = "采是提手旁。";
-  assert.ok(l1Problems([r10], DICT_L1).length > 0, "radPos 是 null 卻講了部首沒抓到");
   const r11 = clone(B.ALL_CARDS.find((c) => c.id === "zx3a")); delete r11.zx.radPos;
   assert.ok(l1Problems([r11], DICT_L1).length > 0, "沒寫 radPos 沒抓到");
-  const r12 = clone(B.ALL_CARDS.find((c) => c.id === "zx3f")); r12.zx.radPos = "右";
-  assert.ok(l1Problems([r12], DICT_L1).length > 0, "撲的 radPos 改成右（Codex 反例）沒抓到");
-  const r13 = clone(B.ALL_CARDS.find((c) => c.id === "zx3e")); r13.zx.radPos = "下";
-  assert.ok(l1Problems([r13], DICT_L1).length > 0, "筍（竹字頭）radPos 改成下沒抓到");
+  const r14 = clone(B.ALL_CARDS.find((c) => c.id === "zx3a")); r14.zx.radPos = "中";
+  assert.ok(l1Problems([r14], DICT_L1).length > 0, "radPos 值不合法沒抓到");
 });
 
 // ㉓ 填字題的句子：把正確的字填回括號，句子裡要出現那個詞（Codex 審 aaa3dbe：zx14「圖書館（　）供」挖錯位置，填回去變「供供」）
@@ -757,7 +713,7 @@ test("㉔成語題：選項都在 CY 表、白話說法的關鍵字在教育部�
 // Codex 審 c8f6d18：查無部首時 undefined === undefined 會被當成同部首 ⇒ 每個字都要查得到部首才比較。
 // Codex 審 1e41707：用字串找「X是Y部」認不出說的是哪個字 ⇒ 解說與錯法說明改由 bs.rad 產生（src/chibank.js bsTexts）；
 // 這裡用辭典部首照同一個模板重產一次，逐字比對；bs.rad 也要等於辭典。
-// Codex 審 44a8dd4：原本允許照抄的補充說明可夾帶「坊是提手旁」⇒ 補充說明拿掉，解說必須和模板完全相同；提示不得有任何部首說法。
+// Codex 審 44a8dd4：原本允許照抄的補充說明可夾帶「坊是提手旁」⇒ 補充說明拿掉，解說必須和模板完全相同。提示是自由文字，由 ㉖ 審定快照釘住。
 function bsExpect(c, R) {
   const b = c.bs, right = c.opts[c.a], wrong = c.opts.filter((o, i) => i !== c.a);
   const head = b.kind === "pair" ? "「" + right.split("、")[0] + "」和「" + right.split("、")[1] + "」都是" + R(right.split("、")[0]) + "部"
@@ -779,7 +735,6 @@ function bsProblems(cards, dict) {
     b.chars.forEach((ch) => { if (!b.rad || b.rad[ch] !== R(ch)) bad.push(c.id + " bs.rad「" + ch + "」寫 " + (b.rad || {})[ch] + "，簡編本是 " + R(ch)); });
     const e = bsExpect(c, R);
     if (c.why !== e.why) bad.push(c.id + " 解說和用辭典部首重產的不同：" + c.why + " ≠ " + e.why);
-    if (/部/.test(c.hint) || radClaims(c.hint).length) bad.push(c.id + " 提示不能講部首（只由模板產生的解說講）：" + c.hint);
     wrong.forEach((w, i) => { const got = c.wrongWhy[c.opts.indexOf(w)]; if (got !== e.ww[i]) bad.push(c.id + " 錯法說明和重產的不同：" + got + " ≠ " + e.ww[i]); });
     if (b.kind === "same") {
       if (R(right) !== R(b.target)) bad.push(c.id + " 正解「" + right + "」和「" + b.target + "」部首不同");
@@ -820,8 +775,74 @@ test("㉕部首題：正解、錯項、錯法說明裡的部首，都和教育�
   assert.ok(bsProblems([k], DICT_L1).length > 0, "自檢：bs.rad 寫錯要抓到");
   // Codex 審 44a8dd4 的反例：解說後面夾帶「坊是提手旁」「坊是糸字旁」；提示寫「坊的部首是糸」
   [ "，坊是提手旁。", "，坊是糸字旁。", "，坊也是糸部。" ].forEach((x) => { const m = clone(card("yb8")); m.why = m.why.replace(/。$/, x); assert.ok(bsProblems([m], DICT_L1).length > 0, "自檢：解說夾帶" + x + "要抓到"); });
-  const n2 = clone(card("yb8")); n2.hint = "坊的部首是糸。";
-  assert.ok(bsProblems([n2], DICT_L1).length > 0, "自檢：提示講部首要抓到");
+});
+
+// ===== ㉖ 第三～六課內容審定快照（2026-10-18，Codex 設計者 L20261018080918-e4f31c 方案②）=====
+// 連 4 輪 FAIL 的根因：拿有限句型判斷孩子看到的任意中文敘述（部首說得對不對），每補一種寫法就有下一種繞過。
+// 改成：k7 產題後的完整內容（每張卡每個欄位、解說每種說法與圖、先猜題、觀念、影片說明）等於審定快照 tests/k7_approved_snapshot.json；
+// 一個字不同就 REVIEW_REQUIRED（不判斷「錯在哪」，只說「沒審過」）。快照只能由人審過差異、送審 PASS 後手動 node tests/k7_snapshot.js --write。
+const K7S = require("./k7_snapshot.js");
+const k7Snap = () => JSON.parse(fs.readFileSync(K7S.SNAPSHOT_FILE, "utf8"));
+function k7Check(cur, snap) {
+  const bad = [];
+  if (!snap || !snap.content) return ["審定快照沒有 content"];
+  if (snap["規則版本"] !== K7S.RULES_VERSION) bad.push("審定快照規則版本不同：" + snap["規則版本"]);
+  if (snap.sha256 !== K7S.sha256Of(snap.content)) bad.push("審定快照的 content 和記的 sha256 對不上（被手改過？只能用 --write 產生）");
+  K7S.diff(snap.content, cur).forEach((d) => bad.push("REVIEW_REQUIRED " + d.path + "：" + d.text));
+  return bad;
+}
+test("㉖第三～六課內容（卡片每個欄位、解說與圖、先猜、觀念、影片）等於審定快照 tests/k7_approved_snapshot.json", () => {
+  let snap; try { snap = k7Snap(); } catch (e) { assert.fail("讀不到審定快照（" + e.message + "）；只能由人手動 node tests/k7_snapshot.js --write 產生並送審"); }
+  const bad = k7Check(K7S.view(), snap);
+  if (bad.length) assert.fail("第三～六課內容有 " + bad.length + " 處和審定版不同（要重審後再更新快照）：\n  " + bad.slice(0, 40).join("\n  "));
+  // 涵蓋：快照裡的卡數＝題庫裡 k7 觀念的卡數（刪題、搬觀念、加新題都會反映在 diff）
+  assert.equal(Object.keys(snap.content.cards).length, B.ALL_CARDS.filter((c) => (B.CONCEPTS[c.concept] || {}).unit === "k7").length);
+});
+// 自檢：設計報告 (D) 驗收矩陣的反例在記憶體裡注入，每一個都要紅、而且紅在被改的欄位；只改鍵的順序要綠
+test("㉖自檢：前 4 輪 Codex 的反例（含否定句、追加句、零寬字、交換錯法說明、拿掉欄位、加新欄位、加新題）都要紅在被改的地方", () => {
+  const snap = k7Snap(), base = K7S.view();
+  assert.deepEqual(k7Check(base, snap), [], "基準：沒改的內容必須綠");
+  const cases = [
+    ["T03 璧解說改下面是土", (v) => { v.cards.zx3a.why = "璧是土做的寶物，所以下面是土。"; }, "cards.zx3a.why"],
+    ["T04 璧提示改是土字旁", (v) => { v.cards.zx3a.hint = "是土字旁的那一個。"; }, "cards.zx3a.hint"],
+    ["T05 正確解說後追加璧上面是玉", (v) => { v.cards.zx3a.why += "璧上面是玉。"; }, "cards.zx3a.why"],
+    ["T09 撲的 radPos 改右", (v) => { v.cards.zx3f.zx.radPos = "右"; }, "cards.zx3f.zx.radPos"],
+    ["T11 yb8 錯法說明坊是糸部", (v) => { const i = v.cards.yb8.opts.indexOf("坊"); v.cards.yb8.wrongWhy[i] = "「坊」是糸部，和「紡」不同。"; }, "cards.yb8.wrongWhy"],
+    ["T14 yb8 提示坊不是土字旁（否定句）", (v) => { v.cards.yb8.hint = "坊不是土字旁。"; }, "cards.yb8.hint"],
+    ["T15 解說夾零寬字", (v) => { v.cards.yb9.why = v.cards.yb9.why.replace("土部", "土​部"); }, "cards.yb9.why"],
+    ["T17 屆恢復裡面是由", (v) => { v.cards.zx4i.why = "屆是一次一次的次序，外面是「尸」，裡面是「由」。"; }, "cards.zx4i.why"],
+    ["T20 cy10 錯項換回患得患失", (v) => { v.cards.cy10.opts[v.cards.cy10.opts.indexOf("雨後春筍")] = "患得患失"; }, "cards.cy10.opts"],
+    ["T21 bd9 恢復排他說法", (v) => { v.cards.bd9.why = "《　》用在書名，〈　〉用在篇名。"; }, "cards.bd9.why"],
+    ["T22 zxc 標題恢復讀音一樣", (v) => { v.explain.zxc[1].name = "換個說法：讀音一樣，意思不一樣"; }, "explain.zxc[1].name"],
+    ["T22 zxc 圖改字", (v) => { v.explain.zxc[1].svg["#fn"] = v.explain.zxc[1].svg["#fn"].replace("容易混淆", "讀音一樣"); }, "explain.zxc[1].svg"],
+    ["T23 出口答案恢復右邊一樣", (v) => { v.concepts.zxd.exitAns = "右邊一樣。"; }, "concepts.zxd.exitAns"],
+    ["T23 影片說明恢復右邊一樣", (v) => { v.videos.zxd[0].note = "劇、據右邊一樣。"; }, "videos.zxd[0].note"],
+    ["T25 交換兩個錯法說明", (v) => { const w = v.cards.yb8.wrongWhy, i = w.findIndex((x) => x), j = w.findIndex((x, k) => x && k > i); [w[i], w[j]] = [w[j], w[i]]; }, "cards.yb8.wrongWhy"],
+    ["T25 拿掉 bs 欄位", (v) => { delete v.cards.yb9.bs; }, "cards.yb9.bs"],
+    ["T25 加未知欄位", (v) => { v.cards.cy1.note = "合理"; }, "cards.cy1.note"],
+    ["T25 刪一題", (v) => { delete v.cards.bd1; }, "cards.bd1"],
+    ["T25 加一題", (v) => { v.cards.bd99 = v.cards.bd1; }, "cards.bd99"],
+  ];
+  cases.forEach(([name, mut, where]) => {
+    const v = JSON.parse(JSON.stringify(base)); mut(v);
+    const bad = k7Check(v, snap);
+    assert.ok(bad.length > 0, name + "：沒有紅");
+    assert.ok(bad.some((b) => b.indexOf("k7." + where) >= 0), name + "：沒有紅在 " + where + "；實際：" + bad.join(" | "));
+  });
+  // 正向控制：物件鍵順序倒過來（存檔排版）不算差異
+  const rev = (o) => (Array.isArray(o) ? o.map(rev) : o && typeof o === "object" ? Object.fromEntries(Object.entries(o).reverse().map(([k, x]) => [k, rev(x)])) : o);
+  assert.deepEqual(k7Check(rev(base), snap), [], "鍵順序不同被判紅");
+  // 快照檔手改（content 改了 sha256 沒改）要紅
+  const hand = JSON.parse(JSON.stringify(snap)); hand.content.cards.zx3a.hint = "改過";
+  assert.ok(k7Check(base, hand).some((b) => /sha256/.test(b)), "手改快照沒被抓到");
+});
+// T27 成品一致：index.html 裡內嵌的每一支 src 檔，和 src 逐字相同（改了 src 沒 build 會紅）
+test("㉖-b 成品 index.html 內嵌的 src 檔和來源逐字相同（build.py 的 <script>\\n…\\n</script> 包法）", () => {
+  const app = fs.readFileSync(path.join(ROOT, "src", "app.html"), "utf8"), html = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
+  const files = [...app.matchAll(/<!--@INLINE (src\/[A-Za-z0-9_.-]+\.js)-->/g)].map((m) => m[1]);
+  assert.ok(files.indexOf("src/chibank.js") >= 0 && files.indexOf("src/chiexplain.js") >= 0 && files.indexOf("src/chivideos.js") >= 0, "app.html 沒有內嵌題庫三支檔：" + files.join("、"));
+  const stale = files.filter((f) => html.indexOf("<script>\n" + fs.readFileSync(path.join(ROOT, f), "utf8") + "\n</script>") < 0);
+  assert.deepEqual(stale, [], "這些 src 檔改了但 index.html 沒重新 build");
 });
 
 module.exports = { T21_ROWS, T21_LEGACY, T21_POSITIVE, crClone, crPrint, t21Check, crSnapshot };

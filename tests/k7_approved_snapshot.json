@@ -1,0 +1,1842 @@
+{
+ "規則版本": "k7-snapshot/1",
+ "說明": "第三～六課內容審定快照；只能由人審過差異、送審 PASS 後手動 node tests/k7_snapshot.js --write 產生",
+ "sha256": "6f68f0e23338e0e8b1258bc52e03218bff287cea9cb310895e218b41340fb22d",
+ "content": {
+  "unit": "第三～六課：生字、成語、標點、部首",
+  "concepts": {
+   "bd": {
+    "exit": "說一句話，裡面要用到冒號，再說說為什麼要用冒號。",
+    "exitAns": "例：我的鉛筆盒裡有：鉛筆、橡皮擦和尺。冒號用來帶出後面要列出的東西。",
+    "short": "標點符號",
+    "title": "標點符號：冒號、頓號、分號、破折號、問號、驚嘆號、書名號",
+    "tone": "c1",
+    "unit": "k7"
+   },
+   "cy": {
+    "exit": "用「挺身而出」說一件你看過或聽過的事。",
+    "exitAns": "答案每個人不同。要聽得出：有人遇到危險或困難，有人勇敢的站出來幫忙。",
+    "short": "課內成語",
+    "title": "第三～五課的成語：完璧歸趙、肝膽相照、雨後春筍、寓教於樂、來龍去脈……",
+    "tone": "c3",
+    "unit": "k7"
+   },
+   "yb": {
+    "exit": "「音樂」和「快樂」的「樂」，讀音一樣嗎？各讀什麼？",
+    "exitAns": "不一樣。音樂讀ㄩㄝˋ，快樂讀ㄌㄜˋ。",
+    "short": "字音與部首",
+    "title": "第三～六課的多音字與部首：卷、行、將、樂、脈、創；部首相同",
+    "tone": "c3",
+    "unit": "k7"
+   },
+   "zxc": {
+    "exit": "「完璧歸趙」的「璧」和「牆壁」的「壁」，哪裡不一樣？",
+    "exitAns": "璧的下面是玉，是玉做的寶物；壁的下面是土，牆是土砌的。",
+    "short": "三四課字形",
+    "title": "第三、四課字形：璧、眾、筍、撲、氛、廳、炒、憶",
+    "tone": "c2",
+    "unit": "k7"
+   },
+   "zxd": {
+    "exit": "「劇情」的「劇」和「根據」的「據」，哪裡不一樣？",
+    "exitAns": "兩個字都有「豦」。劇是豦在左、立刀在右，和戲劇有關；據是提手旁在左、豦在右，根據、占據都用它。",
+    "short": "五六課字形",
+    "title": "第五、六課字形：采、媲、搜、劇、塑、廢、焚、耗、屆",
+    "tone": "c2",
+    "unit": "k7"
+   }
+  },
+  "cards": {
+   "zx3a": {
+    "a": 2,
+    "concept": "zxc",
+    "hint": "和氏璧是玉，下面要有玉。",
+    "id": "zx3a",
+    "opts": [
+     "譬",
+     "壁",
+     "璧",
+     "避"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「藺相如帶著和氏璧，最後完（　）歸趙」括號裡要填哪個字？",
+    "src": "https://pedia.cloud.edu.tw/Bookmark/TCollection?TextNameId=0101051150103",
+    "type": "choice",
+    "why": "璧是玉做的寶物，所以下面是「玉」。",
+    "wrongWhy": [
+     "沒有「完譬歸趙」這個詞，要寫「完璧歸趙」。",
+     "沒有「完壁歸趙」這個詞，要寫「完璧歸趙」。",
+     "",
+     "沒有「完避歸趙」這個詞，要寫「完璧歸趙」。"
+    ],
+    "zx": {
+     "ch": "璧",
+     "rad": "玉",
+     "radPos": "下",
+     "word": "完璧歸趙",
+     "wrong": [
+      "完壁歸趙",
+      "完避歸趙",
+      "完譬歸趙"
+     ]
+    }
+   },
+   "zx3b": {
+    "a": 1,
+    "concept": "zxc",
+    "hint": "很多人的意思，找下面有三個人的那一個。",
+    "id": "zx3b",
+    "opts": [
+     "種",
+     "眾",
+     "從",
+     "重"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「廣場上的大（　）都在看煙火」括號裡要填哪個字？",
+    "src": "https://pedia.cloud.edu.tw/Bookmark/TCollection?TextNameId=0101051150104",
+    "type": "choice",
+    "why": "眾是很多人，下面是三個人並排。",
+    "wrongWhy": [
+     "沒有「大種」這個詞，要寫「大眾」。",
+     "",
+     "沒有「大從」這個詞，要寫「大眾」。",
+     "沒有「大重」這個詞，要寫「大眾」。"
+    ],
+    "zx": {
+     "ch": "眾",
+     "rad": "目",
+     "radPos": null,
+     "word": "大眾",
+     "wrong": [
+      "大重",
+      "大種",
+      "大從"
+     ]
+    }
+   },
+   "zx3e": {
+    "a": 2,
+    "concept": "zxc",
+    "hint": "竹子冒出來的嫩芽。",
+    "id": "zx3e",
+    "opts": [
+     "荀",
+     "詢",
+     "筍",
+     "殉"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「桌遊店像雨後春（　）一樣冒出來」括號裡要填哪個字？",
+    "src": "https://pedia.cloud.edu.tw/Bookmark/TCollection?TextNameId=0101051150104",
+    "type": "choice",
+    "why": "筍是竹子的嫩芽，所以是竹字頭。",
+    "wrongWhy": [
+     "沒有「雨後春荀」這個詞，要寫「雨後春筍」。",
+     "沒有「雨後春詢」這個詞，要寫「雨後春筍」。",
+     "",
+     "沒有「雨後春殉」這個詞，要寫「雨後春筍」。"
+    ],
+    "zx": {
+     "ch": "筍",
+     "rad": "竹",
+     "radPos": "上",
+     "word": "雨後春筍",
+     "wrong": [
+      "雨後春荀",
+      "雨後春殉",
+      "雨後春詢"
+     ]
+    }
+   },
+   "zx3f": {
+    "a": 1,
+    "concept": "zxc",
+    "hint": "玩牌要用手，找提手旁。",
+    "id": "zx3f",
+    "opts": [
+     "僕",
+     "撲",
+     "璞",
+     "樸"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「大家圍在桌邊玩（　）克牌」括號裡要填哪個字？",
+    "src": "https://pedia.cloud.edu.tw/Bookmark/TCollection?TextNameId=0101051150104",
+    "type": "choice",
+    "why": "撲克牌的撲是提手旁。",
+    "wrongWhy": [
+     "沒有「僕克牌」這個詞，要寫「撲克牌」。",
+     "",
+     "沒有「璞克牌」這個詞，要寫「撲克牌」。",
+     "沒有「樸克牌」這個詞，要寫「撲克牌」。"
+    ],
+    "zx": {
+     "ch": "撲",
+     "rad": "手",
+     "radPos": "左",
+     "word": "撲克牌",
+     "wrong": [
+      "樸克牌",
+      "僕克牌",
+      "璞克牌"
+     ]
+    }
+   },
+   "zx3g": {
+    "a": 3,
+    "concept": "zxc",
+    "hint": "和「氣」有關，找有气的那一個。",
+    "id": "zx3g",
+    "opts": [
+     "份",
+     "紛",
+     "芬",
+     "氛"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「遊戲讓客廳的氣（　）熱鬧起來」括號裡要填哪個字？",
+    "src": "https://pedia.cloud.edu.tw/Bookmark/TCollection?TextNameId=0101051150104",
+    "type": "choice",
+    "why": "氛是一種感覺、情調，上面是「气」。",
+    "wrongWhy": [
+     "沒有「氣份」這個詞，要寫「氣氛」。",
+     "沒有「氣紛」這個詞，要寫「氣氛」。",
+     "沒有「氣芬」這個詞，要寫「氣氛」。",
+     ""
+    ],
+    "zx": {
+     "ch": "氛",
+     "rad": "气",
+     "radPos": "上",
+     "word": "氣氛",
+     "wrong": [
+      "氣紛",
+      "氣芬",
+      "氣份"
+     ]
+    }
+   },
+   "zx3h": {
+    "a": 2,
+    "concept": "zxc",
+    "hint": "是一個地方，广字頭的那一個。",
+    "id": "zx3h",
+    "opts": [
+     "庭",
+     "聽",
+     "廳",
+     "艇"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「我們一家人到親子餐（　）吃飯」括號裡要填哪個字？",
+    "src": "https://pedia.cloud.edu.tw/Bookmark/TCollection?TextNameId=0101051150104",
+    "type": "choice",
+    "why": "廳是屋子裡待客、吃飯的地方，外面是「广」。",
+    "wrongWhy": [
+     "沒有「餐庭」這個詞，要寫「餐廳」。",
+     "沒有「餐聽」這個詞，要寫「餐廳」。",
+     "",
+     "沒有「餐艇」這個詞，要寫「餐廳」。"
+    ],
+    "zx": {
+     "ch": "廳",
+     "rad": "广",
+     "radPos": "外",
+     "word": "餐廳",
+     "wrong": [
+      "餐聽",
+      "餐庭",
+      "餐艇"
+     ]
+    }
+   },
+   "zx3i": {
+    "a": 0,
+    "concept": "zxc",
+    "hint": "用鍋子翻炒要開火。",
+    "id": "zx3i",
+    "opts": [
+     "炒",
+     "妙",
+     "吵",
+     "抄"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「媽媽在廚房（　）菜，香味飄出來」括號裡要填哪個字？",
+    "src": "https://pedia.cloud.edu.tw/Bookmark/TCollection?TextNameId=0101051150104",
+    "type": "choice",
+    "why": "炒要用火，所以是火字旁。「炒熱氣氛」也是這個炒。",
+    "wrongWhy": [
+     "",
+     "沒有「妙菜」這個詞，要寫「炒菜」。",
+     "沒有「吵菜」這個詞，要寫「炒菜」。",
+     "沒有「抄菜」這個詞，要寫「炒菜」。"
+    ],
+    "zx": {
+     "ch": "炒",
+     "rad": "火",
+     "radPos": "左",
+     "word": "炒菜",
+     "wrong": [
+      "吵菜",
+      "抄菜",
+      "妙菜"
+     ]
+    }
+   },
+   "zx3j": {
+    "a": 0,
+    "concept": "zxc",
+    "hint": "想起來是心裡的事。",
+    "id": "zx3j",
+    "opts": [
+     "憶",
+     "臆",
+     "意",
+     "億"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「這張照片是我最美好的回（　）」括號裡要填哪個字？",
+    "src": "https://pedia.cloud.edu.tw/Bookmark/TCollection?TextNameId=0101051150104",
+    "type": "choice",
+    "why": "憶是記得、想起來，所以是豎心旁。",
+    "wrongWhy": [
+     "",
+     "沒有「回臆」這個詞，要寫「回憶」。",
+     "沒有「回意」這個詞，要寫「回憶」。",
+     "沒有「回億」這個詞，要寫「回憶」。"
+    ],
+    "zx": {
+     "ch": "憶",
+     "rad": "心",
+     "radPos": "左",
+     "word": "回憶",
+     "wrong": [
+      "回億",
+      "回臆",
+      "回意"
+     ]
+    }
+   },
+   "zx4a": {
+    "a": 3,
+    "concept": "zxd",
+    "hint": "沒有提手旁、沒有三撇、沒有草字頭。",
+    "id": "zx4a",
+    "opts": [
+     "採",
+     "菜",
+     "彩",
+     "采"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「他考了一百分，神（　）飛揚」括號裡要填哪個字？",
+    "src": "https://pedia.cloud.edu.tw/Bookmark/TCollection?TextNameId=0101051150105",
+    "type": "choice",
+    "why": "神采是人的神色、風度，不是用手採的採。",
+    "wrongWhy": [
+     "沒有「神採飛揚」這個詞，要寫「神采飛揚」。",
+     "沒有「神菜飛揚」這個詞，要寫「神采飛揚」。",
+     "沒有「神彩飛揚」這個詞，要寫「神采飛揚」。",
+     ""
+    ],
+    "zx": {
+     "ch": "采",
+     "rad": "釆",
+     "radPos": null,
+     "word": "神采飛揚",
+     "wrong": [
+      "神採飛揚",
+      "神彩飛揚",
+      "神菜飛揚"
+     ]
+    }
+   },
+   "zx4b": {
+    "a": 2,
+    "concept": "zxd",
+    "hint": "左邊是女字旁的那一個。",
+    "id": "zx4b",
+    "opts": [
+     "屁",
+     "批",
+     "媲",
+     "庇"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「他跑得飛快，（　）美閃電俠」括號裡要填哪個字？",
+    "src": "https://pedia.cloud.edu.tw/Bookmark/TCollection?TextNameId=0101051150105",
+    "type": "choice",
+    "why": "媲是比得上，左邊是「女」。",
+    "wrongWhy": [
+     "沒有「屁美」這個詞，要寫「媲美」。",
+     "沒有「批美」這個詞，要寫「媲美」。",
+     "",
+     "沒有「庇美」這個詞，要寫「媲美」。"
+    ],
+    "zx": {
+     "ch": "媲",
+     "rad": "女",
+     "radPos": "左",
+     "word": "媲美",
+     "wrong": [
+      "屁美",
+      "批美",
+      "庇美"
+     ]
+    }
+   },
+   "zx4c": {
+    "a": 2,
+    "concept": "zxd",
+    "hint": "找東西要用手，找提手旁。",
+    "id": "zx4c",
+    "opts": [
+     "嫂",
+     "瘦",
+     "搜",
+     "艘"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「瑞邦上網（　）尋電影」括號裡要填哪個字？",
+    "src": "https://pedia.cloud.edu.tw/Bookmark/TCollection?TextNameId=0101051150105",
+    "type": "choice",
+    "why": "搜是找東西，要用手翻找，所以是提手旁。",
+    "wrongWhy": [
+     "沒有「嫂尋」這個詞，要寫「搜尋」。",
+     "沒有「瘦尋」這個詞，要寫「搜尋」。",
+     "",
+     "沒有「艘尋」這個詞，要寫「搜尋」。"
+    ],
+    "zx": {
+     "ch": "搜",
+     "rad": "手",
+     "radPos": "左",
+     "word": "搜尋",
+     "wrong": [
+      "嫂尋",
+      "艘尋",
+      "瘦尋"
+     ]
+    }
+   },
+   "zx4d": {
+    "a": 1,
+    "concept": "zxd",
+    "hint": "右邊是立刀的那一個。",
+    "id": "zx4d",
+    "opts": [
+     "遽",
+     "劇",
+     "居",
+     "據"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「這部電影的（　）情很感人」括號裡要填哪個字？",
+    "src": "https://pedia.cloud.edu.tw/Bookmark/TCollection?TextNameId=0101051150105",
+    "type": "choice",
+    "why": "劇是戲劇，右邊是「刂」（立刀）。",
+    "wrongWhy": [
+     "沒有「遽情」這個詞，要寫「劇情」。",
+     "",
+     "沒有「居情」這個詞，要寫「劇情」。",
+     "沒有「據情」這個詞，要寫「劇情」。"
+    ],
+    "zx": {
+     "ch": "劇",
+     "rad": "刀",
+     "radPos": "右",
+     "word": "劇情",
+     "wrong": [
+      "據情",
+      "遽情",
+      "居情"
+     ]
+    }
+   },
+   "zx4e": {
+    "a": 3,
+    "concept": "zxd",
+    "hint": "下面有土的那一個。",
+    "id": "zx4e",
+    "opts": [
+     "溯",
+     "宿",
+     "朔",
+     "塑"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「寶特瓶可以做成（　）膠球衣」括號裡要填哪個字？",
+    "src": "https://pedia.cloud.edu.tw/Bookmark/TCollection?TextNameId=0101051150106",
+    "type": "choice",
+    "why": "塑是用土捏出形狀，所以下面是「土」。",
+    "wrongWhy": [
+     "沒有「溯膠」這個詞，要寫「塑膠」。",
+     "沒有「宿膠」這個詞，要寫「塑膠」。",
+     "沒有「朔膠」這個詞，要寫「塑膠」。",
+     ""
+    ],
+    "zx": {
+     "ch": "塑",
+     "rad": "土",
+     "radPos": "下",
+     "word": "塑膠",
+     "wrong": [
+      "宿膠",
+      "朔膠",
+      "溯膠"
+     ]
+    }
+   },
+   "zx4f": {
+    "a": 2,
+    "concept": "zxd",
+    "hint": "外面是广字頭的那一個。",
+    "id": "zx4f",
+    "opts": [
+     "發",
+     "費",
+     "廢",
+     "撥"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「不要的瓶子不是（　）棄物，可以回收」括號裡要填哪個字？",
+    "src": "https://pedia.cloud.edu.tw/Bookmark/TCollection?TextNameId=0101051150106",
+    "type": "choice",
+    "why": "廢是不用了，外面是「广」。",
+    "wrongWhy": [
+     "沒有「發棄」這個詞，要寫「廢棄」。",
+     "沒有「費棄」這個詞，要寫「廢棄」。",
+     "",
+     "沒有「撥棄」這個詞，要寫「廢棄」。"
+    ],
+    "zx": {
+     "ch": "廢",
+     "rad": "广",
+     "radPos": "外",
+     "word": "廢棄",
+     "wrong": [
+      "費棄",
+      "發棄",
+      "撥棄"
+     ]
+    }
+   },
+   "zx4g": {
+    "a": 0,
+    "concept": "zxd",
+    "hint": "燒東西要用火，下面有火。",
+    "id": "zx4g",
+    "opts": [
+     "焚",
+     "林",
+     "汾",
+     "梵"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「露天（　）燒垃圾會汙染空氣」括號裡要填哪個字？",
+    "src": "https://pedia.cloud.edu.tw/Bookmark/TCollection?TextNameId=0101051150106",
+    "type": "choice",
+    "why": "焚是燒，下面是「火」。",
+    "wrongWhy": [
+     "",
+     "沒有「林燒」這個詞，要寫「焚燒」。",
+     "沒有「汾燒」這個詞，要寫「焚燒」。",
+     "沒有「梵燒」這個詞，要寫「焚燒」。"
+    ],
+    "zx": {
+     "ch": "焚",
+     "rad": "火",
+     "radPos": "下",
+     "word": "焚燒",
+     "wrong": [
+      "汾燒",
+      "梵燒",
+      "林燒"
+     ]
+    }
+   },
+   "zx4h": {
+    "a": 0,
+    "concept": "zxd",
+    "hint": "左邊是耒字旁的那一個。",
+    "id": "zx4h",
+    "opts": [
+     "耗",
+     "好",
+     "托",
+     "毛"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「做環保球衣比較不消（　）能源」括號裡要填哪個字？",
+    "src": "https://pedia.cloud.edu.tw/Bookmark/TCollection?TextNameId=0101051150106",
+    "type": "choice",
+    "why": "耗是減少、用掉，左邊是「耒」。",
+    "wrongWhy": [
+     "",
+     "沒有「消好」這個詞，要寫「消耗」。",
+     "沒有「消托」這個詞，要寫「消耗」。",
+     "沒有「消毛」這個詞，要寫「消耗」。"
+    ],
+    "zx": {
+     "ch": "耗",
+     "rad": "耒",
+     "radPos": "左",
+     "word": "消耗",
+     "wrong": [
+      "消毛",
+      "消托",
+      "消好"
+     ]
+    }
+   },
+   "zx4i": {
+    "a": 3,
+    "concept": "zxd",
+    "hint": "尸字頭，裡面有土的那一個。",
+    "id": "zx4i",
+    "opts": [
+     "屈",
+     "介",
+     "居",
+     "屆"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「他是應（　）畢業生，明年就要上國中」括號裡要填哪個字？",
+    "src": "https://pedia.cloud.edu.tw/Bookmark/TCollection?TextNameId=0101051150106",
+    "type": "choice",
+    "why": "屆是一次一次的次序，外面是「尸」，裡面有土和凵。",
+    "wrongWhy": [
+     "沒有「應屈」這個詞，要寫「應屆」。",
+     "沒有「應介」這個詞，要寫「應屆」。",
+     "沒有「應居」這個詞，要寫「應屆」。",
+     ""
+    ],
+    "zx": {
+     "ch": "屆",
+     "rad": "尸",
+     "radPos": "外",
+     "word": "應屆",
+     "wrong": [
+      "應介",
+      "應屈",
+      "應居"
+     ]
+    }
+   },
+   "yb1": {
+    "a": 3,
+    "concept": "yb",
+    "dy": {
+     "ch": "卷",
+     "read": "ㄐㄩㄢˇ",
+     "words": [
+      "蛋卷",
+      "考卷",
+      "問卷",
+      "交卷"
+     ]
+    },
+    "hint": "捲成一圈一圈的，讀第三聲。",
+    "id": "yb1",
+    "opts": [
+     "問卷",
+     "交卷",
+     "考卷",
+     "蛋卷"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "下面哪一個「卷」讀ㄐㄩㄢˇ？",
+    "src": "https://dict.concised.moe.edu.tw/search.jsp?md=1&word=%E8%9B%8B%E5%8D%B7",
+    "type": "choice",
+    "why": "「蛋卷」的「卷」讀ㄐㄩㄢˇ。",
+    "wrongWhy": [
+     "「問卷」的「卷」不讀ㄐㄩㄢˇ。",
+     "「交卷」的「卷」不讀ㄐㄩㄢˇ。",
+     "「考卷」的「卷」不讀ㄐㄩㄢˇ。",
+     ""
+    ]
+   },
+   "yb2": {
+    "a": 1,
+    "concept": "yb",
+    "dy": {
+     "ch": "行",
+     "read": "ㄒㄧㄥˋ",
+     "words": [
+      "品行",
+      "旅行",
+      "行為",
+      "行李"
+     ]
+    },
+    "hint": "說一個人的品德好不好，讀第四聲。",
+    "id": "yb2",
+    "opts": [
+     "旅行",
+     "品行",
+     "行為",
+     "行李"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "下面哪一個「行」讀ㄒㄧㄥˋ？",
+    "src": "https://dict.concised.moe.edu.tw/search.jsp?md=1&word=%E5%93%81%E8%A1%8C",
+    "type": "choice",
+    "why": "「品行」的「行」讀ㄒㄧㄥˋ。",
+    "wrongWhy": [
+     "「旅行」的「行」不讀ㄒㄧㄥˋ。",
+     "",
+     "「行為」的「行」不讀ㄒㄧㄥˋ。",
+     "「行李」的「行」不讀ㄒㄧㄥˋ。"
+    ]
+   },
+   "yb3": {
+    "a": 1,
+    "concept": "yb",
+    "dy": {
+     "ch": "卷",
+     "read": "ㄐㄩㄢˋ",
+     "words": [
+      "考卷",
+      "蛋卷"
+     ]
+    },
+    "hint": "考試寫的紙張，讀第四聲。",
+    "id": "yb3",
+    "opts": [
+     "ㄐㄩㄢˇ",
+     "ㄐㄩㄢˋ"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「考卷」的「卷」怎麼讀？",
+    "src": "https://dict.concised.moe.edu.tw/search.jsp?md=1&word=%E8%80%83%E5%8D%B7",
+    "type": "choice",
+    "why": "「考卷」的「卷」讀ㄐㄩㄢˋ。",
+    "wrongWhy": [
+     "ㄐㄩㄢˇ是「蛋卷」的「卷」的讀音。",
+     ""
+    ]
+   },
+   "yb4": {
+    "a": 0,
+    "concept": "yb",
+    "dy": {
+     "ch": "將",
+     "read": "ㄐㄧㄤˋ",
+     "words": [
+      "大將",
+      "將軍"
+     ]
+    },
+    "hint": "帶兵的大官叫大將，讀第四聲。",
+    "id": "yb4",
+    "opts": [
+     "ㄐㄧㄤˋ",
+     "ㄐㄧㄤ"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「大將」的「將」怎麼讀？",
+    "src": "https://dict.concised.moe.edu.tw/search.jsp?md=1&word=%E5%A4%A7%E5%B0%87",
+    "type": "choice",
+    "why": "「大將」的「將」讀ㄐㄧㄤˋ。",
+    "wrongWhy": [
+     "",
+     "ㄐㄧㄤ是「將軍」的「將」的讀音。"
+    ]
+   },
+   "yb5": {
+    "a": 1,
+    "concept": "yb",
+    "dy": {
+     "ch": "樂",
+     "read": "ㄌㄜˋ",
+     "words": [
+      "寓教於樂",
+      "音樂"
+     ]
+    },
+    "hint": "快樂的樂，讀ㄌㄜˋ。",
+    "id": "yb5",
+    "opts": [
+     "ㄩㄝˋ",
+     "ㄌㄜˋ"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「寓教於樂」的「樂」怎麼讀？",
+    "src": "https://dict.concised.moe.edu.tw/search.jsp?md=1&word=%E5%AF%93%E6%95%99%E6%96%BC%E6%A8%82",
+    "type": "choice",
+    "why": "「寓教於樂」的「樂」讀ㄌㄜˋ。",
+    "wrongWhy": [
+     "ㄩㄝˋ是「音樂」的「樂」的讀音。",
+     ""
+    ]
+   },
+   "yb6": {
+    "a": 0,
+    "concept": "yb",
+    "dy": {
+     "ch": "脈",
+     "read": "ㄇㄞˋ",
+     "words": [
+      "來龍去脈",
+      "脈脈"
+     ]
+    },
+    "hint": "山脈、來龍去脈，讀ㄇㄞˋ。",
+    "id": "yb6",
+    "opts": [
+     "ㄇㄞˋ",
+     "ㄇㄛˋ"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「來龍去脈」的「脈」怎麼讀？",
+    "src": "https://dict.concised.moe.edu.tw/search.jsp?md=1&word=%E4%BE%86%E9%BE%8D%E5%8E%BB%E8%84%88",
+    "type": "choice",
+    "why": "「來龍去脈」的「脈」讀ㄇㄞˋ。",
+    "wrongWhy": [
+     "",
+     "ㄇㄛˋ是「脈脈」的「脈」的讀音。"
+    ]
+   },
+   "yb7": {
+    "a": 1,
+    "concept": "yb",
+    "dy": {
+     "ch": "創",
+     "read": "ㄔㄨㄤ",
+     "words": [
+      "創傷",
+      "創作"
+     ]
+    },
+    "hint": "受了傷，讀第一聲。",
+    "id": "yb7",
+    "opts": [
+     "ㄔㄨㄤˋ",
+     "ㄔㄨㄤ"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「創傷」的「創」怎麼讀？",
+    "src": "https://dict.concised.moe.edu.tw/search.jsp?md=1&word=%E5%89%B5%E5%82%B7",
+    "type": "choice",
+    "why": "「創傷」的「創」讀ㄔㄨㄤ。",
+    "wrongWhy": [
+     "ㄔㄨㄤˋ是「創作」的「創」的讀音。",
+     ""
+    ]
+   },
+   "yb8": {
+    "a": 1,
+    "bs": {
+     "chars": [
+      "紡",
+      "織",
+      "坊",
+      "訪",
+      "仿"
+     ],
+     "kind": "same",
+     "rad": {
+      "仿": "人",
+      "坊": "土",
+      "紡": "糸",
+      "織": "糸",
+      "訪": "言"
+     },
+     "target": "紡"
+    },
+    "concept": "yb",
+    "hint": "紡織要用絲線。",
+    "id": "yb8",
+    "opts": [
+     "訪",
+     "織",
+     "仿",
+     "坊"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "下面哪一個字和「紡」的部首相同？",
+    "src": "https://dict.concised.moe.edu.tw/search.jsp?md=1&word=%E7%B4%A1",
+    "type": "choice",
+    "why": "「紡」和「織」都是糸部。",
+    "wrongWhy": [
+     "「訪」是言部，和「紡」不同。",
+     "",
+     "「仿」是人部，和「紡」不同。",
+     "「坊」是土部，和「紡」不同。"
+    ]
+   },
+   "yb9": {
+    "a": 3,
+    "bs": {
+     "chars": [
+      "培",
+      "壞",
+      "筍",
+      "勾",
+      "炒",
+      "吵",
+      "超",
+      "連"
+     ],
+     "kind": "pair",
+     "rad": {
+      "勾": "勹",
+      "吵": "口",
+      "培": "土",
+      "壞": "土",
+      "炒": "火",
+      "筍": "竹",
+      "超": "走",
+      "連": "辵"
+     }
+    },
+    "concept": "yb",
+    "hint": "看看左邊，哪一組一樣？",
+    "id": "yb9",
+    "opts": [
+     "筍、勾",
+     "超、連",
+     "炒、吵",
+     "培、壞"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "下面哪一組字的部首相同？",
+    "src": "https://dict.concised.moe.edu.tw/search.jsp?md=1&word=%E5%9F%B9",
+    "type": "choice",
+    "why": "「培」和「壞」都是土部。",
+    "wrongWhy": [
+     "「筍」是竹部，「勾」是勹部。",
+     "「超」是走部，「連」是辵部。",
+     "「炒」是火部，「吵」是口部。",
+     ""
+    ]
+   },
+   "yb10": {
+    "a": 2,
+    "bs": {
+     "chars": [
+      "恥",
+      "愧"
+     ],
+     "kind": "common",
+     "rad": {
+      "恥": "心",
+      "愧": "心"
+     }
+    },
+    "concept": "yb",
+    "hint": "羞恥、慚愧都是心裡的感覺。",
+    "id": "yb10",
+    "opts": [
+     "耳",
+     "鬼",
+     "心",
+     "止"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「恥」和「愧」，部首都是哪一個？",
+    "src": "https://dict.concised.moe.edu.tw/search.jsp?md=1&word=%E6%81%A5",
+    "type": "choice",
+    "why": "「恥」和「愧」的部首都是心。",
+    "wrongWhy": [
+     "「耳」不是這兩個字的部首；「恥」「愧」的部首都是心。",
+     "「鬼」不是這兩個字的部首；「恥」「愧」的部首都是心。",
+     "",
+     "「止」不是這兩個字的部首；「恥」「愧」的部首都是心。"
+    ]
+   },
+   "bd1": {
+    "a": 2,
+    "bd": {
+     "hau": "h5",
+     "mark": "："
+    },
+    "concept": "bd",
+    "hint": "後面要列出是哪三樣。",
+    "id": "bd1",
+    "opts": [
+     "問號（？）",
+     "頓號（、）",
+     "冒號（：）",
+     "分號（；）"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「書包裡有三樣東西□鉛筆、課本和水壺。」□裡要填哪一個標點符號？",
+    "src": "https://language.moe.gov.tw/001/Upload/files/site_content/M0001/hau/h5.htm",
+    "type": "choice",
+    "why": "冒號用來帶出下面要一一列出的東西。",
+    "wrongWhy": [
+     "這句不是在問問題。",
+     "頓號放在並列的詞中間，不是用來帶出下面的東西。",
+     "",
+     "分號用來分開兩個平列的句子。"
+    ]
+   },
+   "bd2": {
+    "a": 1,
+    "bd": {
+     "hau": "h3",
+     "mark": "、"
+    },
+    "concept": "bd",
+    "hint": "兩個並列的詞中間。",
+    "id": "bd2",
+    "opts": [
+     "分號（；）",
+     "頓號（、）",
+     "驚嘆號（！）",
+     "冒號（：）"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「我們玩了大富翁□撲克牌和圍棋。」□裡要填哪一個標點符號？",
+    "src": "https://language.moe.gov.tw/001/Upload/files/site_content/M0001/hau/h3.htm",
+    "type": "choice",
+    "why": "大富翁、撲克牌是並列的詞，中間用頓號。",
+    "wrongWhy": [
+     "分號用來分開句子，不是分開詞。",
+     "",
+     "這裡沒有感嘆的語氣。",
+     "冒號放在列舉的前面，不是兩個詞中間。"
+    ]
+   },
+   "bd3": {
+    "a": 3,
+    "bd": {
+     "hau": "h4",
+     "mark": "；"
+    },
+    "concept": "bd",
+    "hint": "前半說哥哥，後半說妹妹。",
+    "id": "bd3",
+    "opts": [
+     "頓號（、）",
+     "問號（？）",
+     "冒號（：）",
+     "分號（；）"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「哥哥喜歡打球，常去操場□妹妹喜歡畫畫，常去美術教室。」□裡要填哪一個標點符號？",
+    "src": "https://language.moe.gov.tw/001/Upload/files/site_content/M0001/hau/h4.htm",
+    "type": "choice",
+    "why": "前後兩句一樣長、平列在一起，中間用分號。",
+    "wrongWhy": [
+     "頓號放在並列的詞中間，不是句子中間。",
+     "這句不是在問問題。",
+     "後半句不是在說明或列舉前半句。",
+     ""
+    ]
+   },
+   "bd4": {
+    "a": 1,
+    "bd": {
+     "hau": "h10",
+     "mark": "──"
+    },
+    "concept": "bd",
+    "hint": "公雞的叫聲拉得長長的。",
+    "id": "bd4",
+    "opts": [
+     "頓號（、）",
+     "破折號（──）",
+     "分號（；）",
+     "冒號（：）"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「「喔喔喔□」公雞一大早就叫個不停。」□裡要填哪一個標點符號？",
+    "src": "https://language.moe.gov.tw/001/Upload/files/site_content/M0001/hau/h10.htm",
+    "type": "choice",
+    "why": "破折號可以表示聲音拉長。",
+    "wrongWhy": [
+     "頓號放在並列的詞中間。",
+     "",
+     "分號用來分開兩個平列的句子。",
+     "後面沒有要列舉或說明的東西。"
+    ]
+   },
+   "bd5": {
+    "a": 2,
+    "bd": {
+     "hau": "h10",
+     "mark": "──"
+    },
+    "concept": "bd",
+    "hint": "後半是在補充說明是哪一種狗。",
+    "id": "bd5",
+    "opts": [
+     "頓號（、）",
+     "問號（？）",
+     "破折號（──）",
+     "分號（；）"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「我想養一隻狗□一隻毛茸茸的小白狗。」□裡要填哪一個標點符號？",
+    "src": "https://language.moe.gov.tw/001/Upload/files/site_content/M0001/hau/h10.htm",
+    "type": "choice",
+    "why": "破折號可以在後面補充說明前面的詞。",
+    "wrongWhy": [
+     "頓號放在並列的詞中間。",
+     "這句不是在問問題。",
+     "",
+     "後半不是另一個平列的句子。"
+    ]
+   },
+   "bd6": {
+    "a": 1,
+    "bd": {
+     "hau": "h8",
+     "mark": "？"
+    },
+    "concept": "bd",
+    "hint": "這句是在問問題嗎？",
+    "id": "bd6",
+    "opts": [
+     "頓號（、）",
+     "問號（？）",
+     "冒號（：）",
+     "驚嘆號（！）"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「你今天要去圖書館嗎□」□裡要填哪一個標點符號？",
+    "src": "https://language.moe.gov.tw/001/Upload/files/site_content/M0001/hau/h8.htm",
+    "type": "choice",
+    "why": "有「嗎」、在問別人，句子後面用問號。",
+    "wrongWhy": [
+     "頓號放在並列的詞中間。",
+     "",
+     "後面沒有要列舉或說明的東西。",
+     "這句是在問人，不是感嘆。"
+    ]
+   },
+   "bd7": {
+    "a": 3,
+    "bd": {
+     "hau": "h9",
+     "mark": "！"
+    },
+    "concept": "bd",
+    "hint": "「哇」是吃驚、感嘆的聲音。",
+    "id": "bd7",
+    "opts": [
+     "分號（；）",
+     "問號（？）",
+     "頓號（、）",
+     "驚嘆號（！）"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「哇□好大的雨啊！」□裡要填哪一個標點符號？",
+    "src": "https://language.moe.gov.tw/001/Upload/files/site_content/M0001/hau/h9.htm",
+    "type": "choice",
+    "why": "獨立的嘆詞「哇」後面可以用驚嘆號。",
+    "wrongWhy": [
+     "分號用來分開兩個平列的句子。",
+     "「哇」是在驚嘆，不是在問問題。",
+     "頓號放在並列的詞中間。",
+     ""
+    ]
+   },
+   "bd9": {
+    "a": 0,
+    "bd": {
+     "hau": "h12",
+     "mark": "《》"
+    },
+    "concept": "bd",
+    "hint": "《西遊記》是一整本書。",
+    "id": "bd9",
+    "opts": [
+     "《　》",
+     "（　）",
+     "「　」",
+     "〈　〉"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "依書名號的一般用法，「我最喜歡看□西遊記□這本書。」整本書的書名通常用哪一組？",
+    "src": "https://language.moe.gov.tw/001/Upload/files/site_content/M0001/hau/h12.htm",
+    "type": "choice",
+    "why": "《　》多用於書名，〈　〉多用於篇名。",
+    "wrongWhy": [
+     "",
+     "括號用來補充說明，不是標書名。",
+     "引號用在說的話或要特別強調的詞，書名要用書名號。",
+     "〈　〉多用在篇名，整本書通常用《　》。"
+    ]
+   },
+   "cy1": {
+    "a": 3,
+    "concept": "cy",
+    "cy": {
+     "idiom": "完璧歸趙",
+     "others": [
+      "雨後春筍",
+      "患得患失",
+      "語重心長"
+     ]
+    },
+    "hint": "東西要還給原來的主人。",
+    "id": "cy1",
+    "opts": [
+     "患得患失",
+     "語重心長",
+     "雨後春筍",
+     "完璧歸趙"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「借來的漫畫看完了，我要（　），還給小明」括號裡填哪一個成語最合適？",
+    "src": "https://dict.idioms.moe.edu.tw/idiomView.jsp?ID=340",
+    "type": "choice",
+    "why": "「完璧歸趙」是把東西完好的還給原主。",
+    "wrongWhy": [
+     "「患得患失」是太在意得失，一直擔心，不符合這句的意思。",
+     "「語重心長」是說的話真誠，用心很深，不符合這句的意思。",
+     "「雨後春筍」是新的事物一下子大量出現，不符合這句的意思。",
+     ""
+    ]
+   },
+   "cy3": {
+    "a": 0,
+    "concept": "cy",
+    "cy": {
+     "idiom": "肝膽相照",
+     "others": [
+      "患得患失",
+      "雨後春筍",
+      "完璧歸趙"
+     ]
+    },
+    "hint": "真心對待朋友。",
+    "id": "cy3",
+    "opts": [
+     "肝膽相照",
+     "患得患失",
+     "完璧歸趙",
+     "雨後春筍"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「他們互相信任、真心相待，是（　）的好朋友」括號裡填哪一個成語最合適？",
+    "src": "https://dict.idioms.moe.edu.tw/idiomView.jsp?ID=203",
+    "type": "choice",
+    "why": "「肝膽相照」是朋友之間真心相待。",
+    "wrongWhy": [
+     "",
+     "「患得患失」是太在意得失，一直擔心，不符合這句的意思。",
+     "「完璧歸趙」是把東西完好的還給原主，不符合這句的意思。",
+     "「雨後春筍」是新的事物一下子大量出現，不符合這句的意思。"
+    ]
+   },
+   "cy5": {
+    "a": 3,
+    "concept": "cy",
+    "cy": {
+     "idiom": "雨後春筍",
+     "others": [
+      "肝膽相照",
+      "語重心長",
+      "負荊請罪"
+     ]
+    },
+    "hint": "一下子冒出很多家。",
+    "id": "cy5",
+    "opts": [
+     "負荊請罪",
+     "語重心長",
+     "肝膽相照",
+     "雨後春筍"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「這幾年，手搖飲料店像（　）般冒出來」括號裡填哪一個成語最合適？",
+    "src": "https://dict.idioms.moe.edu.tw/idiomView.jsp?ID=1411",
+    "type": "choice",
+    "why": "「雨後春筍」是新的事物一下子大量出現。",
+    "wrongWhy": [
+     "「負荊請罪」是主動向人認錯，請對方處罰，不符合這句的意思。",
+     "「語重心長」是說的話真誠，用心很深，不符合這句的意思。",
+     "「肝膽相照」是朋友之間真心相待，不符合這句的意思。",
+     ""
+    ]
+   },
+   "cy6": {
+    "a": 0,
+    "concept": "cy",
+    "cy": {
+     "idiom": "寓教於樂",
+     "others": [
+      "患得患失",
+      "挺身而出",
+      "完璧歸趙"
+     ]
+    },
+    "hint": "一邊玩，一邊學。",
+    "id": "cy6",
+    "opts": [
+     "寓教於樂",
+     "患得患失",
+     "挺身而出",
+     "完璧歸趙"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「這款數學桌遊（　），大家邊玩邊學會加減」括號裡填哪一個成語最合適？",
+    "src": "https://dict.revised.moe.edu.tw/dictView.jsp?ID=164186",
+    "type": "choice",
+    "why": "「寓教於樂」是在遊戲、娛樂裡學到東西。",
+    "wrongWhy": [
+     "",
+     "「患得患失」是太在意得失，一直擔心，不符合這句的意思。",
+     "「挺身而出」是遇到危難，勇敢的站出來，不符合這句的意思。",
+     "「完璧歸趙」是把東西完好的還給原主，不符合這句的意思。"
+    ]
+   },
+   "cy7": {
+    "a": 2,
+    "concept": "cy",
+    "cy": {
+     "idiom": "患得患失",
+     "others": [
+      "神采飛揚",
+      "肝膽相照",
+      "寓教於樂"
+     ]
+    },
+    "hint": "太在意輸贏。",
+    "id": "cy7",
+    "opts": [
+     "神采飛揚",
+     "寓教於樂",
+     "患得患失",
+     "肝膽相照"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「比賽前他一直擔心輸贏，（　），反而睡不著」括號裡填哪一個成語最合適？",
+    "src": "https://dict.idioms.moe.edu.tw/idiomView.jsp?ID=727",
+    "type": "choice",
+    "why": "「患得患失」是太在意得失，一直擔心。",
+    "wrongWhy": [
+     "「神采飛揚」是精神很好、很得意的樣子，不符合這句的意思。",
+     "「寓教於樂」是在遊戲、娛樂裡學到東西，不符合這句的意思。",
+     "",
+     "「肝膽相照」是朋友之間真心相待，不符合這句的意思。"
+    ]
+   },
+   "cy8": {
+    "a": 1,
+    "concept": "cy",
+    "cy": {
+     "idiom": "來龍去脈",
+     "others": [
+      "挺身而出",
+      "負荊請罪",
+      "雨後春筍"
+     ]
+    },
+    "hint": "從頭到尾的經過。",
+    "id": "cy8",
+    "opts": [
+     "負荊請罪",
+     "來龍去脈",
+     "雨後春筍",
+     "挺身而出"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「爸爸要我把事情的（　）說清楚，從頭講到尾」括號裡填哪一個成語最合適？",
+    "src": "https://dict.idioms.moe.edu.tw/idiomView.jsp?ID=656",
+    "type": "choice",
+    "why": "「來龍去脈」是事情從頭到尾的經過。",
+    "wrongWhy": [
+     "「負荊請罪」是主動向人認錯，請對方處罰，不符合這句的意思。",
+     "",
+     "「雨後春筍」是新的事物一下子大量出現，不符合這句的意思。",
+     "「挺身而出」是遇到危難，勇敢的站出來，不符合這句的意思。"
+    ]
+   },
+   "cy9": {
+    "a": 3,
+    "concept": "cy",
+    "cy": {
+     "idiom": "語重心長",
+     "others": [
+      "雨後春筍",
+      "完璧歸趙",
+      "患得患失"
+     ]
+    },
+    "hint": "老師的話很真誠、用心很深。",
+    "id": "cy9",
+    "opts": [
+     "完璧歸趙",
+     "患得患失",
+     "雨後春筍",
+     "語重心長"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「畢業前，老師（　）的提醒我們要好好做人」括號裡填哪一個成語最合適？",
+    "src": "https://dict.idioms.moe.edu.tw/idiomView.jsp?ID=6746",
+    "type": "choice",
+    "why": "「語重心長」是說的話真誠，用心很深。",
+    "wrongWhy": [
+     "「完璧歸趙」是把東西完好的還給原主，不符合這句的意思。",
+     "「患得患失」是太在意得失，一直擔心，不符合這句的意思。",
+     "「雨後春筍」是新的事物一下子大量出現，不符合這句的意思。",
+     ""
+    ]
+   },
+   "cy10": {
+    "a": 2,
+    "concept": "cy",
+    "cy": {
+     "idiom": "神采飛揚",
+     "others": [
+      "雨後春筍",
+      "負荊請罪",
+      "來龍去脈"
+     ]
+    },
+    "hint": "高興、得意、很有精神。",
+    "id": "cy10",
+    "opts": [
+     "來龍去脈",
+     "負荊請罪",
+     "神采飛揚",
+     "雨後春筍"
+    ],
+    "page": "自編題（未對課本）",
+    "q": "「他得了第一名，上台領獎時滿臉笑容、（　）」括號裡填哪一個成語最合適？",
+    "src": "https://dict.idioms.moe.edu.tw/idiomView.jsp?ID=13753",
+    "type": "choice",
+    "why": "「神采飛揚」是精神很好、很得意的樣子。",
+    "wrongWhy": [
+     "「來龍去脈」是事情從頭到尾的經過，不符合這句的意思。",
+     "「負荊請罪」是主動向人認錯，請對方處罰，不符合這句的意思。",
+     "",
+     "「雨後春筍」是新的事物一下子大量出現，不符合這句的意思。"
+    ]
+   }
+  },
+  "explain": {
+   "bd": [
+    {
+     "ask": "這個符號後面接的是詞、句子，還是要列的東西？",
+     "examples": [
+      {
+       "s": "「書包裡有三樣東西：鉛筆、課本和水壺。」",
+       "why": "冒號帶出三樣東西，東西中間用頓號。"
+      },
+      {
+       "s": "「哥哥愛打球；妹妹愛畫畫。」",
+       "why": "兩句平列，中間用分號。"
+      },
+      {
+       "s": "「喔喔喔──」",
+       "why": "公雞的叫聲拉長，用破折號。"
+      }
+     ],
+     "lines": [
+      "冒號：後面要列出東西或說明。",
+      "頓號：放在並列的詞中間，像蘋果、香蕉。",
+      "分號：前後兩句平列，像哥哥怎樣；妹妹怎樣。",
+      "破折號占兩格，可以把聲音拉長，也可以補充說明。"
+     ],
+     "name": "看圖：常考的標點符號",
+     "svg": {
+      "#fn": "<svg class=\"fig\" viewBox=\"0 0 690 256\" role=\"img\" aria-label=\"常考的標點：冒號帶出後面要列的東西；頓號放在並列的詞中間；分號放在平列的兩個句子中間；破折號表示聲音拉長或補充說明\"><rect x=\"16.0\" y=\"16.0\" width=\"321.0\" height=\"104.0\" rx=\"12\" fill=\"var(--sun-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"176.5\" y=\"58.0\" font-size=\"22\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">冒號 ：</text><text x=\"176.5\" y=\"94.0\" font-size=\"17\" text-anchor=\"middle\" fill=\"var(--ink)\">帶出後面要列的東西</text><rect x=\"353.0\" y=\"16.0\" width=\"321.0\" height=\"104.0\" rx=\"12\" fill=\"var(--pri-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"513.5\" y=\"58.0\" font-size=\"22\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">頓號 、</text><text x=\"513.5\" y=\"94.0\" font-size=\"17\" text-anchor=\"middle\" fill=\"var(--ink)\">並列的詞中間</text><rect x=\"16.0\" y=\"136.0\" width=\"321.0\" height=\"104.0\" rx=\"12\" fill=\"var(--leaf-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"176.5\" y=\"178.0\" font-size=\"22\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">分號 ；</text><text x=\"176.5\" y=\"214.0\" font-size=\"17\" text-anchor=\"middle\" fill=\"var(--ink)\">平列的兩個句子中間</text><rect x=\"353.0\" y=\"136.0\" width=\"321.0\" height=\"104.0\" rx=\"12\" fill=\"var(--bad-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"513.5\" y=\"178.0\" font-size=\"22\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">破折號 ──</text><text x=\"513.5\" y=\"214.0\" font-size=\"17\" text-anchor=\"middle\" fill=\"var(--ink)\">聲音拉長、補充說明</text></svg>"
+     },
+     "task": "每讀一個例句，先說標點的用法，再看答案。"
+    },
+    {
+     "ask": "這句話是在問、在感嘆，還是在說明？",
+     "examples": [
+      {
+       "s": "「哇！好大的雨啊！」",
+       "why": "哇是感嘆的聲音，用驚嘆號。"
+      }
+     ],
+     "lines": [
+      "在問別人，用問號。",
+      "很吃驚、很感嘆，或在下命令，用驚嘆號。",
+      "東西還沒列完、話還沒說完，用刪節號。",
+      "書名用《　》，篇名用〈　〉。"
+     ],
+     "name": "換個說法：句子的語氣決定句尾符號",
+     "svg": {
+      "#fn": "<svg class=\"fig\" viewBox=\"0 0 690 150\" role=\"img\" aria-label=\"句尾符號：在問問題用問號；在感嘆或命令用驚嘆號；話還沒說完用刪節號\"><rect x=\"16.0\" y=\"20.0\" width=\"192.7\" height=\"110.0\" rx=\"12\" fill=\"var(--sun-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"112.3\" y=\"66.0\" font-size=\"20\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">在問問題</text><text x=\"112.3\" y=\"102.0\" font-size=\"15\" text-anchor=\"middle\" fill=\"var(--ink)\">用問號？</text><line x1=\"212.7\" y1=\"75.0\" x2=\"244.7\" y2=\"75.0\" stroke=\"var(--ink)\" stroke-width=\"2.5\"/><polygon points=\"244.7,75.0 235.7,79.3 235.7,70.7\" fill=\"var(--ink)\"/><rect x=\"248.7\" y=\"20.0\" width=\"192.7\" height=\"110.0\" rx=\"12\" fill=\"var(--pri-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"345.0\" y=\"66.0\" font-size=\"20\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">在感嘆、命令</text><text x=\"345.0\" y=\"102.0\" font-size=\"15\" text-anchor=\"middle\" fill=\"var(--ink)\">用驚嘆號！</text><line x1=\"445.3\" y1=\"75.0\" x2=\"477.3\" y2=\"75.0\" stroke=\"var(--ink)\" stroke-width=\"2.5\"/><polygon points=\"477.3,75.0 468.3,79.3 468.3,70.7\" fill=\"var(--ink)\"/><rect x=\"481.3\" y=\"20.0\" width=\"192.7\" height=\"110.0\" rx=\"12\" fill=\"var(--leaf-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"577.7\" y=\"66.0\" font-size=\"20\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">話還沒說完</text><text x=\"577.7\" y=\"102.0\" font-size=\"15\" text-anchor=\"middle\" fill=\"var(--ink)\">用刪節號……</text></svg>"
+     },
+     "task": "念句子給爸媽聽，請他們猜你用了什麼符號。"
+    }
+   ],
+   "cy": [
+    {
+     "ask": "這句話想說什麼？哪個成語的意思對得上？",
+     "examples": [
+      {
+       "s": "「新開的飲料店像雨後春筍。」",
+       "why": "一下子開了很多家：大量出現。"
+      },
+      {
+       "s": "「借的書看完了，我會完璧歸趙。」",
+       "why": "完好的還給原主。"
+      },
+      {
+       "s": "「他們是肝膽相照的好朋友。」",
+       "why": "真心相待的朋友。"
+      }
+     ],
+     "lines": [
+      "成語的字面和真正的意思，常常不一樣。",
+      "雨後春筍不是在講竹筍，是說東西一下子冒出很多。",
+      "完璧歸趙不只說玉，借來的東西都可以用。",
+      "選成語前，先想這句話要說什麼。"
+     ],
+     "name": "看圖：成語有表面意思，也有真正的意思",
+     "svg": {
+      "#fn": "<svg class=\"fig\" viewBox=\"0 0 690 298\" role=\"img\" aria-label=\"成語的真正意思：完璧歸趙是把東西完好還給原主；肝膽相照是朋友之間真心相待；雨後春筍是新事物一下子大量出現；來龍去脈是事情從頭到尾的經過\"><rect x=\"16.0\" y=\"16.0\" width=\"220.0\" height=\"56.0\" rx=\"12\" fill=\"var(--card)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"126.0\" y=\"52.0\" font-size=\"19\" text-anchor=\"middle\" fill=\"var(--ink)\">完璧歸趙</text><text x=\"291.0\" y=\"38.0\" font-size=\"15\" text-anchor=\"middle\" fill=\"var(--muted)\">是</text><line x1=\"250.0\" y1=\"50.0\" x2=\"332.0\" y2=\"50.0\" stroke=\"var(--ink)\" stroke-width=\"2.5\"/><polygon points=\"332.0,50.0 323.0,54.3 323.0,45.7\" fill=\"var(--ink)\"/><rect x=\"346.0\" y=\"16.0\" width=\"328.0\" height=\"56.0\" rx=\"12\" fill=\"var(--sun-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"510.0\" y=\"52.0\" font-size=\"19\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">把東西完好還給原主</text><rect x=\"16.0\" y=\"86.0\" width=\"220.0\" height=\"56.0\" rx=\"12\" fill=\"var(--card)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"126.0\" y=\"122.0\" font-size=\"19\" text-anchor=\"middle\" fill=\"var(--ink)\">肝膽相照</text><text x=\"291.0\" y=\"108.0\" font-size=\"15\" text-anchor=\"middle\" fill=\"var(--muted)\">是</text><line x1=\"250.0\" y1=\"120.0\" x2=\"332.0\" y2=\"120.0\" stroke=\"var(--ink)\" stroke-width=\"2.5\"/><polygon points=\"332.0,120.0 323.0,124.3 323.0,115.7\" fill=\"var(--ink)\"/><rect x=\"346.0\" y=\"86.0\" width=\"328.0\" height=\"56.0\" rx=\"12\" fill=\"var(--pri-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"510.0\" y=\"122.0\" font-size=\"19\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">朋友之間真心相待</text><rect x=\"16.0\" y=\"156.0\" width=\"220.0\" height=\"56.0\" rx=\"12\" fill=\"var(--card)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"126.0\" y=\"192.0\" font-size=\"19\" text-anchor=\"middle\" fill=\"var(--ink)\">雨後春筍</text><text x=\"291.0\" y=\"178.0\" font-size=\"15\" text-anchor=\"middle\" fill=\"var(--muted)\">是</text><line x1=\"250.0\" y1=\"190.0\" x2=\"332.0\" y2=\"190.0\" stroke=\"var(--ink)\" stroke-width=\"2.5\"/><polygon points=\"332.0,190.0 323.0,194.3 323.0,185.7\" fill=\"var(--ink)\"/><rect x=\"346.0\" y=\"156.0\" width=\"328.0\" height=\"56.0\" rx=\"12\" fill=\"var(--leaf-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"510.0\" y=\"192.0\" font-size=\"19\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">新事物一下子大量出現</text><rect x=\"16.0\" y=\"226.0\" width=\"220.0\" height=\"56.0\" rx=\"12\" fill=\"var(--card)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"126.0\" y=\"262.0\" font-size=\"19\" text-anchor=\"middle\" fill=\"var(--ink)\">來龍去脈</text><text x=\"291.0\" y=\"248.0\" font-size=\"15\" text-anchor=\"middle\" fill=\"var(--muted)\">是</text><line x1=\"250.0\" y1=\"260.0\" x2=\"332.0\" y2=\"260.0\" stroke=\"var(--ink)\" stroke-width=\"2.5\"/><polygon points=\"332.0,260.0 323.0,264.3 323.0,255.7\" fill=\"var(--ink)\"/><rect x=\"346.0\" y=\"226.0\" width=\"328.0\" height=\"56.0\" rx=\"12\" fill=\"var(--bad-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"510.0\" y=\"262.0\" font-size=\"19\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">事情從頭到尾的經過</text></svg>"
+     },
+     "task": "每讀一個例句，先說成語真正的意思，再看答案。"
+    },
+    {
+     "ask": "這個成語換成白話，是什麼意思？",
+     "examples": [
+      {
+       "s": "「比賽前他患得患失，睡不著。」",
+       "why": "太在意輸贏，一直擔心。"
+      }
+     ],
+     "lines": [
+      "把每個成語換成白話，放進句子裡。",
+      "念起來通順、意思對，就是它。",
+      "患得患失是太在意得失；神采飛揚是很得意、很有精神。"
+     ],
+     "name": "換個說法：把成語換成白話，看通不通",
+     "svg": {
+      "#fn": "<svg class=\"fig\" viewBox=\"0 0 690 150\" role=\"img\" aria-label=\"選成語的方法：先讀句子想它在說什麼，再把成語換成白話放進去，念一次，通了就對\"><rect x=\"16.0\" y=\"20.0\" width=\"192.7\" height=\"110.0\" rx=\"12\" fill=\"var(--sun-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"112.3\" y=\"66.0\" font-size=\"20\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">讀句子</text><text x=\"112.3\" y=\"102.0\" font-size=\"15\" text-anchor=\"middle\" fill=\"var(--ink)\">這句在說什麼？</text><line x1=\"212.7\" y1=\"75.0\" x2=\"244.7\" y2=\"75.0\" stroke=\"var(--ink)\" stroke-width=\"2.5\"/><polygon points=\"244.7,75.0 235.7,79.3 235.7,70.7\" fill=\"var(--ink)\"/><rect x=\"248.7\" y=\"20.0\" width=\"192.7\" height=\"110.0\" rx=\"12\" fill=\"var(--pri-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"345.0\" y=\"66.0\" font-size=\"20\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">換成白話</text><text x=\"345.0\" y=\"102.0\" font-size=\"15\" text-anchor=\"middle\" fill=\"var(--ink)\">成語放進去</text><line x1=\"445.3\" y1=\"75.0\" x2=\"477.3\" y2=\"75.0\" stroke=\"var(--ink)\" stroke-width=\"2.5\"/><polygon points=\"477.3,75.0 468.3,79.3 468.3,70.7\" fill=\"var(--ink)\"/><rect x=\"481.3\" y=\"20.0\" width=\"192.7\" height=\"110.0\" rx=\"12\" fill=\"var(--leaf-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"577.7\" y=\"66.0\" font-size=\"20\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">念一次</text><text x=\"577.7\" y=\"102.0\" font-size=\"15\" text-anchor=\"middle\" fill=\"var(--ink)\">通了就對</text></svg>"
+     },
+     "task": "請爸媽說一個成語，你用它說一句話。"
+    }
+   ],
+   "yb": [
+    {
+     "ask": "這個詞是什麼意思？意思決定讀音。",
+     "examples": [
+      {
+       "s": "「品行」讀ㄆㄧㄣˇ ㄒㄧㄥˋ",
+       "why": "說一個人的品德，行讀第四聲。"
+      },
+      {
+       "s": "「來龍去脈」的脈讀ㄇㄞˋ",
+       "why": "和山脈的脈一樣。"
+      },
+      {
+       "s": "「旅行」讀ㄌㄩˇ ㄒㄧㄥˊ",
+       "why": "走路、出門的行，讀第二聲。"
+      }
+     ],
+     "lines": [
+      "同一個字，意思不同，讀音也不同。",
+      "考試的紙是考卷，讀第四聲；捲起來的蛋卷，讀第三聲。",
+      "開心的樂讀ㄌㄜˋ，唱歌的音樂讀ㄩㄝˋ。",
+      "受傷的創傷讀第一聲，創作讀第四聲。"
+     ],
+     "name": "看圖：一個字，兩種讀音",
+     "svg": {
+      "#fn": "<svg class=\"fig\" viewBox=\"0 0 690 298\" role=\"img\" aria-label=\"多音字：卷讀ㄐㄩㄢˋ是考卷問卷，讀ㄐㄩㄢˇ是蛋卷；將讀ㄐㄧㄤ是將軍，讀ㄐㄧㄤˋ是大將；樂讀ㄌㄜˋ是寓教於樂，讀ㄩㄝˋ是音樂；創讀ㄔㄨㄤˋ是創作，讀ㄔㄨㄤ是創傷\"><rect x=\"16.0\" y=\"16.0\" width=\"300.0\" height=\"56.0\" rx=\"12\" fill=\"var(--card)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"166.0\" y=\"52.0\" font-size=\"19\" text-anchor=\"middle\" fill=\"var(--ink)\">卷 ㄐㄩㄢˋ：考卷、問卷</text><text x=\"371.0\" y=\"38.0\" font-size=\"15\" text-anchor=\"middle\" fill=\"var(--muted)\">也讀</text><line x1=\"330.0\" y1=\"50.0\" x2=\"412.0\" y2=\"50.0\" stroke=\"var(--ink)\" stroke-width=\"2.5\"/><polygon points=\"412.0,50.0 403.0,54.3 403.0,45.7\" fill=\"var(--ink)\"/><rect x=\"426.0\" y=\"16.0\" width=\"248.0\" height=\"56.0\" rx=\"12\" fill=\"var(--sun-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"550.0\" y=\"52.0\" font-size=\"19\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">卷 ㄐㄩㄢˇ：蛋卷</text><rect x=\"16.0\" y=\"86.0\" width=\"300.0\" height=\"56.0\" rx=\"12\" fill=\"var(--card)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"166.0\" y=\"122.0\" font-size=\"19\" text-anchor=\"middle\" fill=\"var(--ink)\">將 ㄐㄧㄤ：將軍</text><text x=\"371.0\" y=\"108.0\" font-size=\"15\" text-anchor=\"middle\" fill=\"var(--muted)\">也讀</text><line x1=\"330.0\" y1=\"120.0\" x2=\"412.0\" y2=\"120.0\" stroke=\"var(--ink)\" stroke-width=\"2.5\"/><polygon points=\"412.0,120.0 403.0,124.3 403.0,115.7\" fill=\"var(--ink)\"/><rect x=\"426.0\" y=\"86.0\" width=\"248.0\" height=\"56.0\" rx=\"12\" fill=\"var(--pri-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"550.0\" y=\"122.0\" font-size=\"19\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">將 ㄐㄧㄤˋ：大將</text><rect x=\"16.0\" y=\"156.0\" width=\"300.0\" height=\"56.0\" rx=\"12\" fill=\"var(--card)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"166.0\" y=\"192.0\" font-size=\"19\" text-anchor=\"middle\" fill=\"var(--ink)\">樂 ㄌㄜˋ：寓教於樂</text><text x=\"371.0\" y=\"178.0\" font-size=\"15\" text-anchor=\"middle\" fill=\"var(--muted)\">也讀</text><line x1=\"330.0\" y1=\"190.0\" x2=\"412.0\" y2=\"190.0\" stroke=\"var(--ink)\" stroke-width=\"2.5\"/><polygon points=\"412.0,190.0 403.0,194.3 403.0,185.7\" fill=\"var(--ink)\"/><rect x=\"426.0\" y=\"156.0\" width=\"248.0\" height=\"56.0\" rx=\"12\" fill=\"var(--leaf-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"550.0\" y=\"192.0\" font-size=\"19\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">樂 ㄩㄝˋ：音樂</text><rect x=\"16.0\" y=\"226.0\" width=\"300.0\" height=\"56.0\" rx=\"12\" fill=\"var(--card)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"166.0\" y=\"262.0\" font-size=\"19\" text-anchor=\"middle\" fill=\"var(--ink)\">創 ㄔㄨㄤˋ：創作</text><text x=\"371.0\" y=\"248.0\" font-size=\"15\" text-anchor=\"middle\" fill=\"var(--muted)\">也讀</text><line x1=\"330.0\" y1=\"260.0\" x2=\"412.0\" y2=\"260.0\" stroke=\"var(--ink)\" stroke-width=\"2.5\"/><polygon points=\"412.0,260.0 403.0,264.3 403.0,255.7\" fill=\"var(--ink)\"/><rect x=\"426.0\" y=\"226.0\" width=\"248.0\" height=\"56.0\" rx=\"12\" fill=\"var(--bad-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"550.0\" y=\"262.0\" font-size=\"19\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">創 ㄔㄨㄤ：創傷</text></svg>"
+     },
+     "task": "每讀一個例句，先自己念一次，再看答案。"
+    },
+    {
+     "ask": "這個字和什麼有關？部首在哪裡？",
+     "examples": [
+      {
+       "s": "「愧」的部首是心",
+       "why": "左邊的豎心旁就是心，慚愧是心裡的感覺。"
+      }
+     ],
+     "lines": [
+      "字典把同一個偏旁的字放在一起，那個偏旁就是部首。",
+      "部首常常和字的意思有關。",
+      "恥的左邊是耳，部首卻是右邊的心。"
+     ],
+     "name": "換個說法：部首就是字典把字分類的那一格",
+     "svg": {
+      "#fn": "<svg class=\"fig\" viewBox=\"0 0 690 256\" role=\"img\" aria-label=\"部首分類：紡織純是糸部，和絲線有關；培和壞是土部；恥和愧是心部；炒是火部，吵是口部，長得像但部首不同\"><rect x=\"16.0\" y=\"16.0\" width=\"321.0\" height=\"104.0\" rx=\"12\" fill=\"var(--sun-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"176.5\" y=\"58.0\" font-size=\"22\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">紡、織、純</text><text x=\"176.5\" y=\"94.0\" font-size=\"17\" text-anchor=\"middle\" fill=\"var(--ink)\">糸部：和絲線有關</text><rect x=\"353.0\" y=\"16.0\" width=\"321.0\" height=\"104.0\" rx=\"12\" fill=\"var(--pri-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"513.5\" y=\"58.0\" font-size=\"22\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">培、壞</text><text x=\"513.5\" y=\"94.0\" font-size=\"17\" text-anchor=\"middle\" fill=\"var(--ink)\">土部</text><rect x=\"16.0\" y=\"136.0\" width=\"321.0\" height=\"104.0\" rx=\"12\" fill=\"var(--leaf-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"176.5\" y=\"178.0\" font-size=\"22\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">恥、愧</text><text x=\"176.5\" y=\"214.0\" font-size=\"17\" text-anchor=\"middle\" fill=\"var(--ink)\">心部：心裡的感覺</text><rect x=\"353.0\" y=\"136.0\" width=\"321.0\" height=\"104.0\" rx=\"12\" fill=\"var(--bad-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"513.5\" y=\"178.0\" font-size=\"22\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">炒（火）吵（口）</text><text x=\"513.5\" y=\"214.0\" font-size=\"17\" text-anchor=\"middle\" fill=\"var(--ink)\">長得像，部首不同</text></svg>"
+     },
+     "task": "請爸媽說一個字，你說出它的部首。"
+    }
+   ],
+   "zxc": [
+    {
+     "ask": "這個詞和什麼有關？要用哪個偏旁？",
+     "examples": [
+      {
+       "s": "「完璧歸趙」不是「完壁歸趙」",
+       "why": "趙國拿回來的是玉，不是牆壁。"
+      },
+      {
+       "s": "「回憶」不是「回億」",
+       "why": "想起來是心裡的事，用豎心旁；億是數字。"
+      },
+      {
+       "s": "「炒熱氣氛」不是「吵熱氣氛」",
+       "why": "像炒菜一樣把氣氛弄熱，用火字旁。"
+      }
+     ],
+     "lines": [
+      "長得像的字，差別常在偏旁。",
+      "先想這個詞在說什麼，再找對得上的偏旁。",
+      "和氏璧是玉，所以「璧」下面是玉。",
+      "牆壁是土砌的，所以「壁」下面是土。"
+     ],
+     "name": "看圖：看偏旁，想意思",
+     "svg": {
+      "#fn": "<svg class=\"fig\" viewBox=\"0 0 690 256\" role=\"img\" aria-label=\"看偏旁想意思：璧下面是玉，是玉做的寶物；憶是豎心旁，是心裡想起來；炒是火字旁，要開火翻炒；筍是竹字頭，是竹子的嫩芽\"><rect x=\"16.0\" y=\"16.0\" width=\"321.0\" height=\"104.0\" rx=\"12\" fill=\"var(--sun-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"176.5\" y=\"58.0\" font-size=\"22\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">璧（玉）</text><text x=\"176.5\" y=\"94.0\" font-size=\"17\" text-anchor=\"middle\" fill=\"var(--ink)\">玉做的寶物</text><rect x=\"353.0\" y=\"16.0\" width=\"321.0\" height=\"104.0\" rx=\"12\" fill=\"var(--pri-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"513.5\" y=\"58.0\" font-size=\"22\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">憶（忄）</text><text x=\"513.5\" y=\"94.0\" font-size=\"17\" text-anchor=\"middle\" fill=\"var(--ink)\">心裡想起來</text><rect x=\"16.0\" y=\"136.0\" width=\"321.0\" height=\"104.0\" rx=\"12\" fill=\"var(--leaf-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"176.5\" y=\"178.0\" font-size=\"22\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">炒（火）</text><text x=\"176.5\" y=\"214.0\" font-size=\"17\" text-anchor=\"middle\" fill=\"var(--ink)\">要開火翻炒</text><rect x=\"353.0\" y=\"136.0\" width=\"321.0\" height=\"104.0\" rx=\"12\" fill=\"var(--bad-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"513.5\" y=\"178.0\" font-size=\"22\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">筍（竹）</text><text x=\"513.5\" y=\"214.0\" font-size=\"17\" text-anchor=\"middle\" fill=\"var(--ink)\">竹子的嫩芽</text></svg>"
+     },
+     "task": "每讀一個例句，先說錯的字錯在哪個偏旁，再看答案。"
+    },
+    {
+     "ask": "這個字的偏旁，和詞的意思對得上嗎？",
+     "examples": [
+      {
+       "s": "「逐步」不是「遂步」",
+       "why": "逐是一步一步追；遂是順利、完成。"
+      }
+     ],
+     "lines": [
+      "考卷常把長得像或讀音像的字換掉。",
+      "權利的權，是應該有的資格，不是「全部」的全。",
+      "大眾是很多人，眾的下面是三個人。",
+      "餐廳是一個地方，外面是广，不是耳朵聽的聽。"
+     ],
+     "name": "換個說法：字形容易混淆，要分清字義",
+     "svg": {
+      "#fn": "<svg class=\"fig\" viewBox=\"0 0 690 298\" role=\"img\" aria-label=\"容易混淆的字：權利不是全利；大眾是很多人，不是大重；逐步有辶，不是遂步；餐廳是地方，用广，不是餐聽\"><rect x=\"16.0\" y=\"16.0\" width=\"220.0\" height=\"56.0\" rx=\"12\" fill=\"var(--card)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"126.0\" y=\"52.0\" font-size=\"19\" text-anchor=\"middle\" fill=\"var(--ink)\">權利（木）</text><text x=\"291.0\" y=\"38.0\" font-size=\"15\" text-anchor=\"middle\" fill=\"var(--muted)\">記住</text><line x1=\"250.0\" y1=\"50.0\" x2=\"332.0\" y2=\"50.0\" stroke=\"var(--ink)\" stroke-width=\"2.5\"/><polygon points=\"332.0,50.0 323.0,54.3 323.0,45.7\" fill=\"var(--ink)\"/><rect x=\"346.0\" y=\"16.0\" width=\"328.0\" height=\"56.0\" rx=\"12\" fill=\"var(--sun-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"510.0\" y=\"52.0\" font-size=\"19\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">不是全利</text><rect x=\"16.0\" y=\"86.0\" width=\"220.0\" height=\"56.0\" rx=\"12\" fill=\"var(--card)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"126.0\" y=\"122.0\" font-size=\"19\" text-anchor=\"middle\" fill=\"var(--ink)\">大眾（很多人）</text><text x=\"291.0\" y=\"108.0\" font-size=\"15\" text-anchor=\"middle\" fill=\"var(--muted)\">記住</text><line x1=\"250.0\" y1=\"120.0\" x2=\"332.0\" y2=\"120.0\" stroke=\"var(--ink)\" stroke-width=\"2.5\"/><polygon points=\"332.0,120.0 323.0,124.3 323.0,115.7\" fill=\"var(--ink)\"/><rect x=\"346.0\" y=\"86.0\" width=\"328.0\" height=\"56.0\" rx=\"12\" fill=\"var(--pri-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"510.0\" y=\"122.0\" font-size=\"19\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">不是大重</text><rect x=\"16.0\" y=\"156.0\" width=\"220.0\" height=\"56.0\" rx=\"12\" fill=\"var(--card)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"126.0\" y=\"192.0\" font-size=\"19\" text-anchor=\"middle\" fill=\"var(--ink)\">逐步（辶）</text><text x=\"291.0\" y=\"178.0\" font-size=\"15\" text-anchor=\"middle\" fill=\"var(--muted)\">記住</text><line x1=\"250.0\" y1=\"190.0\" x2=\"332.0\" y2=\"190.0\" stroke=\"var(--ink)\" stroke-width=\"2.5\"/><polygon points=\"332.0,190.0 323.0,194.3 323.0,185.7\" fill=\"var(--ink)\"/><rect x=\"346.0\" y=\"156.0\" width=\"328.0\" height=\"56.0\" rx=\"12\" fill=\"var(--leaf-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"510.0\" y=\"192.0\" font-size=\"19\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">不是遂步</text><rect x=\"16.0\" y=\"226.0\" width=\"220.0\" height=\"56.0\" rx=\"12\" fill=\"var(--card)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"126.0\" y=\"262.0\" font-size=\"19\" text-anchor=\"middle\" fill=\"var(--ink)\">餐廳（广）</text><text x=\"291.0\" y=\"248.0\" font-size=\"15\" text-anchor=\"middle\" fill=\"var(--muted)\">記住</text><line x1=\"250.0\" y1=\"260.0\" x2=\"332.0\" y2=\"260.0\" stroke=\"var(--ink)\" stroke-width=\"2.5\"/><polygon points=\"332.0,260.0 323.0,264.3 323.0,255.7\" fill=\"var(--ink)\"/><rect x=\"346.0\" y=\"226.0\" width=\"328.0\" height=\"56.0\" rx=\"12\" fill=\"var(--bad-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"510.0\" y=\"262.0\" font-size=\"19\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">不是餐聽</text></svg>"
+     },
+     "task": "請爸媽念詞，你寫在紙上，寫完再對答案。"
+    }
+   ],
+   "zxd": [
+    {
+     "ask": "這件事和火、土、手，還是刀有關？",
+     "examples": [
+      {
+       "s": "「塑膠」不是「宿膠」",
+       "why": "塑是捏出形狀，下面是土。"
+      },
+      {
+       "s": "「焚燒」不是「汾燒」",
+       "why": "燒東西要用火，下面是火。"
+      },
+      {
+       "s": "「廢棄物」不是「費棄物」",
+       "why": "廢是不用了，外面是广。"
+      }
+     ],
+     "lines": [
+      "考卷常把讀音像的字換掉，要看偏旁。",
+      "焚燒要用火，所以「焚」下面是火，不是三點水的汾。",
+      "塑膠的塑下面是土，不是宿舍的宿。",
+      "廢棄物的廢外面是广，不是花費的費。"
+     ],
+     "name": "看圖：看偏旁，想意思",
+     "svg": {
+      "#fn": "<svg class=\"fig\" viewBox=\"0 0 690 256\" role=\"img\" aria-label=\"看偏旁想意思：焚下面是火，是用火燒；塑下面是土，是用土捏出形狀；搜是提手旁，是用手翻找；劇是立刀，是戲劇、劇情\"><rect x=\"16.0\" y=\"16.0\" width=\"321.0\" height=\"104.0\" rx=\"12\" fill=\"var(--sun-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"176.5\" y=\"58.0\" font-size=\"22\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">焚（火）</text><text x=\"176.5\" y=\"94.0\" font-size=\"17\" text-anchor=\"middle\" fill=\"var(--ink)\">用火燒</text><rect x=\"353.0\" y=\"16.0\" width=\"321.0\" height=\"104.0\" rx=\"12\" fill=\"var(--pri-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"513.5\" y=\"58.0\" font-size=\"22\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">塑（土）</text><text x=\"513.5\" y=\"94.0\" font-size=\"17\" text-anchor=\"middle\" fill=\"var(--ink)\">用土捏出形狀</text><rect x=\"16.0\" y=\"136.0\" width=\"321.0\" height=\"104.0\" rx=\"12\" fill=\"var(--leaf-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"176.5\" y=\"178.0\" font-size=\"22\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">搜（扌）</text><text x=\"176.5\" y=\"214.0\" font-size=\"17\" text-anchor=\"middle\" fill=\"var(--ink)\">用手翻找</text><rect x=\"353.0\" y=\"136.0\" width=\"321.0\" height=\"104.0\" rx=\"12\" fill=\"var(--bad-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"513.5\" y=\"178.0\" font-size=\"22\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">劇（刂）</text><text x=\"513.5\" y=\"214.0\" font-size=\"17\" text-anchor=\"middle\" fill=\"var(--ink)\">戲劇、劇情</text></svg>"
+     },
+     "task": "每讀一個例句，先說錯的字錯在哪裡，再看答案。"
+    },
+    {
+     "ask": "這個字要不要用手？",
+     "examples": [
+      {
+       "s": "「神采飛揚」不是「神採飛揚」",
+       "why": "神采是人的神色，不是用手採東西。"
+      }
+     ],
+     "lines": [
+      "劇和據都有「豦」：劇是豦在左、刂在右；據是扌在左、豦在右。",
+      "神采飛揚的采，沒有提手旁。",
+      "用手去摘，才是有提手旁的採。"
+     ],
+     "name": "換個說法：同一個部件，換偏旁就換意思",
+     "svg": {
+      "#fn": "<svg class=\"fig\" viewBox=\"0 0 690 298\" role=\"img\" aria-label=\"同一個部件換偏旁：劇是立刀，劇情戲劇；據是提手旁，根據占據；神采的采是神色；採是提手旁，用手採花\"><rect x=\"16.0\" y=\"16.0\" width=\"220.0\" height=\"56.0\" rx=\"12\" fill=\"var(--card)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"126.0\" y=\"52.0\" font-size=\"19\" text-anchor=\"middle\" fill=\"var(--ink)\">劇（刂）</text><text x=\"291.0\" y=\"38.0\" font-size=\"15\" text-anchor=\"middle\" fill=\"var(--muted)\">是</text><line x1=\"250.0\" y1=\"50.0\" x2=\"332.0\" y2=\"50.0\" stroke=\"var(--ink)\" stroke-width=\"2.5\"/><polygon points=\"332.0,50.0 323.0,54.3 323.0,45.7\" fill=\"var(--ink)\"/><rect x=\"346.0\" y=\"16.0\" width=\"328.0\" height=\"56.0\" rx=\"12\" fill=\"var(--sun-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"510.0\" y=\"52.0\" font-size=\"19\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">劇情、戲劇</text><rect x=\"16.0\" y=\"86.0\" width=\"220.0\" height=\"56.0\" rx=\"12\" fill=\"var(--card)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"126.0\" y=\"122.0\" font-size=\"19\" text-anchor=\"middle\" fill=\"var(--ink)\">據（扌）</text><text x=\"291.0\" y=\"108.0\" font-size=\"15\" text-anchor=\"middle\" fill=\"var(--muted)\">是</text><line x1=\"250.0\" y1=\"120.0\" x2=\"332.0\" y2=\"120.0\" stroke=\"var(--ink)\" stroke-width=\"2.5\"/><polygon points=\"332.0,120.0 323.0,124.3 323.0,115.7\" fill=\"var(--ink)\"/><rect x=\"346.0\" y=\"86.0\" width=\"328.0\" height=\"56.0\" rx=\"12\" fill=\"var(--pri-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"510.0\" y=\"122.0\" font-size=\"19\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">根據、占據</text><rect x=\"16.0\" y=\"156.0\" width=\"220.0\" height=\"56.0\" rx=\"12\" fill=\"var(--card)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"126.0\" y=\"192.0\" font-size=\"19\" text-anchor=\"middle\" fill=\"var(--ink)\">采（神采）</text><text x=\"291.0\" y=\"178.0\" font-size=\"15\" text-anchor=\"middle\" fill=\"var(--muted)\">是</text><line x1=\"250.0\" y1=\"190.0\" x2=\"332.0\" y2=\"190.0\" stroke=\"var(--ink)\" stroke-width=\"2.5\"/><polygon points=\"332.0,190.0 323.0,194.3 323.0,185.7\" fill=\"var(--ink)\"/><rect x=\"346.0\" y=\"156.0\" width=\"328.0\" height=\"56.0\" rx=\"12\" fill=\"var(--leaf-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"510.0\" y=\"192.0\" font-size=\"19\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">人的神色</text><rect x=\"16.0\" y=\"226.0\" width=\"220.0\" height=\"56.0\" rx=\"12\" fill=\"var(--card)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"126.0\" y=\"262.0\" font-size=\"19\" text-anchor=\"middle\" fill=\"var(--ink)\">採（扌）</text><text x=\"291.0\" y=\"248.0\" font-size=\"15\" text-anchor=\"middle\" fill=\"var(--muted)\">是</text><line x1=\"250.0\" y1=\"260.0\" x2=\"332.0\" y2=\"260.0\" stroke=\"var(--ink)\" stroke-width=\"2.5\"/><polygon points=\"332.0,260.0 323.0,264.3 323.0,255.7\" fill=\"var(--ink)\"/><rect x=\"346.0\" y=\"226.0\" width=\"328.0\" height=\"56.0\" rx=\"12\" fill=\"var(--bad-soft)\" stroke=\"var(--line)\" stroke-width=\"2\"/><text x=\"510.0\" y=\"262.0\" font-size=\"19\" text-anchor=\"middle\" font-weight=\"700\" fill=\"var(--ink)\">用手採花</text></svg>"
+     },
+     "task": "用這兩課的生字，各說出它的偏旁和意思。"
+    }
+   ]
+  },
+  "predict": {
+   "bd": {
+    "a": 0,
+    "opts": [
+     "頓號、",
+     "分號；",
+     "冒號："
+    ],
+    "q": "先猜猜看：「蘋果□香蕉」中間要用哪個符號？",
+    "why": "並列的詞中間用頓號。"
+   },
+   "cy": {
+    "a": 0,
+    "opts": [
+     "不是，是說東西一下子冒出很多",
+     "是，在說下雨後的竹筍"
+    ],
+    "q": "先猜猜看：「雨後春筍」是在說竹筍嗎？",
+    "why": "成語要看真正的意思：大量出現。"
+   },
+   "yb": {
+    "a": 0,
+    "opts": [
+     "不一樣",
+     "一樣"
+    ],
+    "q": "先猜猜看：「蛋卷」和「考卷」的「卷」，讀音一樣嗎？",
+    "why": "蛋卷讀ㄐㄩㄢˇ，考卷讀ㄐㄩㄢˋ。"
+   },
+   "zxc": {
+    "a": 0,
+    "opts": [
+     "玉",
+     "土",
+     "石"
+    ],
+    "q": "先猜猜看：「完璧歸趙」的「璧」，下面是什麼？",
+    "why": "和氏璧是玉做的，下面是玉。"
+   },
+   "zxd": {
+    "a": 0,
+    "opts": [
+     "火",
+     "水",
+     "土"
+    ],
+    "q": "先猜猜看：「焚燒」的「焚」，下面是什麼？",
+    "why": "燒東西要用火，下面是火。"
+   }
+  },
+  "videos": {
+   "bd": [
+    {
+     "channel": "劉緯丞",
+     "end": 248,
+     "fitNote": "三年級的影片：破折號的用法和五上相同。",
+     "id": "za23KxzWVog",
+     "note": "破折號占兩格：聲音拉長、意思轉變、補充說明，最後還有挑戰題。",
+     "start": 34,
+     "title": "國小國語3下作文特攻隊 3認識標點符號 破折號 (翰林出版)",
+     "verify": "yt-dlp 確認公開且可嵌入；YouTube 無字幕，whisper-cli（large-v3-turbo）整片轉錄全文讀過，用法對照《重訂標點符號手冊》破折號條；選用段落抽 6 格逐張看過，2026-10-18"
+    }
+   ],
+   "cy": [
+    {
+     "channel": "翰林國小教學資源頻道",
+     "end": 552,
+     "fitNote": "翰林給老師看的備課影片；這一段正好在講本課成語。",
+     "id": "1lbqHRV3ypg",
+     "note": "翰林老師用課文前後的句子，讀懂雨後春筍、寓教於樂的意思。",
+     "start": 500,
+     "title": "【翰林國語五上備課影片】L4 來場快樂的桌遊",
+     "verify": "yt-dlp 確認公開且可嵌入；YouTube 無字幕，whisper-cli（large-v3-turbo）整片轉錄全文讀過；選用段落抽 6 格逐張看過（投影片：隨文識詞策略 文脈 雨後春筍、寓教於樂），2026-10-18"
+    },
+    {
+     "channel": "翰林國小教學資源頻道",
+     "end": 500,
+     "fitNote": "翰林給老師看的備課影片；這一段正好在講本課成語。",
+     "id": "885-kVntRrM",
+     "note": "翰林老師講第五課的來龍去脈、神采飛揚：什麼時候可以用。",
+     "start": 440,
+     "title": "【翰林國語五上備課影片】L5 超級英雄",
+     "verify": "yt-dlp 確認公開且可嵌入；YouTube 無字幕，whisper-cli（large-v3-turbo）整片轉錄全文讀過；選用段落抽 6 格逐張看過（投影片：四字語詞 神采飛揚、來龍去脈、語重心長），2026-10-18"
+    },
+    {
+     "channel": "臺北酷課雲",
+     "end": 390,
+     "fitNote": "三年級的影片：成語要看真正意思的觀念和五上相同。",
+     "id": "BJUJn8YBlZQ",
+     "note": "成語有表面意思和真正的意思，用的時候要看真正的意思。",
+     "start": 40,
+     "title": "小三國語｜字詞｜成語（一）",
+     "verify": "yt-dlp 確認公開且可嵌入；YouTube 無字幕，whisper-cli（large-v3-turbo）整片轉錄全文讀過；選用段落抽 6 格逐張看過，2026-10-18"
+    }
+   ],
+   "yb": [
+    {
+     "channel": "翰林國小教學資源頻道",
+     "end": 567,
+     "fitNote": "翰林給老師看的備課影片；這一段正好在講本課多音字。",
+     "id": "1lbqHRV3ypg",
+     "note": "翰林老師講第四課的多音字「樂」：寓教於樂讀ㄌㄜˋ，音樂讀ㄩㄝˋ。",
+     "start": 555,
+     "title": "【翰林國語五上備課影片】L4 來場快樂的桌遊",
+     "verify": "yt-dlp 確認公開且可嵌入；YouTube 無字幕，whisper-cli（large-v3-turbo）整片轉錄全文讀過；選用段落抽 6 格逐張看過（投影片：多音字 樂 ㄌㄜˋ 寓教於樂、ㄩㄝˋ 音樂；讀音已對照簡編本），2026-10-18"
+    },
+    {
+     "channel": "劉緯丞",
+     "end": 142,
+     "fitNote": "二年級的影片：部首的觀念和五上相同。",
+     "id": "z7rJF5bhIOE",
+     "note": "什麼是部首？字典把同一個偏旁的字放在一起，最後還有練習。",
+     "start": 0,
+     "title": "104翰林國語2上作文特攻隊 : 我會查字典 利用部首查字典",
+     "verify": "yt-dlp 確認公開且可嵌入；YouTube 無字幕，whisper-cli（large-v3-turbo）整片轉錄全文讀過；選用段落抽 6 格逐張看過，2026-10-18"
+    }
+   ],
+   "zxc": [
+    {
+     "channel": "翰林國小教學資源頻道",
+     "end": 590,
+     "fitNote": "翰林給老師看的備課影片；這一段正好在講本課生字。",
+     "id": "iw0g95iwzBU",
+     "note": "翰林老師講第三課生字：諸、賭、睹右邊一樣；壁、璧上面一樣，下面一個是土、一個是玉。",
+     "start": 535,
+     "title": "【翰林國語五上備課影片】L3 廉頗與藺相如",
+     "verify": "yt-dlp 確認公開且可嵌入；YouTube 無字幕，whisper-cli（large-v3-turbo）整片轉錄全文讀過；選用段落抽 6 格逐張看過（投影片：同部件 者 諸賭睹、辟 壁璧），2026-10-18"
+    },
+    {
+     "channel": "翰林國小教學資源頻道",
+     "end": 590,
+     "fitNote": "翰林給老師看的備課影片；這一段正好在講本課生字。",
+     "id": "1lbqHRV3ypg",
+     "note": "翰林老師講第四課生字：撲、樸、僕右邊一樣，看左邊分意思。",
+     "start": 555,
+     "title": "【翰林國語五上備課影片】L4 來場快樂的桌遊",
+     "verify": "yt-dlp 確認公開且可嵌入；YouTube 無字幕，whisper-cli（large-v3-turbo）整片轉錄全文讀過；選用段落抽 6 格逐張看過（投影片：同部件 少 炒沙妙、菐 撲樸僕），2026-10-18"
+    }
+   ],
+   "zxd": [
+    {
+     "channel": "翰林國小教學資源頻道",
+     "end": 650,
+     "fitNote": "翰林給老師看的備課影片；這一段正好在講本課生字。",
+     "id": "885-kVntRrM",
+     "note": "翰林老師講第五課生字：劇、據都有「豦」，配上不同的偏旁，意思就不一樣。",
+     "start": 589,
+     "title": "【翰林國語五上備課影片】L5 超級英雄",
+     "verify": "yt-dlp 確認公開且可嵌入；YouTube 無字幕，whisper-cli（large-v3-turbo）整片轉錄全文讀過；選用段落抽 6 格逐張看過（投影片：同部件 昜、豦；多音字 脈、創），2026-10-18"
+    },
+    {
+     "channel": "劉緯丞",
+     "end": 104,
+     "fitNote": "二年級的影片：看偏旁猜意思的觀念和五上相同。",
+     "id": "z7rJF5bhIOE",
+     "note": "同一個偏旁的字，意思常常有關：木、枯、枝、樹都和樹木有關。",
+     "start": 0,
+     "title": "104翰林國語2上作文特攻隊 : 我會查字典 利用部首查字典",
+     "verify": "yt-dlp 確認公開且可嵌入；YouTube 無字幕，whisper-cli（large-v3-turbo）整片轉錄全文讀過；選用段落抽 6 格逐張看過，2026-10-18"
+    }
+   ]
+  },
+  "noVideo": {
+   "bd": null,
+   "cy": null,
+   "yb": null,
+   "zxc": null,
+   "zxd": null
+  },
+  "merged": {
+   "yb3": {
+    "keep": [
+     "yb1"
+    ],
+    "why": "yb1 的選項含考卷，要分得出蛋卷讀ㄐㄩㄢˇ、考卷不讀ㄐㄩㄢˇ；yb3 唯一的錯項ㄐㄩㄢˇ就是蛋卷的讀音（同 dy1 前例）"
+   }
+  }
+ }
+}
