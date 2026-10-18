@@ -32,11 +32,12 @@ DICTS = {
 WORDS_JS = r"""
 const B = require(process.argv[1]);
 const w = new Set();
-B.CARDS.forEach((c) => {
+B.ALL_CARDS.forEach((c) => {
   if (c.zx) [c.zx.word, c.zx.good, c.zx.bad].concat(c.zx.wrong || [], c.zx.ok || []).filter(Boolean).forEach((x) => w.add(x));
   if (c.dy) c.dy.words.forEach((x) => w.add(x));
   if (c.yin) { w.add(c.yin.ch); if (c.yin.word) w.add(c.yin.word); }
   if (c.yinPick) [c.yinPick.ch].concat(c.yinPick.others).forEach((x) => w.add(x));
+  if (c.bs) c.bs.chars.forEach((x) => w.add(x));
 });
 (B.P6 || []).forEach((g) => g.forEach((e) => { w.add(e[0]); e[2].forEach((x) => w.add(x)); }));
 console.log(JSON.stringify([...w]));
@@ -87,12 +88,48 @@ def readings(word: str, t: str) -> list:
     return list(dict.fromkeys(r for r in out if r))   # 去重：重編本單筆頁的 title 與 Description 會各抓到一次
 
 
+RADICAL_JS = r"""
+const B = require(process.argv[1]);
+const w = new Set();
+B.ALL_CARDS.forEach((c) => { if (c.bs) c.bs.chars.forEach((x) => w.add(x)); if (c.zx && c.zx.rad) w.add(c.zx.ch); });
+console.log(JSON.stringify([...w]));
+"""
+
+
+def radical(ch: str, t: str, cache: Path) -> str:
+    """部首題（c.bs）與字形題寫了部首（c.zx.rad）的字用：簡編本單字詞條頁 Description 的「X部+N畫」，取 X。列表頁先找名稱就是這個字的那一列。"""
+    m = None
+    for r in re.finditer(r"<tr data-link='(dictView\.jsp\?ID=\d+)[^']*'[^>]*>(.*?)</tr>", t, flags=re.S):
+        tds = [html.unescape(re.sub(r"<[^>]+>", "", x)).strip() for x in re.findall(r"<td[^>]*>(.*?)</td>", r.group(2), flags=re.S)]
+        if len(tds) > 1 and tds[1] == ch:
+            m = r.group(1)
+            break
+    if m:
+        fn = cache / ("conv_" + urllib.parse.quote(ch, safe="") + ".html")
+        if not (fn.exists() and fn.stat().st_size > 500):
+            jar = str(cache / "cookies_concised.txt")
+            v = subprocess.run(["curl", "-sL", "-m", "30", "-c", jar, "-b", jar, "https://dict.concised.moe.edu.tw/" + m], capture_output=True).stdout.decode("utf-8", "ignore")
+            if len(v) <= 500:
+                raise SystemExit("辭典查不到回應：部首 " + ch)
+            fn.write_text(v, encoding="utf-8")
+        t = fn.read_text(encoding="utf-8")
+    d = re.search(r'<meta name="Description" content="字詞:([^,]*),注音:[^,]*,([^部,]+)部\+', t)
+    if not d or html.unescape(d.group(1)).strip() != ch:
+        raise SystemExit("簡編本找不到部首：" + ch)
+    return d.group(2).strip()
+
+
 def main() -> None:
     cache = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("/tmp/dict_l1_cache")
     cache.mkdir(parents=True, exist_ok=True)
     res = {}
     for w in words():
         res[w] = {k: readings(w, fetch(k, w, cache)) for k in DICTS}
+    rad = json.loads(subprocess.run(["node", "-e", RADICAL_JS, str(ROOT / "src" / "chibank.js")], capture_output=True, text=True, check=True).stdout)
+    for ch in rad:
+        if ch not in res:
+            res[ch] = {k: readings(ch, fetch(k, ch, cache)) for k in DICTS}
+        res[ch]["concised_radical"] = radical(ch, fetch("concised", ch, cache), cache)
     OUT.write_text(json.dumps({"checked": time.strftime("%Y-%m-%d"),
                                "source": {k: v for k, v in DICTS.items()},
                                "note": "讀音以 concised（簡編本，和現行課本一致）為準；錯字詞要 revised、concised 都查無",

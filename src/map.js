@@ -35,17 +35,17 @@
   chi: {
     title: "書架", empty: "一個空書架，做完一站的題目就放上一本書",
     rule: "怎麼放書：一站的題目，每一題都做過一次，就放上一本書。", done: "放了一本書",
-    // 2026-10-14 國語加第一課字形、多音字三站與國練第二課五站（10 → 18 站）：一層放 9 本、書變窄，一站一本
-    NAMES: ["空書架", "第 1 本書", "第 2 本書", "第 3 本書", "第 4 本書", "第 5 本書", "第 6 本書", "第 7 本書", "第 8 本書", "第 9 本書",
-            "第 10 本書", "第 11 本書", "第 12 本書", "第 13 本書", "第 14 本書", "第 15 本書", "第 16 本書", "第 17 本書", "書架放滿了"],
+    // 2026-10-14 國語加第一課字形、多音字三站與國練第二課五站（10 → 18 站）；2026-10-18 加第三～六課五站（→ 23 站）：書架改三層、一層放 8 本，一站一本
+    NAMES: ["空書架"].concat(Array.from({ length: 22 }, function (_, i) { return "第 " + (i + 1) + " 本書"; })).concat(["書架放滿了"]),
     art: function (level, part, col) {
-      var s = '<rect x="12" y="16" width="96" height="128" rx="4" fill="none" stroke="' + col("var(--soil)") + '" stroke-width="5"/>' +
-              '<path d="M12 80 H108" stroke="' + col("var(--soil)") + '" stroke-width="5"/>';
-      var H = [52, 44, 54, 46, 50, 42, 48, 53, 45], C = ["var(--red)", "var(--pri)", "var(--leaf)", "var(--sunball)", "var(--sun)"];
-      for (var i = 0; i < 18; i++) {
-        var r = i < 9 ? 0 : 1, k = i % 9, x = 16 + k * 10, base = r ? 141 : 77, h = H[(k + r * 2) % 9], c = C[(k + r * 3) % 5];
-        s += part(i + 1, '<rect x="' + x + '" y="' + (base - h) + '" width="9" height="' + h + '" rx="2" fill="' + col(c) + '"/>' +
-                          '<path d="M' + (x + 2) + ' ' + (base - h + 8) + ' H' + (x + 7) + '" stroke="' + col("var(--card)") + '" stroke-width="2"/>');
+      var s = '<rect x="12" y="10" width="96" height="134" rx="4" fill="none" stroke="' + col("var(--soil)") + '" stroke-width="5"/>' +
+              '<path d="M12 54 H108 M12 98 H108" stroke="' + col("var(--soil)") + '" stroke-width="5"/>';
+      var H = [36, 30, 38, 32, 35, 29, 34, 37], C = ["var(--red)", "var(--pri)", "var(--leaf)", "var(--sunball)", "var(--sun)"];
+      for (var i = 0; i < 23; i++) {
+        // 第三層只放 7 本：書寬一點、間距大一點，放滿時整層剛好排滿
+        var r = Math.floor(i / 8), k = i % 8, gap = r < 2 ? 11 : 12.5, w = r < 2 ? 10 : 11.5, x = 17 + k * gap, base = [51, 95, 141][r], h = H[(k + r * 2) % 8], c = C[(k + r * 3) % 5];
+        s += part(i + 1, '<rect x="' + x + '" y="' + (base - h) + '" width="' + w + '" height="' + h + '" rx="2" fill="' + col(c) + '"/>' +
+                          '<path d="M' + (x + 2) + ' ' + (base - h + 7) + ' H' + (x + w - 2) + '" stroke="' + col("var(--card)") + '" stroke-width="2"/>');
       }
       return s;
     }

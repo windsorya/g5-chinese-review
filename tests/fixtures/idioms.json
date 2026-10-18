@@ -1,0 +1,87 @@
+{
+ "checked": "2026-10-18",
+ "source": "https://dict.idioms.moe.edu.tw/",
+ "note": "釋義與語義說明照抄教育部《成語典》；查無＝null",
+ "idioms": {
+  "來龍去脈": {
+   "dict": "idioms",
+   "id": 656,
+   "url": "https://dict.idioms.moe.edu.tw/idiomView.jsp?ID=656",
+   "zhuyin": "ㄌㄞˊㄌㄨㄥˊㄑㄩˋㄇㄞˋ",
+   "meaning": "本是堪輿家用以形容山脈河流走向的術語，後用以比喻事情的首尾始末。※語或出明．無名氏《運甓記》第一三齣。",
+   "semantic": "堪輿家用以形容山脈河流走向的術語。"
+  },
+  "完璧歸趙": {
+   "dict": "idioms",
+   "id": 340,
+   "url": "https://dict.idioms.moe.edu.tw/idiomView.jsp?ID=340",
+   "zhuyin": "ㄨㄢˊㄅㄧˋㄍㄨㄟㄓㄠˋ",
+   "meaning": "藺相如奉使秦國，交涉以和氏璧換取秦國十五城時，識破秦國的詭詐，用計使璧安然回到趙國。語本《史記．卷八一．廉頗藺相如列傳》。後用「完璧歸趙」比喻物歸原主。",
+   "semantic": "比喻物歸原主。"
+  },
+  "寓教於樂": {
+   "dict": "revised",
+   "id": 164186,
+   "url": "https://dict.revised.moe.edu.tw/dictView.jsp?ID=164186",
+   "zhuyin": "ㄩˋㄐㄧㄠˋㄩˊㄌㄜˋ",
+   "meaning": "在娛樂中寄託教育的作用。如：「這種寓教於樂的方式比教條式的教育方式，效果來得大。」",
+   "semantic": ""
+  },
+  "患得患失": {
+   "dict": "idioms",
+   "id": 727,
+   "url": "https://dict.idioms.moe.edu.tw/idiomView.jsp?ID=727",
+   "zhuyin": "ㄏㄨㄢˋㄉㄜˊㄏㄨㄢˋㄕ",
+   "meaning": "在沒得到以前怕得不到，得到以後又怕失去。形容人的得失心很重。語本《論語．陽貨》。",
+   "semantic": "形容人的得失心很重。"
+  },
+  "挺身而出": {
+   "dict": "idioms",
+   "id": 6964,
+   "url": "https://dict.idioms.moe.edu.tw/idiomView.jsp?ID=6964",
+   "zhuyin": "ㄊㄧㄥˇㄕㄣㄦˊㄔㄨ",
+   "meaning": "遇到危難時，勇敢的站出來，擔當其任。元．王實甫《西廂記．第二本．第三折》：「小生挺身而出，作書與杜將軍，庶幾得免夫人之禍。」《文明小史》第五回：「當下見柳知府回答不出，他便挺身而出，對洋人竭力排解。」",
+   "semantic": ""
+  },
+  "神采飛揚": {
+   "dict": "idioms",
+   "id": 13753,
+   "url": "https://dict.idioms.moe.edu.tw/idiomView.jsp?ID=13753",
+   "zhuyin": "ㄕㄣˊㄘㄞˇㄈㄟㄧㄤˊ",
+   "meaning": "活力充沛，神色自得的樣子。如：「她的企畫書得到上司的肯定，露出神采飛揚、得意之色。」",
+   "semantic": ""
+  },
+  "肝膽相照": {
+   "dict": "idioms",
+   "id": 203,
+   "url": "https://dict.idioms.moe.edu.tw/idiomView.jsp?ID=203",
+   "zhuyin": "ㄍㄢㄉㄢˇㄒㄧㄤㄓㄠˋ",
+   "meaning": "以肝膽互相照見。比喻赤忱相處。＃語本《史記．卷九二．淮陰侯列傳》。",
+   "semantic": "比喻赤忱相處。"
+  },
+  "語重心長": {
+   "dict": "idioms",
+   "id": 6746,
+   "url": "https://dict.idioms.moe.edu.tw/idiomView.jsp?ID=6746",
+   "zhuyin": "ㄩˇㄓㄨㄥˋㄒㄧㄣㄔㄤˊ",
+   "meaning": "言辭真誠具影響力而情意深長。如：「畢業典禮上，校長語重心長的一番話，我們都牢記在心。」",
+   "semantic": ""
+  },
+  "負荊請罪": {
+   "dict": "idioms",
+   "id": 46,
+   "url": "https://dict.idioms.moe.edu.tw/idiomView.jsp?ID=46",
+   "zhuyin": "ㄈㄨˋㄐㄧㄥㄑㄧㄥˇㄗㄨㄟˋ",
+   "meaning": "背著荊條，前往對方居所自請責罰。典出《史記．卷八一．廉頗藺相如列傳》。後用「負荊請罪」比喻主動向對方承認錯誤，請求責罰和原諒。",
+   "semantic": "背著荊條，前往對方居所自請責罰。"
+  },
+  "雨後春筍": {
+   "dict": "idioms",
+   "id": 1411,
+   "url": "https://dict.idioms.moe.edu.tw/idiomView.jsp?ID=1411",
+   "zhuyin": "ㄩˇㄏㄡˋㄔㄨㄣㄙㄨㄣˇ",
+   "meaning": "春筍在雨後長得又多又快。＃語本宋．趙蕃〈過易簡彥從〉詩。後用以比喻事物在某一時期新生之後大量湧現，迅速發展。",
+   "semantic": "比喻事物在某一時期後大量湧現，迅速發展。"
+  }
+ }
+}

@@ -72,7 +72,8 @@ test("④每個觀念都有題，8～15 題；每題的觀念都存在；每題�
   Object.keys(B.CONCEPTS).forEach((k) => { if (!B.UNITS[B.CONCEPTS[k].unit]) bad.push(k + " 單元不存在"); if (B.CONCEPTS[k].unit === "3") bad.push(k + " 單元代號不可用 \"3\"（core.js 會當成待開放單元）"); });
   assert.deepEqual(bad, []);
   // 2026-10-14 加第一課字形、多音字三個觀念（34 題）與國練第二課五個觀念（64 題）後，上限 130 → 230
-  assert.ok(B.ALL_CARDS.length >= 90 && B.ALL_CARDS.length <= 230, "總題數 " + B.ALL_CARDS.length);
+  // 2026-10-18 依考古卷加第三～六課五個觀念（43 題，交辦 #2703）後 → 280；每天量另由排程模擬把關（國語每天增量 ≤5 題為原則）
+  assert.ok(B.ALL_CARDS.length >= 90 && B.ALL_CARDS.length <= 280, "總題數 " + B.ALL_CARDS.length);
 });
 
 // ㉒ 字形（zx*、w2a–w2c）、字音（dy*、w2d）、字義（w2e）：每題對 tests/fixtures/dict_l1.json（tests/build_dict_fixture.py 產生，教育部兩本辭典的查詢結果）
@@ -100,6 +101,8 @@ function l1Problems(cards, dict) {
         c.opts.forEach((o, i) => { if (i !== c.a && !(p && p.group.indexOf(o) >= 0)) bad.push(id + " 錯項「" + o + "」不是國練同一組的形近字"); });
       } else if (!inDict(c.zx.word)) bad.push(id + " 辭典查不到「" + c.zx.word + "」");
       if (c.opts[c.a] !== c.zx.ch) bad.push(id + " 正解不是「" + c.zx.ch + "」");
+      // 2026-10-18 第三～六課字形題：解說講的偏旁（zx.rad）要等於簡編本的部首
+      if (c.zx.rad && (dict[c.zx.ch] || {}).concised_radical !== c.zx.rad) bad.push(id + "「" + c.zx.ch + "」部首寫 " + c.zx.rad + "，簡編本是 " + (dict[c.zx.ch] || {}).concised_radical);
       c.zx.wrong.forEach((w) => {
         if (!known(w)) bad.push(id + "「" + w + "」沒查過");
         else if (inDict(w)) bad.push(id + " 錯項「" + w + "」辭典其實有");
@@ -190,6 +193,19 @@ test("㉒自檢-反例：把讀音改錯、把錯項換成辭典有的詞、把�
   assert.ok(l1Problems([g], DICT_L1).length > 0, "錯項不是同一組的形近字沒抓到");
   const m = clone(B.ALL_CARDS.find((c) => c.id === "w2e6")); m.yi.word = "熟人";
   assert.ok(l1Problems([m], DICT_L1).length > 0, "字義放錯沒抓到");
+  const r3 = clone(B.ALL_CARDS.find((c) => c.id === "zx3a")); r3.zx.rad = "土";
+  assert.ok(l1Problems([r3], DICT_L1).length > 0, "部首寫錯（璧寫成土部）沒抓到");
+});
+
+// ㉓ 填字題的句子：把正確的字填回括號，句子裡要出現那個詞（Codex 審 aaa3dbe：zx14「圖書館（　）供」挖錯位置，填回去變「供供」）
+const blankBad = (cards) => cards.filter((c) => c.zx && c.zx.word).filter((c) => {
+  const m = /^「(.+)」括號裡要填哪個字？$/.exec(c.q);
+  return !m || m[1].indexOf("（　）") < 0 || m[1].split("（　）").join(c.zx.ch).indexOf(c.zx.word) < 0;
+}).map((c) => c.id + "：" + c.q);
+test("㉓填字題把正確的字填回去，句子裡要有那個詞（挖空位置正確）", () => {
+  assert.deepEqual(blankBad(B.ALL_CARDS), []);
+  const z = JSON.parse(JSON.stringify(card("zx14"))); z.q = "「圖書館（　）供很多好書給我們借」括號裡要填哪個字？";
+  assert.deepEqual(blankBad([z]).length, 1, "自檢：zx14 舊題幹（挖錯位置）要抓到");
 });
 
 // ⑤ 反義／近義：src 是國語辭典簡編本的條目網址；正解在該條目的相反詞（或相似詞）欄；其他選項都不在同一欄；
@@ -252,10 +268,10 @@ test("⑥-b 線索檢查器自檢：把譬喻句的正解改成擬人，要抓�
 });
 
 // ⑦ 史實（hs）與著作權（cr）題：每題要有 src，而且 tests/FACTCHECK.md 逐題列出依據
-test("⑦史實與著作權題都有 src，且每題 id 都列在 tests/FACTCHECK.md", () => {
+test("⑦史實、著作權、標點題都有 src，且每題 id 都列在 tests/FACTCHECK.md", () => {
   const fc = fs.readFileSync(path.join(__dirname, "FACTCHECK.md"), "utf8");
   const bad = [];
-  B.ALL_CARDS.filter((c) => c.concept === "hs" || c.concept === "cr").forEach((c) => {
+  B.ALL_CARDS.filter((c) => c.concept === "hs" || c.concept === "cr" || c.concept === "bd").forEach((c) => {   // bd 標點：2026-10-18 加，依《重訂標點符號手冊》
     if (!/^https:\/\//.test(c.src || "")) bad.push(c.id + " 沒有 src");
     if (!new RegExp("\\b" + c.id + "\\b").test(fc)) bad.push(c.id + " 沒列在 FACTCHECK.md");
   });
@@ -621,6 +637,72 @@ test("㉑自檢-解析器：<tspan> 與 entity 都收進文字；不認得的語
   ];
   BAD.forEach(([name, markup, why]) => assert.throws(() => SNAP.parseSvg(markup), (e) => e instanceof Error && e.message.indexOf(why) >= 0, name + "：沒有因為「" + why + "」丟錯"));
 });
+// ㉔ 成語題（cy*）：每個選項都是 CY 表裡的成語，CY 的辭典關鍵字真的在教育部《成語典》（或《重編國語辭典修訂本》）的釋義裡，
+//    src 是正解那一條的網址。辭典查詢結果存在 tests/fixtures/idioms.json（tests/build_idiom_fixture.py 產生）。
+const IDIOMS = JSON.parse(fs.readFileSync(path.join(__dirname, "fixtures", "idioms.json"), "utf8")).idioms;
+function cyProblems(cards, CY, fx) {
+  const bad = [];
+  cards.forEach((c) => {
+    const y = c.cy;
+    if (c.opts[c.a] !== y.idiom) bad.push(c.id + " 正解不是 " + y.idiom);
+    if (JSON.stringify(c.opts.filter((o, i) => i !== c.a).sort()) !== JSON.stringify(y.others.slice().sort())) bad.push(c.id + " 錯項和 cy.others 對不上");
+    c.opts.forEach((o) => {
+      const e = fx[o];
+      if (!CY[o]) bad.push(c.id + "「" + o + "」不在 CY 表");
+      else if (!e) bad.push(c.id + "「" + o + "」辭典查無");
+      else if ((e.meaning + e.semantic).indexOf(CY[o][1]) < 0) bad.push(c.id + "「" + o + "」的關鍵字「" + CY[o][1] + "」不在辭典釋義裡");
+    });
+    if (!fx[y.idiom] || c.src !== fx[y.idiom].url) bad.push(c.id + " src 不是辭典那一條：" + c.src);
+  });
+  return bad;
+}
+test("㉔成語題：選項都在 CY 表、白話說法的關鍵字在教育部辭典釋義裡、src 是那一條", () => {
+  const cards = B.ALL_CARDS.filter((c) => c.cy);
+  assert.ok(cards.length >= 8, "成語題只有 " + cards.length + " 題");
+  assert.deepEqual(cyProblems(cards, B.CY, IDIOMS), []);
+  // 自檢：關鍵字改成辭典沒有的話、src 指錯條，都要抓到
+  const CY2 = JSON.parse(JSON.stringify(B.CY)); CY2["雨後春筍"][1] = "長得很快的竹筍";
+  assert.ok(cyProblems(cards, CY2, IDIOMS).length > 0, "關鍵字不在辭典裡沒抓到");
+  const c1 = JSON.parse(JSON.stringify(card("cy1"))); c1.src = IDIOMS["肝膽相照"].url;
+  assert.ok(cyProblems([c1], B.CY, IDIOMS).length > 0, "src 指錯條沒抓到");
+});
+
+// ㉕ 部首題（c.bs）：部首一律以《國語辭典簡編本》為準（fixture 的 concised_radical）。
+//    same：正解和 target 同部首、錯項都不同；pair：正解那組兩字同部首、錯項每組兩字不同；common：正解就是兩字共同的部首、錯項都不是。
+//    錯法說明若寫「X是Y部」，Y 要等於 X 的部首。
+function bsProblems(cards, dict) {
+  const bad = [], R = (ch) => (dict[ch] || {}).concised_radical;
+  cards.forEach((c) => {
+    const b = c.bs, right = c.opts[c.a], wrong = c.opts.filter((o, i) => i !== c.a);
+    b.chars.forEach((ch) => { if (!R(ch)) bad.push(c.id + "「" + ch + "」沒查部首"); });
+    if (b.kind === "same") {
+      if (R(right) !== R(b.target)) bad.push(c.id + " 正解「" + right + "」和「" + b.target + "」部首不同");
+      wrong.forEach((w) => { if (R(w) === R(b.target)) bad.push(c.id + " 錯項「" + w + "」其實同部首"); });
+    } else if (b.kind === "pair") {
+      const two = (o) => o.split("、");
+      if (R(two(right)[0]) !== R(two(right)[1])) bad.push(c.id + " 正解那組部首不同");
+      wrong.forEach((w) => { if (R(two(w)[0]) === R(two(w)[1])) bad.push(c.id + " 錯項「" + w + "」其實部首相同"); });
+    } else if (b.kind === "common") {
+      if (b.chars.some((ch) => R(ch) !== right)) bad.push(c.id + " 正解「" + right + "」不是兩字共同的部首");
+      wrong.forEach((w) => { if (b.chars.some((ch) => R(ch) === w)) bad.push(c.id + " 錯項「" + w + "」其實是部首"); });
+    } else bad.push(c.id + " bs.kind 不認得：" + b.kind);
+    c.wrongWhy.forEach((t) => { for (const m of t.matchAll(/(.)是(.)部/g)) if (R(m[1]) && R(m[1]) !== m[2]) bad.push(c.id + " 錯法說明「" + m[0] + "」，簡編本是 " + R(m[1]) + " 部"); });
+  });
+  return bad;
+}
+test("㉕部首題：正解、錯項、錯法說明裡的部首，都和教育部簡編本一致", () => {
+  const cards = B.ALL_CARDS.filter((c) => c.bs);
+  assert.ok(cards.length >= 3, "部首題只有 " + cards.length + " 題");
+  assert.deepEqual(bsProblems(cards, DICT_L1), []);
+  const clone = (x) => JSON.parse(JSON.stringify(x));
+  const a = clone(card("yb8")); a.opts[a.a] = "坊";
+  assert.ok(bsProblems([a], DICT_L1).length > 0, "自檢：正解換成不同部首的字要抓到");
+  const b = clone(card("yb9")); b.wrongWhy = b.wrongWhy.map((t) => t.replace("筍是竹部", "筍是艸部"));
+  assert.ok(bsProblems([b], DICT_L1).length > 0, "自檢：錯法說明部首寫錯要抓到");
+  const d = clone(card("yb10")); d.opts[d.a] = "耳";
+  assert.ok(bsProblems([d], DICT_L1).length > 0, "自檢：共同部首寫錯要抓到");
+});
+
 module.exports = { T21_ROWS, T21_LEGACY, T21_POSITIVE, crClone, crPrint, t21Check, crSnapshot };
 
 // 2026-10-18 重複題只留一題（律師：「重複是指a題可以答對，也能夠答對b或c題，那b、c題就可能是重複觀念題」）
@@ -639,7 +721,7 @@ test("重複題合併表：被併的題存在、留下的題存在且沒被併�
   });
   assert.deepEqual(bad, []);
   assert.deepEqual(B.CARDS.map((c) => c.id), B.ALL_CARDS.filter((c) => !B.MERGED[c.id]).map((c) => c.id));
-  assert.equal(B.CARDS.length, 204);
+  assert.equal(B.CARDS.length, 246);   // 2026-10-18：204 ＋ 第三～六課 43 題 − 併入的 yb3
   const n = {}; B.CARDS.forEach((c) => { n[c.concept] = (n[c.concept] || 0) + 1; });
   const thin = Object.keys(B.CONCEPTS).filter((k) => !(n[k] >= 4)).map((k) => k + "=" + (n[k] || 0));
   assert.deepEqual(thin, [], "每個觀念合併後至少 4 題");

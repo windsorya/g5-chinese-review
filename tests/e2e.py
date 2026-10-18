@@ -66,8 +66,9 @@ def flow_main(browser, label, device=None):
     n_concepts = pg.evaluate("Object.keys(G5ChiBank.CONCEPTS).length")
     check(f"{label} 首頁標題與倒數", SELF_NAME in pg.title() and pg.locator("#days").inner_text().strip().isdigit(), pg.title())
     # 2026-10-14：加第一課字形、多音字三個觀念與國練第二課五個觀念，10 → 18
-    check(f"{label} {n_concepts} 個觀念入口", n_concepts == 18 and pg.locator("#concepts .ccard").count() == n_concepts, pg.locator("#concepts .ccard").count())
-    check(f"{label} 小考複習列出六組", all(pg.locator(f'button[data-rv="u{u}"]').count() == 1 for u in ["k1", "k2", "k3", "k4", "k5", "k6"]))
+    # 2026-10-18 第三～六課加五個觀念（18 → 23，交辦 #2703）
+    check(f"{label} {n_concepts} 個觀念入口", n_concepts == 23 and pg.locator("#concepts .ccard").count() == n_concepts, pg.locator("#concepts .ccard").count())
+    check(f"{label} 小考複習列出七組（含 2026-10-18 第三～六課 k7）", all(pg.locator(f'button[data-rv="u{u}"]').count() == 1 for u in ["k1", "k2", "k3", "k4", "k5", "k6", "k7"]))
     # 10/15 小考的國練第二課要排在「小考前想全部練一次」第一個
     check(f"{label} 國練第二課排第一個", pg.locator("button[data-rv]").first.get_attribute("data-rv") == "uk6",
           pg.locator("button[data-rv]").first.get_attribute("data-rv"))
