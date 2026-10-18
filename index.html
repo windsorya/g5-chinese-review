@@ -3321,20 +3321,24 @@ function makeStorage(){
   return {getItem:function(k){return Object.prototype.hasOwnProperty.call(m,k)?m[k]:null;},setItem:function(k,v){m[k]=String(v);}};
 }
 // 單一寫入分頁（同錯題站；Codex 審 8364a83 T15／T18）：同一時間只有一個分頁能作答與存檔，其他分頁唯讀。
-// 開機先試拿寫入權（ifAvailable）；被別的分頁拿著就排隊，那一頁關掉後自動接手（先換成磁碟最新版）。瀏覽器不支援＝唯讀並明講
-var WRITER=false, LOCKMODE="BOOT", LOCKNAME="g5chi.v1:writer";
+// 開頁先決定寫入權、再跑原本的開頁流程（whenLockDecided）：拿到寫入權的頁面，開頁路徑與改版前逐字相同
+// （先開頁、後拿寫入權會讓開頁那一次畫面在唯讀下畫出，自然站地圖長大動畫與「開頁不寫存檔」都因此壞掉）。
+// 被別的分頁拿著＝唯讀開頁並排隊，那一頁關掉後接手（先換成磁碟最新版）；瀏覽器不支援＝唯讀並明講；鎖 2 秒沒回應＝先唯讀開頁
+var WRITER=false, LOCKMODE="BOOT", LOCKNAME="g5chi.v1:writer", LOCKDONE=false, LOCKQ=[];
 var store = C.createStore({storage:makeStorage(), bank:BANK, clock:function(){return Date.now();}, lock:{held:function(){return WRITER;}}});
 store.load();
-function BOOTED(){return typeof booted==="undefined"||booted;}   // 自然站沒有 booted：鎖回呼是非同步的，跑到這裡開頁已經完成
-function gotWriter(){var wasRO=LOCKMODE==="RO",before=JSON.stringify(store.get().state);WRITER=true;LOCKMODE="W";store.reload();store.dispatch({type:"tick"});banners();if(BOOTED()&&screen==="home"&&(wasRO||JSON.stringify(store.get().state)!==before))renderHome();return new Promise(function(){});}
+function whenLockDecided(fn){if(LOCKDONE)fn();else LOCKQ.push(fn);}
+function lockDecided(){if(LOCKDONE)return;LOCKDONE=true;var q=LOCKQ;LOCKQ=[];q.forEach(function(f){f();});}
+function gotWriter(){var late=LOCKDONE;WRITER=true;LOCKMODE="W";store.reload();lockDecided();if(late){banners();if(screen==="home")renderHome();}return new Promise(function(){});}
 (function(){
   var L=navigator.locks;
-  if(!L||typeof L.request!=="function"){LOCKMODE="NOLOCK";return;}
+  if(!L||typeof L.request!=="function"){LOCKMODE="NOLOCK";lockDecided();return;}
+  setTimeout(function(){if(!LOCKDONE){LOCKMODE="RO";lockDecided();banners();}},2000);
   try{L.request(LOCKNAME,{ifAvailable:true},function(l){
     if(l) return gotWriter();
-    LOCKMODE="RO"; if(BOOTED()) banners();
+    LOCKMODE="RO"; lockDecided(); banners();
     L.request(LOCKNAME,gotWriter).catch(function(){});
-  }).catch(function(){LOCKMODE="NOLOCK";if(BOOTED())banners();});}catch(e){LOCKMODE="NOLOCK";}
+  }).catch(function(){LOCKMODE="NOLOCK";lockDecided();banners();});}catch(e){LOCKMODE="NOLOCK";lockDecided();}
 })();
 var seq = 0;
 function newId(p){seq++;return (p||"a")+Date.now().toString(36)+seq.toString(36)+Math.floor(Math.random()*1e6).toString(36);}
@@ -4068,8 +4072,7 @@ window.addEventListener("hashchange",openFromHash);
     document.head.appendChild(sc);
   });
 })();
-renderHome();
-openFromHash(); booted=true;
+whenLockDecided(function(){renderHome();openFromHash(); booted=true;});   // 開頁：等寫入權決定（見儲存段）
 })();
 </script>
 <script src="https://windsorya.github.io/g5-help/qrcode.js"></script>
