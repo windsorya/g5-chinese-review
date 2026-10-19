@@ -2,7 +2,7 @@
 """第三～六課（k7）畫面文字＝審定快照（2026-10-18，4agent 4B-20261018-chi-k7 最終方案第 3 點；設計報告矩陣 T29 精簡版）。
 
 為什麼：㉖ 鎖的是資料（題庫產出的每個欄位），不保證瀏覽器畫出來的字就是那些欄位（模板綁錯欄位、跳脫、只載入部分題庫都不改資料）。
-做法：每個 k7 觀念從觀念頁按「練這個觀念的全部 N 題」，逐題實際作答；預期值一律讀 tests/k7_approved_snapshot.json（不是讀頁面上的題庫），
+做法：每個 k7 觀念從觀念頁按「直接闖關」，逐題實際作答；預期值一律讀 tests/k7_approved_snapshot.json（不是讀頁面上的題庫），
   ① 題目、選項＝快照；② 按提示＝「提示：」＋快照 hint；③④ 回饋框（#ansBox 第一個 .fb）的每一個子節點（含裸文字節點）＝[標籤, class, 文字]
   必須「完全等於」用快照組出來的清單（Codex 審 ab43de7：原本只查子字串，解說後面多塞一句「璧的部首是土」也會過）：
     答對（有按提示）：[strong「答對了！你有勾「不太確定」或用了提示，明天再確認一次。」, span why, div.src「出處：page」]
@@ -41,8 +41,8 @@ def run(browser, label, device):
     for cid in sorted(SNAP["concepts"]):
         want_ids = sorted(i for i, c in SNAP["cards"].items() if c["concept"] == cid and i not in SNAP["merged"])
         pg.goto(URL + "#c/" + cid)
-        pg.wait_for_selector("#cAll")
-        pg.locator("#cAll").click()
+        pg.wait_for_selector("#cGo")   # 2026-10-19「練這個觀念的全部」併進「直接闖關」（只出沒做過的；各觀念的題互不重疊＝這站全部）
+        pg.locator("#cGo").click()
         seen, bad, n = [], [], 0
         while pg.locator("#main .q").count() and n < 60:
             n += 1
