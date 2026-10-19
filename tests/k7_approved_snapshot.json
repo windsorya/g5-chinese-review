@@ -1,7 +1,7 @@
 {
  "規則版本": "k7-snapshot/1",
  "說明": "第三～六課內容審定快照；只能由人審過差異、送審 PASS 後手動 node tests/k7_snapshot.js --write 產生",
- "sha256": "4455a63c34c2a84efa29749dd3cd1a4df401814810a9a4e454a5ff22b5f70f03",
+ "sha256": "d8ac9c9f930f7321b3819debf30a63064d7f6f8b595560b1b1db7c67573a8c15",
  "content": {
   "unit": "第三～六課：生字、成語、標點、部首",
   "concepts": {
@@ -399,7 +399,7 @@
      "艘"
     ],
     "page": "自編題（未對課本）",
-    "q": "「瑞邦上網（　）尋電影」括號裡要填哪個字？",
+    "q": "「銳邦上網（　）尋電影」括號裡要填哪個字？",
     "src": "https://pedia.cloud.edu.tw/Bookmark/TCollection?TextNameId=0101051150105",
     "type": "choice",
     "why": "搜是找東西，要用手翻找，所以是提手旁。",

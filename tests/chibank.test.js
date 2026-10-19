@@ -9,6 +9,7 @@ const fs = require("fs");
 const path = require("path");
 const B = require("../src/chibank.js");
 const X = require("../src/chiexplain.js");
+const VID = require("../src/chivideos.js");
 const ROOT = path.join(__dirname, "..");
 const MAX_SENTENCE = 40;
 const sentences = (t) => String(t == null ? "" : t).split(/[。！？；\n]/).map((s) => s.trim()).filter(Boolean);
@@ -411,10 +412,18 @@ test("⑲cr8 加「沒有取得販售授權」條件；cr9 錯因改「未取得
   assert.ok(w && !/只能自己用/.test(w) && /未取得授權/.test(w) && /任意上傳/.test(w), "cr9 錯因：" + w);
 });
 
-test("⑳著作權補救解說：合理引用四要件都講到，不說「用之前一定要先問」", () => {
-  const all = X.EXPLAIN.cr.map((x) => x.svg() + x.lines.join("") + x.ask + x.task + (x.examples || []).map((y) => y.s + y.why).join("")).join("");
-  ["已公開發表", "需要", "合理範圍", "出處"].forEach((k) => assert.ok(all.indexOf(k) >= 0, "缺合理引用要件：" + k));
-  assert.ok(!/用之前(一定要)?先問/.test(all), "仍寫「用之前先問」");
+// 2026-10-19 範圍稽核改寫：舊⑳要求講合理引用四要件；第五課〈超級英雄〉教的是「影片、圖片、文章都要先取得創作者的同意與授權」，
+// 合理引用、登記、讀後心得不用問都是課外著作權法（公開教案主旨），和課文方向相反會讓她照課文推時答錯 ⇒ 反過來：主訊息要有、課外條件不准出現。
+const CR_OUT = /合理引用|合理使用|合理範圍|四件事|已公開發表|登記|讀後心得|寫心得|不用先問|不必先問/;
+test("⑳著作權補救解說與先猜題照第五課主訊息：要先取得同意與授權、寫上作者和出處；不教課外的合理引用條件、登記、讀後心得不用問", () => {
+  const all = X.EXPLAIN.cr.map((x) => x.name + x.svg() + x.lines.join("") + x.ask + x.task + (x.examples || []).map((y) => y.s + y.why).join("")).join("");
+  ["同意", "授權", "作者", "出處"].forEach((k) => assert.ok(all.indexOf(k) >= 0, "缺第五課主訊息：" + k));
+  assert.equal((all.match(CR_OUT) || [""])[0], "", "解說仍教課外的著作權法條件");
+  const p = X.PREDICT.cr, pt = [p.q, p.why].concat(p.opts).join("");
+  assert.ok(/同意/.test(p.opts[p.a]) && /授權/.test(p.opts[p.a]), "先猜題正解不是「先取得同意與授權」：" + p.opts[p.a]);
+  assert.equal((pt.match(CR_OUT) || [""])[0], "", "先猜題仍考課外的著作權法條件");
+  // 自檢：把舊內容的句子放回去要抓得到
+  ["作品一完成，作者就有著作權，不用登記。", "合理引用不用先問作者，但四件事都要做到：", "用自己的話寫讀後心得，不用先問作者。"].forEach((t) => assert.ok(CR_OUT.test(t), "CR_OUT 沒抓到舊句：" + t));
 });
 
 // ===== ㉑ 著作權補救解說（EXPLAIN.cr）：整份審定快照＋結構斷言 =====
@@ -429,12 +438,14 @@ test("⑳著作權補救解說：合理引用四要件都講到，不說「用�
 //     （同一套文字正規化後逐字比；就算有人沒送審就重產快照，這四句的位置和字也還釘著）。
 // 改內容的流程：改 src/chiexplain.js → node tests/cr_snapshot.js 看差異 → 送審 → PASS 後由人手動 node tests/cr_snapshot.js --write
 // → 內容和快照同一個 commit。網站成品 index.html 由 build.py 內嵌 src 產生，成品一致性不在這條的範圍。
+// 2026-10-19 範圍稽核：內容改成第五課主訊息（先取得同意與授權、寫上作者和出處），審定句換成新的四句；
+// 下面的反例跟著換：意思從「合理引用要先問」（推翻舊內容）改成「分享不用先問」（推翻新內容），位置與檢查方式不變。
 const SNAP = require("./cr_snapshot.js");
 const CR_PINS = [   // [第幾張（從 0 起）, lines 第幾句, 審定句, 這句承載的意思]
-  [0, 1, "合理引用不用先問作者，但四件事都要做到：", "合理引用不用先問"],
-  [0, 6, "超出合理引用的複製、上傳、賣，要先取得授權。", "超出合理引用才要授權"],
-  [1, 3, "合理引用不用先問，但一定要寫出處。", "合理引用不用先問"],
-  [1, 4, "超出合理引用的複製、上傳，要先取得授權。", "超出合理引用才要授權"],
+  [0, 2, "得到創作者的同意與授權，才算合法使用。", "要先取得同意與授權"],
+  [0, 3, "使用的時候，要寫上作者和出處。", "寫上作者和出處"],
+  [1, 3, "得到同意與授權，才能使用、才能分享。", "要先取得同意與授權"],
+  [1, 4, "用的時候，記得寫上作者和出處。", "寫上作者和出處"],
 ];
 const crSnapshot = () => JSON.parse(fs.readFileSync(SNAP.SNAPSHOT_FILE, "utf8"));
 // 回傳 [{ kind: file｜parse｜snapshot｜structure, path, text }]；空陣列＝通過
@@ -462,7 +473,7 @@ function t21Check(cr, snap) {
 }
 const T21_KIND = { file: "快照檔", parse: "解析失敗", snapshot: "和審定快照不同", structure: "結構斷言" };
 const t21Lines = (bad) => bad.map((b) => "  [" + T21_KIND[b.kind] + "] " + b.text).join("\n");
-test("㉑著作權補救解說：整份內容（每個欄位、例句配對與順序、圖卡元素樹與全部屬性）等於審定快照 tests/cr_approved_snapshot.json；第一張 lines[1]／[6]、第二張 lines[3]／[4] 是「不用先問」「超出才要授權」審定句", () => {
+test("㉑著作權補救解說：整份內容（每個欄位、例句配對與順序、圖卡元素樹與全部屬性）等於審定快照 tests/cr_approved_snapshot.json；第一張 lines[2]／[3]、第二張 lines[3]／[4] 是「先取得同意與授權」「寫上作者和出處」審定句", () => {
   let snap;
   try { snap = crSnapshot(); } catch (e) { assert.fail("讀不到審定快照 tests/cr_approved_snapshot.json（" + e.message + "）。快照只能由人手動執行 node tests/cr_snapshot.js --write 產生並送審，測試不會自己產生。"); }
   const bad = t21Check(X.EXPLAIN.cr, snap);
@@ -487,66 +498,66 @@ function svgEdit(card, f) { const s = f(card.svg()); card.svg = () => s; }
 const charRefs = (t, hexEvery) => Array.from(t).map((c, n) => (hexEvery && n % hexEvery === 1 ? "&#x" + c.codePointAt(0).toString(16) + ";" : "&#" + c.codePointAt(0) + ";")).join("");
 const crPrint = (C) => JSON.stringify(C.map((c) => Object.keys(c).map((k) => [k, typeof c[k] === "function" ? c[k]() : c[k]])));
 const T21_ROWS = [   // 設計檔 (d) 18 列；hit＝[種類, 位置, 訊息裡要出現的字]
-  { id: "1", what: "同義詞：第二張 lines[0] →「合理引用要先詢問作者。」", mutate: (C) => { C[1].lines[0] = "合理引用要先詢問作者。"; },
-    hit: [["snapshot", "cr[1].lines[0]", "→ \"合理引用要先詢問作者。\""]] },
+  { id: "1", what: "同義詞：第二張 lines[0] →「分享別人的作品不用先詢問作者。」", mutate: (C) => { C[1].lines[0] = "分享別人的作品不用先詢問作者。"; },
+    hit: [["snapshot", "cr[1].lines[0]", "→ \"分享別人的作品不用先詢問作者。\""]] },
   { id: "2", what: "配對拆散：第一張 examples[1].s →「「把整篇文章貼到自己的網站。」」，why 不變", mutate: (C) => { C[0].examples[1].s = "「把整篇文章貼到自己的網站。」"; },
     hit: [["snapshot", "cr[0].examples[1].s", "→ \"「把整篇文章貼到自己的網站。」\""]] },
-  { id: "3", what: "tspan：第二張圖卡新增 <text x=\"10\" y=\"145\"><tspan>合理引用要先取得同意。</tspan></text>",
-    mutate: (C) => svgEdit(C[1], (s) => rep1(s, "</svg>", '<text x="10" y="145"><tspan>合理引用要先取得同意。</tspan></text></svg>')),
-    hit: [["snapshot", "cr[1].svg.children[13]", "<tspan>合理引用要先取得同意。</tspan>"]] },
+  { id: "3", what: "tspan：第二張圖卡新增 <text x=\"10\" y=\"145\"><tspan>分享別人的作品不用先問。</tspan></text>",
+    mutate: (C) => svgEdit(C[1], (s) => rep1(s, "</svg>", '<text x="10" y="145"><tspan>分享別人的作品不用先問。</tspan></text></svg>')),
+    hit: [["snapshot", "cr[1].svg.children[13]", "<tspan>分享別人的作品不用先問。</tspan>"]] },
   { id: "4", what: "審定句錯配：第一張 examples[1].why ↔ examples[2].why", mutate: (C) => { const e = C[0].examples, w = e[1].why; e[1].why = e[2].why; e[2].why = w; },
-    hit: [["snapshot", "cr[0].examples[1].why", "→ \"整篇貼上不是引用"], ["snapshot", "cr[0].examples[2].why", "→ \"合理引用，不用先問"]] },
-  { id: "5", what: "標題漏檢：第二張 name →「合理引用要先詢問作者」", mutate: (C) => { C[1].name = "合理引用要先詢問作者"; },
-    hit: [["snapshot", "cr[1].name", "→ \"合理引用要先詢問作者\""]] },
-  { id: "6", what: "任務漏檢：第二張 task →「合理引用前，先詢問作者。」", mutate: (C) => { C[1].task = "合理引用前，先詢問作者。"; },
-    hit: [["snapshot", "cr[1].task", "→ \"合理引用前，先詢問作者。\""]] },
-  { id: "7", what: "提問漏檢：第二張 ask →「合理引用前，為什麼必須先詢問？」", mutate: (C) => { C[1].ask = "合理引用前，為什麼必須先詢問？"; },
-    hit: [["snapshot", "cr[1].ask", "→ \"合理引用前，為什麼必須先詢問？\""]] },
-  { id: "8", what: "無障礙文字：第二張圖卡根 aria-label →「合理引用要先詢問作者。」",
-    mutate: (C) => svgEdit(C[1], (s) => { const m = s.match(/ aria-label="[^"]*"/g) || []; return rep1(s, m.length === 1 ? m[0] : "（aria-label 不是剛好一個）", ' aria-label="合理引用要先詢問作者。"'); }),
-    hit: [["snapshot", "cr[1].svg.attrs.aria-label", "→ \"合理引用要先詢問作者。\""]] },
-  { id: "9", what: "SVG 篩選：第二張圖卡文字「我的畫」→「合理引用要先詢問作者」", mutate: (C) => svgEdit(C[1], (s) => rep1(s, ">我的畫<", ">合理引用要先詢問作者<")),
-    hit: [["snapshot", "cr[1].svg.children[1].text", "→ \"合理引用要先詢問作者\""]] },
-  { id: "10", what: "entity：第二張圖卡新增 <text>，「合理引用要先取得同意。」逐字寫成 &#十進位碼點;",
-    mutate: (C) => svgEdit(C[1], (s) => rep1(s, "</svg>", "<text>" + charRefs("合理引用要先取得同意。") + "</text></svg>")),
-    hit: [["snapshot", "cr[1].svg.children[13]", "<text>合理引用要先取得同意。</text>"]] },
+    hit: [["snapshot", "cr[0].examples[1].why", "→ \"音樂也是作品"], ["snapshot", "cr[0].examples[2].why", "→ \"先得到畫的人同意"]] },
+  { id: "5", what: "標題漏檢：第二張 name →「分享別人的作品不用先問」", mutate: (C) => { C[1].name = "分享別人的作品不用先問"; },
+    hit: [["snapshot", "cr[1].name", "→ \"分享別人的作品不用先問\""]] },
+  { id: "6", what: "任務漏檢：第二張 task →「分享別人的作品前，不用先問作者。」", mutate: (C) => { C[1].task = "分享別人的作品前，不用先問作者。"; },
+    hit: [["snapshot", "cr[1].task", "→ \"分享別人的作品前，不用先問作者。\""]] },
+  { id: "7", what: "提問漏檢：第二張 ask →「分享別人的作品前，為什麼不用先問？」", mutate: (C) => { C[1].ask = "分享別人的作品前，為什麼不用先問？"; },
+    hit: [["snapshot", "cr[1].ask", "→ \"分享別人的作品前，為什麼不用先問？\""]] },
+  { id: "8", what: "無障礙文字：第二張圖卡根 aria-label →「分享別人的作品不用先問作者。」",
+    mutate: (C) => svgEdit(C[1], (s) => { const m = s.match(/ aria-label="[^"]*"/g) || []; return rep1(s, m.length === 1 ? m[0] : "（aria-label 不是剛好一個）", ' aria-label="分享別人的作品不用先問作者。"'); }),
+    hit: [["snapshot", "cr[1].svg.attrs.aria-label", "→ \"分享別人的作品不用先問作者。\""]] },
+  { id: "9", what: "SVG 篩選：第二張圖卡文字「我的畫」→「分享不用先問作者」", mutate: (C) => svgEdit(C[1], (s) => rep1(s, ">我的畫<", ">分享不用先問作者<")),
+    hit: [["snapshot", "cr[1].svg.children[1].text", "→ \"分享不用先問作者\""]] },
+  { id: "10", what: "entity：第二張圖卡新增 <text>，「分享別人的作品不用先問。」逐字寫成 &#十進位碼點;",
+    mutate: (C) => svgEdit(C[1], (s) => rep1(s, "</svg>", "<text>" + charRefs("分享別人的作品不用先問。") + "</text></svg>")),
+    hit: [["snapshot", "cr[1].svg.children[13]", "<text>分享別人的作品不用先問。</text>"]] },
   { id: "11", what: "圖文關係：第一張圖卡兩個 x=\"535.0\" 右格文字的 y=\"122.0\" ↔ \"192.0\"",
     mutate: (C) => svgEdit(C[0], (s) => rep1(rep1(rep1(s, 'x="535.0" y="122.0"', "@@Y@@"), 'x="535.0" y="192.0"', 'x="535.0" y="122.0"'), "@@Y@@", 'x="535.0" y="192.0"')),
     hit: [["snapshot", "cr[0].svg.children[13].attrs.y", "\"122.0\" → \"192.0\""], ["snapshot", "cr[0].svg.children[20].attrs.y", "\"192.0\" → \"122.0\""]] },
   { id: "12", what: "隱藏內容：第一張圖卡根節點加 style=\"display:none\"", mutate: (C) => svgEdit(C[0], (s) => rep1(s, "<svg ", '<svg style="display:none" ')),
     hit: [["parse", "cr[0].svg", "不認得的屬性 style"]] },
-  { id: "13", what: "刪除被掩護：刪掉第一張 lines[1]", mutate: (C) => { C[0].lines.splice(1, 1); },
-    hit: [["snapshot", "cr[0].lines[1]", "少了這一項 \"合理引用不用先問作者，但四件事都要做到：\""], ["structure", "cr[0].lines[1]"], ["structure", "cr[0].lines[6]"]] },
+  { id: "13", what: "刪除被掩護：刪掉第一張 lines[2]（審定句「先取得同意與授權」）", mutate: (C) => { C[0].lines.splice(2, 1); },
+    hit: [["snapshot", "cr[0].lines[2]", "少了這一項 \"得到創作者的同意與授權，才算合法使用。\""], ["structure", "cr[0].lines[2]"], ["structure", "cr[0].lines[3]"]] },
   { id: "14", what: "集合完整性：刪掉第二張卡", mutate: (C) => { C.splice(1, 1); },
     hit: [["snapshot", "cr[1]", "少了這一項 整張卡"], ["structure", "cr"]] },
   { id: "15", what: "順序遺失：第一張 lines[0] ↔ lines[2]", mutate: (C) => { const l = C[0].lines, x = l[0]; l[0] = l[2]; l[2] = x; },
-    hit: [["snapshot", "cr[0].lines[0]", "→ \"①引用的作品已公開發表。\""], ["snapshot", "cr[0].lines[2]", "→ \"作品一完成，作者就有著作權，不用登記。\""]] },
-  { id: "16", what: "schema 擴張：第二張新增 note 欄位「合理引用要先詢問作者。」", mutate: (C) => { C[1].note = "合理引用要先詢問作者。"; },
-    hit: [["snapshot", "cr[1].note", "多了這個欄位 \"合理引用要先詢問作者。\""]] },
-  { id: "17", what: "Unicode 零寬：第二張 lines[0] →「合理引用要先\\u200b問作者。」", mutate: (C) => { C[1].lines[0] = "合理引用要先\u{200B}問作者。"; },
-    hit: [["snapshot", "cr[1].lines[0]", "→ \"合理引用要先\\u200b問作者。\""]] },
-  { id: "18", what: "過度正規化：第一張 examples[0].s「我畫好了一張圖。」→「我畫好了一張圖？」", mutate: (C) => { C[0].examples[0].s = rep1(C[0].examples[0].s, "我畫好了一張圖。", "我畫好了一張圖？"); },
-    hit: [["snapshot", "cr[0].examples[0].s", "→ \"「我畫好了一張圖？」\""]] },
+    hit: [["snapshot", "cr[0].lines[0]", "→ \"得到創作者的同意與授權，才算合法使用。\""], ["snapshot", "cr[0].lines[2]", "→ \"影片、圖片、文章，都是創作者辛苦做出來的作品。\""]] },
+  { id: "16", what: "schema 擴張：第二張新增 note 欄位「分享別人的作品不用先問作者。」", mutate: (C) => { C[1].note = "分享別人的作品不用先問作者。"; },
+    hit: [["snapshot", "cr[1].note", "多了這個欄位 \"分享別人的作品不用先問作者。\""]] },
+  { id: "17", what: "Unicode 零寬：第二張 lines[0] →「分享別人的作品不用先\\u200b問作者。」", mutate: (C) => { C[1].lines[0] = "分享別人的作品不用先\u{200B}問作者。"; },
+    hit: [["snapshot", "cr[1].lines[0]", "→ \"分享別人的作品不用先\\u200b問作者。\""]] },
+  { id: "18", what: "過度正規化：第一張 examples[0].s「…貼到自己的網站。」→「…貼到自己的網站？」", mutate: (C) => { C[0].examples[0].s = rep1(C[0].examples[0].s, "貼到自己的網站。", "貼到自己的網站？"); },
+    hit: [["snapshot", "cr[0].examples[0].s", "→ \"「我想把網路上的文章貼到自己的網站？」\""]] },
   // 以下兩列：Codex 審 6c732ff（規則版本 1 在這兩列假通過）
   { id: "19", what: "屬性值過度正規化：第一張圖卡 width=\"270.0\" →「270 .0」", mutate: (C) => svgEdit(C[0], (s) => s.replace('width="270.0"', 'width="270 .0"')),   // 只換第一個（根下第一個元素）
     hit: [["snapshot", "cr[0].svg.children[0].attrs.width", "270 .0"]] },
-  { id: "20", what: "schema 擴張（__proto__）：第二張新增自有欄位 __proto__「合理引用要先詢問作者。」",
-    mutate: (C) => { Object.defineProperty(C[1], "__proto__", { value: "合理引用要先詢問作者。", enumerable: true, writable: true, configurable: true }); },
-    hit: [["snapshot", "cr[1].__proto__", "合理引用要先詢問作者"]] },
-  { id: "21", what: "schema 擴張（例句裡的 __proto__）：第一張 examples[0] 新增自有欄位 __proto__「合理引用要先詢問作者。」",
-    mutate: (C) => { Object.defineProperty(C[0].examples[0], "__proto__", { value: "合理引用要先詢問作者。", enumerable: true, writable: true, configurable: true }); },
-    hit: [["snapshot", "cr[0].examples[0].__proto__", "合理引用要先詢問作者"]] },
+  { id: "20", what: "schema 擴張（__proto__）：第二張新增自有欄位 __proto__「分享別人的作品不用先問作者。」",
+    mutate: (C) => { Object.defineProperty(C[1], "__proto__", { value: "分享別人的作品不用先問作者。", enumerable: true, writable: true, configurable: true }); },
+    hit: [["snapshot", "cr[1].__proto__", "分享別人的作品不用先問作者"]] },
+  { id: "21", what: "schema 擴張（例句裡的 __proto__）：第一張 examples[0] 新增自有欄位 __proto__「分享別人的作品不用先問作者。」",
+    mutate: (C) => { Object.defineProperty(C[0].examples[0], "__proto__", { value: "分享別人的作品不用先問作者。", enumerable: true, writable: true, configurable: true }); },
+    hit: [["snapshot", "cr[0].examples[0].__proto__", "分享別人的作品不用先問作者"]] },
 ];
 const T21_LEGACY = [   // abb1c94 以前的自檢反例（Codex 審 9daba41、899b730），新版照樣要紅
-  ["分號", "合理引用要先取得同意；用自己的話寫心得不用先問。"],
-  ["逗號", "合理引用要先取得同意，寫心得不用先問"],
-  ["換行", "合理引用要先取得同意\n寫心得不用先問"],
-  ["同義詞", "合理引用也要作者允許才能用。"],
+  ["分號", "分享別人的作品不用先問；寫上出處就好。"],
+  ["逗號", "分享別人的作品不用先問，寫上出處就好"],
+  ["換行", "分享別人的作品不用先問\n寫上出處就好"],
+  ["同義詞", "分享別人的作品，不必徵求作者允許。"],
 ].map(([k, line], n) => ({ id: "舊" + (n + 1), what: "原有反例（" + k + "）：第二張 lines[3] → " + JSON.stringify(line), mutate: (C) => { C[1].lines[3] = line; },
   hit: [["snapshot", "cr[1].lines[3]"], ["structure", "cr[1].lines[3]"]] })).concat([
-  { id: "舊5", what: "原有反例（圖卡左右格對調）：第一張圖卡左格「合理引用」↔「超出合理引用」",
-    mutate: (C) => svgEdit(C[0], (s) => rep1(rep1(rep1(s, ">合理引用<", ">@@L@@<"), ">超出合理引用<", ">合理引用<"), ">@@L@@<", ">超出合理引用<")),
-    hit: [["snapshot", "cr[0].svg.children[8].text"], ["snapshot", "cr[0].svg.children[15].text"]] },
+  { id: "舊5", what: "原有反例（圖卡左右格對調）：第一張圖卡左格「得到同意與授權」↔「沒問就拿來用」（變成「沒問就拿來用→才可以用」）",
+    mutate: (C) => svgEdit(C[0], (s) => rep1(rep1(rep1(s, ">得到同意與授權<", ">@@L@@<"), ">沒問就拿來用<", ">得到同意與授權<"), ">@@L@@<", ">沒問就拿來用<")),
+    hit: [["snapshot", "cr[0].svg.children[8].text"], ["snapshot", "cr[0].svg.children[22].text"]] },
 ]);
 const T21_POSITIVE = [   // 設計檔 (d) 6 個正向控制：只改排版或編碼，新版必須綠
   { id: "正1", what: "文字縮排／CRLF：每個字串前後加縮排與 CRLF，句中逗號後換行",
@@ -573,15 +584,15 @@ const T21_POSITIVE = [   // 設計檔 (d) 6 個正向控制：只改排版或編
       (m, tag, attrs, sl) => "<" + tag + attrs.match(/ [A-Za-z-]+="[^"]*"/g).reverse().join("") + sl + ">"))) },
   { id: "正5", what: "等價 entity：圖卡文字與 aria-label 的字改寫成 &#十進位; 與 &#x十六進位;",
     mutate: (C) => {
-      svgEdit(C[0], (s) => rep1(s, ">合理引用<", ">" + charRefs("合理引用", 2) + "<").replace(/；/g, "&#xff1b;"));
+      svgEdit(C[0], (s) => rep1(s, ">得到同意與授權<", ">" + charRefs("得到同意與授權", 2) + "<").replace(/；/g, "&#xff1b;"));
       svgEdit(C[1], (s) => rep1(rep1(s, ">我的畫<", ">" + charRefs("我的畫", 2) + "<"), "換位想一想", charRefs("換位想一想", 2)));
     } },
-  { id: "正6", what: "NFC 等價：「著」「不」「理」換成相容漢字 U+FA5F、U+F967、U+F9E4（NFC 後是同一個字）",
+  { id: "正6", what: "NFC 等價：「都」「者」「者」「不」換成相容漢字 U+FA26、U+FA5B、U+FAB2、U+F967（NFC 後是同一個字；第二張 lines[4] 是審定句）",
     mutate: (C) => {
-      C[0].lines[0] = rep1(C[0].lines[0], "著", "\u{FA5F}");
-      C[0].lines[1] = rep1(C[0].lines[1], "不", "\u{F967}");
-      C[1].lines[3] = rep1(C[1].lines[3], "理", "\u{F9E4}");
-      svgEdit(C[0], (s) => rep1(s, ">四件事做到，不用先問<", ">四件事做到，\u{F967}用先問<"));
+      C[0].lines[0] = rep1(C[0].lines[0], "都", "\u{FA26}");
+      C[0].lines[1] = rep1(C[0].lines[1], "者", "\u{FA5B}");
+      C[1].lines[4] = rep1(C[1].lines[4], "者", "\u{FAB2}");
+      svgEdit(C[0], (s) => rep1(s, ">不尊重創作者<", ">\u{F967}尊重創作者<"));
     } },
 ];
 function t21Mutant(row) { const C = crClone(X.EXPLAIN.cr); row.mutate(C); return C; }
@@ -784,7 +795,8 @@ test("㉕部首題：正解、錯項、錯法說明裡的部首，都和教育�
 const K7S = require("./k7_snapshot.js");
 // 審定版的雜湊另釘在這裡（4agent 4B-20261018-chi-k7 Phase 3 證實：改錯內容後重產快照，測試照樣全綠）。
 // 改第三～六課內容＝重產快照＋改這一行，兩處都會出現在 diff 裡，送審時一定看得到；本值對應 Codex 逐題審過的內容（c8f6d18 起到 b1ae58f 各輪修正）。
-const K7_APPROVED_SHA256 = "4455a63c34c2a84efa29749dd3cd1a4df401814810a9a4e454a5ff22b5f70f03";
+// 2026-10-19 範圍稽核：zx4c 人名「瑞邦」改成課文的「銳邦」（第五課主角；教案、考古卷）——快照只差這一個字（node tests/k7_snapshot.js 逐字確認）
+const K7_APPROVED_SHA256 = "d8ac9c9f930f7321b3819debf30a63064d7f6f8b595560b1b1db7c67573a8c15";
 const k7Snap = () => JSON.parse(fs.readFileSync(K7S.SNAPSHOT_FILE, "utf8"));
 function k7Check(cur, snap) {
   const bad = [];
@@ -889,7 +901,7 @@ test("㉖-c 自檢：審定檔只重排鍵不算被手改；build.py --check 對
 module.exports = { T21_ROWS, T21_LEGACY, T21_POSITIVE, crClone, crPrint, t21Check, crSnapshot };
 
 // 2026-10-18 重複題只留一題（律師：「重複是指a題可以答對，也能夠答對b或c題，那b、c題就可能是重複觀念題」）
-test("重複題合併表：被併的題存在、留下的題存在且沒被併（不接龍）、同一個觀念、寫了理由；出題＝全部扣掉被併的", () => {
+test("重複題合併表：被併的題存在、留下的題存在且沒被併（不接龍）、同一個觀念、寫了理由；出題＝全部扣掉被併的和停出的", () => {
   const byId = {}; B.ALL_CARDS.forEach((c) => { byId[c.id] = c; });
   const bad = [];
   Object.keys(B.MERGED).forEach((id) => {
@@ -903,9 +915,90 @@ test("重複題合併表：被併的題存在、留下的題存在且沒被併�
     });
   });
   assert.deepEqual(bad, []);
-  assert.deepEqual(B.CARDS.map((c) => c.id), B.ALL_CARDS.filter((c) => !B.MERGED[c.id]).map((c) => c.id));
-  assert.equal(B.CARDS.length, 246);   // 2026-10-18：204 ＋ 第三～六課 43 題 − 併入的 yb3
+  assert.deepEqual(B.CARDS.map((c) => c.id), B.ALL_CARDS.filter((c) => !B.MERGED[c.id] && !B.RETIRED[c.id]).map((c) => c.id));
+  assert.equal(B.ALL_CARDS.length, 256);
+  assert.equal(B.CARDS.length, 235);   // 2026-10-18：204 ＋ 第三～六課 43 題 − 併入的 yb3 ＝ 246；2026-10-19 範圍稽核停出 11 題 ⇒ 235
   const n = {}; B.CARDS.forEach((c) => { n[c.concept] = (n[c.concept] || 0) + 1; });
   const thin = Object.keys(B.CONCEPTS).filter((k) => !(n[k] >= 4)).map((k) => k + "=" + (n[k] || 0));
   assert.deepEqual(thin, [], "每個觀念合併後至少 4 題");
+});
+
+// ===== 2026-10-19 範圍稽核：考不到的不練，課文怎麼寫就怎麼教 =====
+// 依據：翰林第九冊第一～六課＋統整活動一、二＋享閱讀〈煙會說話〉。〈廉頗與藺相如〉課文第 1 段只一句帶過「使秦．完璧歸趙」「諸侯大會－維護趙王顏面」，
+// 沒有澠池、瑟、缶、十五座城，結尾用「肝膽相照」不是「刎頸之交」（彰化縣 114 學年公開授課學習單、教育百科第三課語詞表）；第五課主角是「銳邦」。
+// 停出的題只是不出新題（RETIRED，和 MERGED 同一套）：ALL_CARDS 照留，她以前練過的照常複習。
+const RETIRED_IDS = ["hs1", "hs2", "hs3", "hs4", "hs6", "hs7", "hs8", "cr1", "cr2", "cr5", "cr10"];
+test("停出表 RETIRED：恰是稽核判 OUT 的 11 題；每題在 ALL_CARDS、不在 CARDS、kind 是 out、寫了理由；不和 MERGED 重疊、MERGED 不指向停出題", () => {
+  assert.ok(B.RETIRED && typeof B.RETIRED === "object", "api 沒有匯出 RETIRED");
+  assert.deepEqual(Object.keys(B.RETIRED).sort(), RETIRED_IDS.slice().sort());
+  const all = new Set(B.ALL_CARDS.map((c) => c.id)), active = new Set(B.CARDS.map((c) => c.id)), bad = [];
+  Object.keys(B.RETIRED).forEach((id) => {
+    const r = B.RETIRED[id];
+    if (!all.has(id)) bad.push(id + " 不在 ALL_CARDS（練過的就沒辦法複習）");
+    if (active.has(id)) bad.push(id + " 還在 CARDS（會出新題）");
+    if (!r || r.kind !== "out") bad.push(id + " kind 不是 out");
+    if (!r || typeof r.why !== "string" || r.why.trim().length < 8) bad.push(id + " 沒寫理由");
+    if (B.MERGED[id]) bad.push(id + " 同時在 MERGED");
+  });
+  Object.keys(B.MERGED).forEach((id) => (B.MERGED[id].keep || []).forEach((k) => { if (B.RETIRED[k]) bad.push(id + " 留下的題 " + k + " 已停出"); }));
+  assert.deepEqual(bad, []);
+});
+
+// 課外細節與錯的人名：會出新題的卡片（題目、選項、解說、錯法說明、提示）、出口題與參考答案、補救解說（每個欄位含圖）、先猜題、影片標題與說明都不能出現
+const OUT_OF_SCOPE = /澠池|瑟|缶|刎頸|十五座城|瑞邦/;
+function scopeLeaks(bank, expl, vid) {
+  const bad = [], chk = (where, t) => { const m = String(t == null ? "" : t).match(OUT_OF_SCOPE); if (m) bad.push(where + "「" + m[0] + "」"); };
+  (bank.CARDS || []).forEach((c) => {
+    chk(c.id + " 題目", c.q); (c.opts || []).forEach((o) => chk(c.id + " 選項", o));
+    chk(c.id + " 解說", c.why); (c.wrongWhy || []).forEach((w) => chk(c.id + " 錯法說明", w)); chk(c.id + " 提示", c.hint);
+  });
+  Object.keys(bank.CONCEPTS || {}).forEach((k) => { const c = bank.CONCEPTS[k]; chk(k + " 觀念名稱", c.title); chk(k + " 出口題", c.exit); chk(k + " 出口題答案", c.exitAns); });
+  Object.keys(expl.EXPLAIN || {}).forEach((k) => expl.EXPLAIN[k].forEach((ex, i) => {
+    const w = k + " 說法" + (i + 1);
+    chk(w + " 圖", typeof ex.svg === "function" ? ex.svg() : ex.svg);
+    [ex.name, ex.task, ex.ask].concat(ex.lines || []).forEach((t) => chk(w, t));
+    (ex.examples || []).forEach((e) => { chk(w + " 例句", e.s); chk(w + " 例句說明", e.why); });
+  }));
+  Object.keys(expl.PREDICT || {}).forEach((k) => { const p = expl.PREDICT[k]; [p.q, p.why].concat(p.opts || []).forEach((t) => chk(k + " 先猜", t)); });
+  Object.keys(vid.V || {}).forEach((k) => vid.V[k].forEach((v) => { chk(k + " 影片標題", v.title); chk(k + " 影片說明", v.note); chk(k + " 影片備註", v.fitNote); }));
+  return bad;
+}
+test("範圍：會出新題的卡片、出口題、補救解說、先猜題、影片標題與說明，都不出現課外的《史記》細節（澠池、瑟、缶、刎頸、十五座城）和錯的人名（瑞邦）", () => {
+  assert.deepEqual(scopeLeaks(B, X, VID), []);
+  // 自檢：停出的題如果還在出題，要抓得到（證明是 RETIRED 過濾讓它綠，不是掃描器沒牙）
+  const leak = scopeLeaks({ CARDS: B.ALL_CARDS, CONCEPTS: {} }, {}, {});
+  ["hs1", "hs6", "hs7"].forEach((id) => assert.ok(leak.some((b) => b.indexOf(id + " ") === 0), "把停出的 " + id + " 放回出題沒抓到：" + leak.join("、")));
+  // 自檢：每一個掃描位置各放一個課外詞，都要紅
+  const clone = (x) => JSON.parse(JSON.stringify(x));
+  const h = clone(card("hs12")); h.opts[h.a] = "完璧歸趙→澠池之會→負荊請罪";
+  const z = clone(card("zx4c")); z.q = z.q.replace("銳邦", "瑞邦");
+  const w = clone(card("hs13")); w.wrongWhy = w.wrongWhy.map((t) => (t ? t + "成為刎頸之交。" : t));
+  const cases = [
+    ["選項", { CARDS: [h] }, {}, {}], ["題目", { CARDS: [z] }, {}, {}], ["錯法說明", { CARDS: [w] }, {}, {}],
+    ["出口題答案", { CARDS: [], CONCEPTS: { hs: Object.assign({}, B.CONCEPTS.hs, { exitAns: "兩人成了刎頸之交。" }) } }, {}, {}],
+    ["解說的圖", { CARDS: [] }, { EXPLAIN: { hs: [Object.assign({}, X.EXPLAIN.hs[0], { svg: () => "<svg>秦王要趙王彈瑟</svg>" })] } }, {}],
+    ["解說例句", { CARDS: [] }, { EXPLAIN: { hs: [Object.assign({}, X.EXPLAIN.hs[1], { examples: [{ s: "逼秦王敲缶", why: "爭面子" }] })] } }, {}],
+    ["先猜題", { CARDS: [] }, { PREDICT: { hs: Object.assign({}, X.PREDICT.hs, { why: "秦王說要用十五座城換璧。" }) } }, {}],
+    ["影片說明", { CARDS: [] }, {}, { V: { hs: [Object.assign({}, VID.V.hs[0], { note: "從完璧歸趙、澠池之會到負荊請罪。" })] } }],
+  ];
+  cases.forEach(([name, b, x, v]) => assert.ok(scopeLeaks(b, x, v).length > 0, "自檢：" + name + "放進課外詞沒抓到"));
+});
+
+test("課文說法：hs12 用「諸侯大會」、hs13 正解是「肝膽相照」、hs 出口題參考答案是「肝膽相照」、zx4c 是第五課主角「銳邦」", () => {
+  const h12 = card("hs12"), h13 = card("hs13");
+  assert.equal(h12.opts[h12.a], "完璧歸趙→諸侯大會→負荊請罪");
+  assert.ok(h12.opts.every((o) => o.indexOf("諸侯大會") >= 0), "hs12 每個選項都要用課文的「諸侯大會」：" + h12.opts.join("／"));
+  assert.match(h13.opts[h13.a], /肝膽相照/, "hs13 正解：" + h13.opts[h13.a]);
+  assert.ok(B.CARDS.indexOf(h12) >= 0 && B.CARDS.indexOf(h13) >= 0, "hs12、hs13 是改內容不是停出，要照常出題");
+  assert.match(B.CONCEPTS.hs.exitAns, /肝膽相照/);
+  assert.match(card("zx4c").q, /銳邦/);
+});
+
+test("〈廉頗與藺相如〉補救解說照課文三個意義段：使秦完璧歸趙、諸侯大會維護趙王顏面 → 藺相如以國家為重避讓 → 負荊請罪、肝膽相照；不出現《史記》才有的細節", () => {
+  const e = X.EXPLAIN.hs, txt = (ex) => [ex.name, ex.svg(), ex.task, ex.ask].concat(ex.lines, (ex.examples || []).flatMap((y) => [y.s, y.why])).join("");
+  const all = e.map(txt).join("");
+  const m = all.match(/澠池|瑟|缶|刎頸|十五座城|肉袒/);
+  assert.equal(m ? m[0] : "", "", "解說出現《史記》細節");
+  ["完璧歸趙", "諸侯大會", "趙王的顏面", "國家為重", "負荊請罪", "肝膽相照"].forEach((k) => assert.ok(all.indexOf(k) >= 0, "解說缺課文的「" + k + "」"));
+  assert.deepEqual(e[0].examples.map((y) => y.s.slice(0, 4)), ["意義段一", "意義段二", "意義段三"], "第一種說法的例句要照三個意義段");
 });
