@@ -2379,3 +2379,92 @@ test("X8 #3010 F3：今天計畫引用、做不了又沒做過的題不佔單元
   assert.ok(s.days[D].planIds.includes("x"));
   assert.deepEqual(C.poolCards(s, b, D).map((c) => c.id).sort(), ["a", "o"], "x 不佔分母；做過的 o 照算");
 });
+
+/* ---------- 父版補做存檔（Codex 審 a9216909 第 4 項，#2498）----------
+ * 逐題歸屬那三版（b6efa94／bf0c658／20d38f9）2026-10-14 10:45–11:52 在線上，寫出過兩種結算制不收的形狀：
+ * 補做回合 kind:"plan"＋makeup、開了補做還沒答就先寫上 madeUp（touched 空）。原樣拒讀＝整份紀錄判壞檔、封鎖存檔，
+ * 首頁只剩「清除壞掉的存檔，重新開始」。存檔一律用當時的核心原封不動跑出來（tests/legacy_makeup_states.js）。 */
+const LEG = require("./legacy_makeup_states.js");
+const LEGS = LEG.states();
+const legacy = (v, stage) => LEGS.find((x) => x.version === v && x.stage === stage);
+const LNOON = (d) => NOON(d || LEG.TODAY);
+
+test("L01 父版三版 × 補做剛開／答 1 題／做完：父版自己驗得過，現行核心一律讀得懂（v→4、檢查全過）", () => {
+  assert.equal(LEGS.length, 9);
+  LEGS.forEach((x) => {
+    assert.deepEqual(x.oldErrors, [], x.version + " " + x.stage + " 前置：父版自己認這份存檔");
+    assert.deepEqual([x.state.v, x.state.session.kind, x.state.session.makeup], [3, "plan", LEG.DAY], "前置：真的是父版補做回合");
+    const r = C.decode(JSON.stringify(x.state), LEG.BANK);
+    assert.ok(r.accepted, x.version + " " + x.stage + " " + JSON.stringify(r.detail));
+    assert.deepEqual([r.state.v, C.checkState(r.state, LEG.BANK)], [4, []]);
+  });
+});
+
+test("L02 補做剛開、一題都沒答：回合改成結算制的補做回合，那天不算補到（拿掉 madeUp）、可以再補，不擋新回合", () => {
+  LEG.VERSIONS.forEach((v) => {
+    const s = C.decode(JSON.stringify(legacy(v, "opened").state), LEG.BANK).state;
+    assert.deepEqual([s.session.kind, s.session.makeup, s.session.answered], ["review", LEG.DAY, []], v);
+    assert.equal(s.days[LEG.DAY].madeUp, undefined, v + " 沒答過就不算補到");
+    assert.deepEqual([C.makeupInProgress(s, LEG.TODAY), C.makeupUnsettled(s, LEG.TODAY)], [false, false], v);
+    assert.ok(C.missedDays(s, "2026-10-12", LEG.TODAY).includes(LEG.DAY), v + " 日曆仍列為沒練、可以補");
+    const r = C.reduce(s, op("sessionStart", { kind: "makeup", day: LEG.DAY }), env(LEG.BANK, LNOON()));
+    assert.ok(!r.error, v + " 重開補做 10/13：" + r.error);
+    assert.ok(r.state.session.makeup === LEG.DAY && r.state.session.queue.length > 0, v);
+  });
+});
+
+test("L03 父版已答的補做（1 題／做完）：那天照父版記成練過、不重複結算；新回合不被擋；接著把剩下的做完也不出錯", () => {
+  LEG.VERSIONS.forEach((v) => {
+    ["one", "done"].forEach((stage) => {
+      const x = legacy(v, stage), s = C.decode(JSON.stringify(x.state), LEG.BANK).state;
+      const d = s.days[LEG.DAY], tag = v + " " + stage;
+      assert.deepEqual([d.touched.length, d.madeUp], [x.answered, x.state.days[LEG.DAY].madeUp], tag + " 那天的紀錄原樣保留");
+      assert.equal(s.session.kind, "review", tag);
+      assert.equal(C.makeupUnsettled(s, LEG.TODAY), false, tag + " 父版已記到那天＝已結算");
+      assert.ok(!C.missedDays(s, "2026-10-12", LEG.TODAY).includes(LEG.DAY), tag + " 不再列為沒練");
+      assert.equal(C.reduce(s, op("makeupClaim", { answerDay: LEG.TODAY, day: LEG.DAY, ids: s.session.answered }), env(LEG.BANK, LNOON())).error, "MAKEUP_DAY", tag + " 不重複結算");
+      assert.equal(C.reduce(s, op("sessionStart", { kind: "makeup", day: LEG.DAY }), env(LEG.BANK, LNOON())).error, "MAKEUP_DAY", tag);
+      const r = C.reduce(s, op("sessionStart", { kind: "review", ids: ["c29", "c30"] }), env(LEG.BANK, LNOON()));
+      assert.ok(!r.error, tag + " 開新回合：" + r.error);
+      if (stage === "one") {
+        let t = s;
+        while (t.session.queue.length) t = run(t, LEG.BANK, LNOON(), op("answer", { cardId: t.session.queue[0], ok: true }));
+        assert.deepEqual([t.session.queue.length, t.days[LEG.DAY].touched.length, C.checkState(t, LEG.BANK)], [0, 1, []], tag + " 做完剩下的照今天算、那天不變");
+      }
+    });
+  });
+});
+
+test("L04 只放行 v3 的歷史形狀：同樣的形狀標成 v4（沒有任何 v4 寫入程式寫過）照舊拒讀", () => {
+  ["opened", "one"].forEach((stage) => {
+    const o = JSON.parse(JSON.stringify(legacy("20d38f9", stage).state)); o.v = 4;
+    const r = C.decode(JSON.stringify(o), LEG.BANK);
+    assert.deepEqual([r.accepted, r.error], [false, "SCHEMA"], stage);
+    assert.ok(r.detail.includes("session"), JSON.stringify(r.detail));
+  });
+  const o = JSON.parse(JSON.stringify(legacy("20d38f9", "opened").state)); o.v = 4; o.session.kind = "review";
+  assert.ok(C.decode(JSON.stringify(o), LEG.BANK).detail.includes("day " + LEG.DAY), "v4 的 madeUp＋空 touched 照舊算壞");
+});
+
+test("L05 store：磁碟上是父版補做存檔 → 開頁不封鎖、可以作答；寫回的是 v4，再讀一次一字不差（冪等）；開頁本身不寫", () => {
+  LEG.VERSIONS.forEach((v) => {
+    const raw0 = JSON.stringify(legacy(v, "opened").state), disk = memStorage({ [C.LS_KEY]: raw0 });
+    const store = C.createStore({ storage: disk, bank: LEG.BANK, clock: () => LNOON() }); store.load();
+    assert.deepEqual([store.get().loadError, store.get().saveStatus, disk.writes(), disk.raw[C.LS_KEY] === raw0], [null, "ok", 0, true], v);
+    const r = store.dispatch(op("sessionStart", { kind: "makeup", day: LEG.DAY }));
+    assert.ok(r.ok, v + " " + r.error);
+    const raw1 = disk.raw[C.LS_KEY], d1 = C.decode(raw1, LEG.BANK);
+    assert.ok(d1.accepted && JSON.parse(raw1).v === 4, v);
+    assert.equal(JSON.stringify(d1.state), raw1, v + " 再讀一次不變");
+  });
+});
+
+test("L06 只動父版補做那兩種形狀：v3 的一般每日回合（沒有 makeup）、有練過的日子，讀進來除了 v 以外一字不差", () => {
+  let o = OLD.blankState();
+  o = OLD.reduce(o, op("sessionStart", {}), { bank: B12, now: NOON(D) }).state;
+  o = OLD.reduce(o, op("answer", { cardId: o.session.queue[0], ok: true }), { bank: B12, now: NOON(D) }).state;
+  assert.deepEqual([o.v, o.session.kind, o.session.makeup, o.days[D].touched.length], [3, "plan", undefined, 1], "前置");
+  const r = C.decode(JSON.stringify(o), B12);
+  assert.ok(r.accepted, JSON.stringify(r.detail));
+  assert.deepEqual(Object.assign({}, r.state, { v: 3 }), o);
+});
