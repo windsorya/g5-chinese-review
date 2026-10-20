@@ -2418,7 +2418,8 @@ test("L03 父版已答的補做（1 題／做完）：那天照父版記成練�
     ["one", "done"].forEach((stage) => {
       const x = legacy(v, stage), s = C.decode(JSON.stringify(x.state), LEG.BANK).state;
       const d = s.days[LEG.DAY], tag = v + " " + stage;
-      assert.deepEqual([d.touched.length, d.madeUp], [x.answered, x.state.days[LEG.DAY].madeUp], tag + " 那天的紀錄原樣保留");
+      // bf0c658／20d38f9 開補做當下就寫 madeUp＝回合那天；b6efa94 不寫，由還在的補做回合補上同一天（Codex 審 9baf334 F2）
+      assert.deepEqual([d.touched.length, d.madeUp, x.state.days[LEG.DAY].madeUp], [x.answered, LEG.TODAY, v === "b6efa94" ? undefined : LEG.TODAY], tag + " 那天的作答原樣保留、補做日＝回合那天");
       assert.equal(s.session.kind, "review", tag);
       assert.equal(C.makeupUnsettled(s, LEG.TODAY), false, tag + " 父版已記到那天＝已結算");
       assert.ok(!C.missedDays(s, "2026-10-12", LEG.TODAY).includes(LEG.DAY), tag + " 不再列為沒練");
@@ -2467,4 +2468,47 @@ test("L06 只動父版補做那兩種形狀：v3 的一般每日回合（沒有 
   const r = C.decode(JSON.stringify(o), B12);
   assert.ok(r.accepted, JSON.stringify(r.detail));
   assert.deepEqual(Object.assign({}, r.state, { v: 3 }), o);
+});
+
+test("L07 父版自己就判壞的值不藉轉換洗白（Codex 審 9baf334 F1）：madeUp 不是晚於那天的日子、補做回合指到不存在或不是日子的那天 → 照舊拒讀", () => {
+  const base = legacy("20d38f9", "opened").state;
+  ["bad-date", null, 123, LEG.DAY, "2026-10-12"].forEach((bad) => {
+    const o = JSON.parse(JSON.stringify(base)); o.days[LEG.DAY].madeUp = bad;
+    const r = C.decode(JSON.stringify(o), LEG.BANK);
+    assert.deepEqual([r.accepted, r.error], [false, "SCHEMA"], JSON.stringify(bad));
+    assert.ok(r.detail.includes("day " + LEG.DAY), JSON.stringify(bad) + " " + JSON.stringify(r.detail));
+    const disk = memStorage({ [C.LS_KEY]: JSON.stringify(o) }), store = C.createStore({ storage: disk, bank: LEG.BANK, clock: () => LNOON() }); store.load();
+    assert.equal(store.get().loadError, "SCHEMA", JSON.stringify(bad) + " store 照舊封鎖");
+  });
+  const noDay = JSON.parse(JSON.stringify(base)); delete noDay.days[LEG.DAY];
+  const notDay = JSON.parse(JSON.stringify(base)); notDay.session.makeup = "13號";
+  [noDay, notDay].forEach((o, i) => {
+    const r = C.decode(JSON.stringify(o), LEG.BANK);
+    assert.deepEqual([r.accepted, r.detail.includes("session")], [false, true], i + " " + JSON.stringify(r.detail));
+  });
+});
+
+test("L08 最早那版（b6efa94）答一半的補做：讀進來那天補上 madeUp＝回合那天；續做完不再送結算（已結算），沒有「這一天已經練過了」的路", () => {
+  const x = legacy("b6efa94", "one");
+  assert.equal(x.state.days[LEG.DAY].madeUp, undefined, "前置：b6efa94 不寫 madeUp");
+  let s = C.decode(JSON.stringify(x.state), LEG.BANK).state;
+  assert.deepEqual([s.days[LEG.DAY].madeUp, C.makeupInProgress(s, LEG.TODAY)], [LEG.TODAY, true]);
+  while (s.session.queue.length) s = run(s, LEG.BANK, LNOON(), op("answer", { cardId: s.session.queue[0], ok: true }));
+  const v = C.view(s, env(LEG.BANK, LNOON()));
+  assert.deepEqual([v.makeupPending, s.days[LEG.DAY].madeUp, s.days[LEG.DAY].touched.length], [null, LEG.TODAY, 1], "畫面判已結算（renderEnd 看 madeUp）、不會再送 makeupClaim");
+  // 回合已不在（被別的回合取代）時無從得知是哪天補的：當一般練過的日子，不猜日期
+  const o = JSON.parse(JSON.stringify(x.state)); o.session = null;
+  const t = C.decode(JSON.stringify(o), LEG.BANK);
+  assert.deepEqual([t.accepted, t.state.days[LEG.DAY].madeUp, t.state.days[LEG.DAY].touched.length], [true, undefined, 1]);
+});
+
+test("L09 補做回合已不在（被別的回合取代）時，父版已答補做日的 madeUp 原樣保留——不靠回合補回（突變自檢：② 不看 touched 就刪會被 ③ 遮住）", () => {
+  ["bf0c658", "20d38f9"].forEach((v) => {
+    ["one", "done"].forEach((stage) => {
+      const o = JSON.parse(JSON.stringify(legacy(v, stage).state)); o.session = null;
+      const r = C.decode(JSON.stringify(o), LEG.BANK);
+      assert.ok(r.accepted, v + " " + stage + " " + JSON.stringify(r.detail));
+      assert.deepEqual([r.state.days[LEG.DAY].madeUp, r.state.days[LEG.DAY].touched.length], [LEG.TODAY, legacy(v, stage).answered], v + " " + stage);
+    });
+  });
 });

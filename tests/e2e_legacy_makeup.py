@@ -6,8 +6,8 @@
 存檔用當時的核心原封不動跑出來（tests/legacy_makeup_states.js，題庫換成本站頁面上的題庫），放進 localStorage 後開頁：
   ① 三版 × 補做剛開／答 1 題／做完：都沒有壞檔提示、沒有清除按鈕
   ② 補做剛開：日曆下有「補做 10/13」，按了真的開補做回合
-  ③ 答 1 題（20d38f9）：首頁有「繼續補做 10/13」，做完顯示「10/13 補做完成」
-  ④ 做完：不再列「補做 10/13」；開一段小考複習寫得進去、存檔變 v4
+  ③ 答 1 題（三版）：首頁有「繼續補做 10/13」，做完顯示「10/13 補做完成」、不說「這一天已經練過了」
+  ④ 做完：不再列「補做 10/13」、日曆 13 號是補做色；開一段小考複習寫得進去、存檔變 v4
   每段都驗沒有 JS 錯誤。執行：python3.12 tests/e2e_legacy_makeup.py [--base https://windsorya.github.io/g5-chinese-review/]
 """
 import json
@@ -90,7 +90,7 @@ def main():
                     b.click(); page.wait_for_timeout(200)
                 se = (disk(page) or {}).get("session") or {}
                 check(f"② {tag}：按了真的開補做回合、存檔寫成 v4", se.get("makeup") == DAY and se.get("kind") == "review" and len(se.get("queue") or []) > 0 and disk(page)["v"] == 4, json.dumps(se, ensure_ascii=False)[:200])
-            elif x["stage"] == "one" and x["version"] == "20d38f9":
+            elif x["stage"] == "one":   # 三版都測（Codex 審 9baf334 F2：只測 20d38f9 漏掉 b6efa94 沒寫 madeUp 的那版）
                 go = page.locator("#goOn")
                 check(f"③ {tag}：首頁有「繼續補做 10/13」", go.count() == 1 and "繼續補做 10/13" in go.inner_text(), page.inner_text("#main")[:200])
                 if go.count():
@@ -102,9 +102,13 @@ def main():
                         nx = page.locator("#next")
                         if nx.count():
                             nx.first.click()
-                check(f"③ {tag}：做完顯示「10/13 補做完成」", "10/13 補做完成" in page.inner_text("#main"), page.inner_text("#main")[:200])
+                end = page.inner_text("#main")
+                check(f"③ {tag}：做完顯示「10/13 補做完成」、沒有「這一天已經練過了」", "10/13 補做完成" in end and "已經練過了" not in end, end[:200])
             elif x["stage"] == "done":
                 check(f"④ {tag}：不再列「補做 10/13」", page.locator(f"#makeup button[data-mk='{DAY}']").count() == 0, page.inner_text("#makeup")[:200])
+                cal = page.locator("#cal i[title^='10/13']")   # 補做過的格子標題是「10/13（補做）」
+                cls = cal.first.get_attribute("class") if cal.count() else ""
+                check(f"④ {tag}：日曆 13 號是補做色（on mk）", "on" in (cls or "") and "mk" in (cls or ""), cls)
                 rv = page.locator("button[data-rv]").first
                 if rv.count():
                     rv.click(); page.wait_for_timeout(200)
