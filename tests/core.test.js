@@ -2512,3 +2512,52 @@ test("L09 補做回合已不在（被別的回合取代）時，父版已答補�
     });
   });
 });
+
+test("L10 結算制的 v3 存檔（5e61b05 首版～ca33987 末版，10-14 11:52 起到 10-18 改 v4 前線上寫的）讀進來除了 v 以外一字不差；非父版形狀 v3 與 v4 讀法相同（突變自檢：把 review 回合也當父版轉會補錯 madeUp）", () => {
+  ["5e61b05", "ca33987"].forEach((v) => {
+    const O = require("./fixtures/core.settle-v3-" + v + ".js");
+    let n = 0;
+    const go = (s, a) => { const r = O.reduce(s, Object.assign({ id: v + "-s" + (++n) }, a), env(LEG.BANK, LNOON())); assert.ok(!r.error, v + " " + a.type + " " + r.error); return r.state; };
+    let s = go(O.blankState(), { type: "sessionStart" });
+    while (s.session.queue.length) s = go(s, { type: "answer", cardId: s.session.queue[0], ok: true });
+    s = go(s, { type: "sessionStart", kind: "makeup", day: LEG.DAY });
+    const got = [JSON.parse(JSON.stringify(s))];
+    s = go(s, { type: "answer", cardId: s.session.queue[0], ok: true }); got.push(JSON.parse(JSON.stringify(s)));
+    while (s.session.queue.length) s = go(s, { type: "answer", cardId: s.session.queue[0], ok: true });
+    got.push(JSON.parse(JSON.stringify(s)));
+    s = go(s, { type: "makeupClaim", answerDay: LEG.TODAY, day: LEG.DAY, ids: s.session.answered }); got.push(JSON.parse(JSON.stringify(s)));
+    got.forEach((x, i) => {
+      assert.deepEqual([x.v, x.session.kind, x.session.makeup, O.checkState(x, LEG.BANK)], [3, "review", LEG.DAY, []], v + " #" + i + " 前置：結算制的補做回合");
+      const r = C.decode(JSON.stringify(x), LEG.BANK);
+      assert.ok(r.accepted, v + " #" + i + " " + JSON.stringify(r.detail));
+      assert.deepEqual(Object.assign({}, r.state, { v: 3 }), x, v + " #" + i);
+    });
+    assert.deepEqual([got[3].days[LEG.DAY].madeUp, got[3].days[LEG.DAY].touched.length > 0], [LEG.TODAY, true], v + " 已結算那份：那天記成補做");
+  });
+  // 只轉 kind:"plan"：review 補做回合、那天已有作答卻沒有 madeUp（沒有寫入程式寫過）——v3 與 v4 的讀法必須一樣，不得替它補 madeUp
+  const o = JSON.parse(JSON.stringify(legacy("b6efa94", "one").state)); o.session.kind = "review";
+  const r3 = C.decode(JSON.stringify(o), LEG.BANK), r4 = C.decode(JSON.stringify(Object.assign({}, o, { v: 4 })), LEG.BANK);
+  assert.deepEqual(r3, r4);
+  if (r3.accepted) assert.equal(r3.state.days[LEG.DAY].madeUp, undefined);
+});
+
+test("L11 回合帶 makeup 卻不是父版補做回合（review＋makeup）＝父版自己拒讀，整份不轉：配上「madeUp＋空 touched」照舊拒讀、v3 與 v4 同結果（數學站 Codex 審 2354f822，#3268）；沒有補做回合時照轉（父版開補做沒答、改開小考複習寫得出這種日子）", () => {
+  ["bf0c658", "20d38f9"].forEach((v) => {
+    const bad = JSON.parse(JSON.stringify(legacy(v, "opened").state)); bad.session.kind = "review";
+    const O = require("./fixtures/core.makeup-perq-" + v + ".js");
+    assert.ok(O.checkState(bad, LEG.BANK).includes("session"), v + " 前置：父版自己拒讀");
+    const r3 = C.decode(JSON.stringify(bad), LEG.BANK), r4 = C.decode(JSON.stringify(Object.assign({}, bad, { v: 4 })), LEG.BANK);
+    assert.deepEqual([r3.accepted, r3.error], [false, "SCHEMA"], v + " " + JSON.stringify(r3.detail));
+    assert.deepEqual(r3, r4, v + " v3 與 v4 讀法相同");
+    const disk = memStorage({ [C.LS_KEY]: JSON.stringify(bad) }), store = C.createStore({ storage: disk, bank: LEG.BANK, clock: () => LNOON() }); store.load();
+    assert.deepEqual([store.get().loadError, disk.writes()], ["SCHEMA", 0], v + " store 照舊封鎖、不寫");
+    // 父版真的寫得出來的對照組：開補做 10/13 沒答 → 改開小考複習（回合沒有 makeup）
+    let n = 0;
+    const sw = O.reduce(JSON.parse(JSON.stringify(legacy(v, "opened").state)), { type: "sessionStart", kind: "review", ids: ["c29", "c30"], id: v + "-sw" + (++n) }, env(LEG.BANK, LNOON()));
+    assert.ok(!sw.error, v + " " + sw.error);
+    assert.deepEqual([sw.state.session.makeup, sw.state.days[LEG.DAY].madeUp, sw.state.days[LEG.DAY].touched.length, O.checkState(sw.state, LEG.BANK)], [undefined, LEG.TODAY, 0, []], v + " 前置：父版認這份");
+    const rs = C.decode(JSON.stringify(sw.state), LEG.BANK);
+    assert.ok(rs.accepted, v + " " + JSON.stringify(rs.detail));
+    assert.deepEqual([rs.state.days[LEG.DAY].madeUp, C.missedDays(rs.state, "2026-10-12", LEG.TODAY).includes(LEG.DAY)], [undefined, true], v + " 那天沒補到、可以再補");
+  });
+});
