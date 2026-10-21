@@ -377,6 +377,71 @@ def flow_lab_after_external_clear(browser):
     ctx.close()
 
 
+BREAK_SET = """() => { window.__realSet = Storage.prototype.setItem;
+  Storage.prototype.setItem = function () { throw new DOMException('QuotaExceededError', 'QuotaExceededError'); }; }"""
+FIX_SET = "() => { Storage.prototype.setItem = window.__realSet; }"
+LAST_RUN = """() => { const s = JSON.parse(localStorage.getItem('g5chi.v1') || 'null'); if (!s) return null;
+  const ids = Object.keys(s.labRuns || {}); const r = s.labRuns[ids[ids.length - 1]];
+  return r ? {id: ids[ids.length - 1], n: ids.length, tasksDone: r.tasksDone.slice().sort(), tasks: r.tasks} : null; }"""
+
+
+def enter_lab_wrong(pg):   # 答錯後補救進來，先猜一個；回傳任務（例句）數
+    pg.locator("#goAll").click(); pg.wait_for_selector("#main .q")
+    answer(pg, False); pg.locator('#errq button[data-k="concept"]').click()
+    pg.wait_for_selector("#toLab"); pg.locator("#toLab").click(); pg.wait_for_selector("#labPredict button[data-g]")
+    pg.locator("#labPredict button[data-g]").first.click(); pg.wait_for_selector("#mNext")
+    return pg.evaluate("document.querySelectorAll('#labTask .ck').length")
+
+
+def flow_lab_last_resume(browser):
+    """社會站 #1542 ①（e554ab6）三姊妹站同型（#2632）：最後一個例句存檔失敗→恢復→切回分頁（visibilitychange 補存）。
+    舊版切回分頁只重繪側欄，任務與完成鈕還是存檔前的樣子，完成鈕一直停用、「下一個例句」也已收起，卡死。應該：補存後完成鈕可按。"""
+    ctx, pg, errors = open_page(browser, {"viewport": {"width": 390, "height": 844}})
+    n = enter_lab_wrong(pg)
+    for _ in range(n - 1):
+        pg.locator("#mNext").click()
+    pg.evaluate(BREAK_SET); pg.locator("#mNext").click()
+    had_retry = pg.locator("#retrySave").count() >= 1
+    pg.evaluate(FIX_SET)
+    pg.evaluate("() => document.dispatchEvent(new Event('visibilitychange'))")
+    if pg.locator("#mNext").is_visible():
+        pg.locator("#mNext").click()
+    run = pg.evaluate(LAST_RUN)
+    check("看例句最後一個例句存檔失敗→恢復→切回分頁補存：每個例句都記到、提示列消失、完成鈕可按",
+          had_retry and run and run["tasksDone"] == list(range(n)) and pg.locator("#retrySave").count() == 0 and pg.locator("#labDone").is_enabled(),
+          {"先出現再存一次": had_retry, "run": run, "再存一次": pg.locator("#retrySave").count(), "完成鈕": pg.locator("#labDone").is_enabled()})
+    if pg.locator("#labDone").is_enabled():
+        pg.locator("#labDone").click()
+    check("看例句補存後按「我看懂了，換一題確認」：回到練習換一題", pg.locator("#main .q").count() == 1, pg.inner_text("#main")[:120])
+    check("看例句最後一個例句補存流程沒有 JS 錯誤", not errors, errors)
+    ctx.close()
+
+
+def flow_lab_retry_resume(browser):
+    """社會站 #1542 ②（e554ab6）三姊妹站同型（#2632）：第二個例句存檔失敗→恢復→按「再存一次」。
+    舊版存成功後 route() 把 screen="lab" 導回首頁、lab=null，只能重開一輪。應該：留在原本那一輪，同一個 runId 做到完。"""
+    ctx, pg, errors = open_page(browser, {"viewport": {"width": 390, "height": 844}})
+    n = enter_lab_wrong(pg)
+    pg.locator("#mNext").click()
+    pg.evaluate(BREAK_SET); pg.locator("#mNext").click()
+    before = pg.evaluate(LAST_RUN)
+    pg.evaluate(FIX_SET); pg.locator("#retrySave").first.click()
+    after = pg.evaluate(LAST_RUN)
+    still_lab = pg.locator("#labPredict").count() == 1 and pg.locator("#mNext").count() == 1
+    check("看例句「再存一次」成功後留在原本那一輪：兩個例句都記到、提示列消失",
+          still_lab and after and after["tasksDone"] == [0, 1] and pg.locator("#mSteps li").count() == 2 and pg.locator("#retrySave").count() == 0,
+          {"還在學習畫面": still_lab, "畫面例句數": pg.locator("#mSteps li").count(), "run": after, "main": pg.inner_text("#main")[:80]})
+    k = 0
+    while still_lab and pg.locator("#mNext").is_visible() and k < 20:
+        pg.locator("#mNext").click(); k += 1
+    end = pg.evaluate(LAST_RUN)
+    check("看例句「再存一次」後續接同一輪（同一個 runId、沒有多開一輪）做到完、完成鈕可按",
+          bool(still_lab and end and before and end["id"] == before["id"] and end["n"] == before["n"]
+               and end["tasksDone"] == list(range(n)) and pg.locator("#labDone").is_enabled()), {"before": before, "end": end})
+    check("看例句「再存一次」續接流程沒有 JS 錯誤", not errors, errors)
+    ctx.close()
+
+
 def flow_review(browser):
     ctx, pg, errors = open_page(browser)
     check("小考複習按鈕寫「修辭與句型」", "修辭與句型" in pg.locator("#main .review").inner_text(), pg.locator("#main .review").inner_text()[:200])
@@ -473,6 +538,8 @@ def main():
         flow_review(cr)
         flow_redo_after_external_clear(cr)
         flow_lab_after_external_clear(cr)
+        flow_lab_last_resume(cr)
+        flow_lab_retry_resume(cr)
         flow_upload(cr, "國語", "g5-chinese-review", "G5ChiBank")
         cr.close()
         wk = p.webkit.launch()
