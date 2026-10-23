@@ -878,6 +878,7 @@ test("㉖-c 自檢：審定檔只重排鍵不算被手改；build.py --check 對
     fs.mkdirSync(path.join(tmp, "src"));
     fs.copyFileSync(path.join(ROOT, "build.py"), path.join(tmp, "build.py"));
     fs.copyFileSync(path.join(ROOT, "index.html"), path.join(tmp, "index.html"));
+    fs.copyFileSync(path.join(ROOT, "weak-export.js"), path.join(tmp, "weak-export.js"));   // #4027：--check 也比 weak-export.js
     fs.readdirSync(path.join(ROOT, "src")).filter((f) => /\.(js|html)$/.test(f)).forEach((f) => fs.copyFileSync(path.join(ROOT, "src", f), path.join(tmp, "src", f)));
     const ok = require("child_process").spawnSync("python3", [path.join(tmp, "build.py"), "--check"], { encoding: "utf8" });
     assert.equal(ok.status, 0, "複本未改應一致：" + ok.stdout);
@@ -892,6 +893,13 @@ test("㉖-c 自檢：審定檔只重排鍵不算被手改；build.py --check 對
     variant("首個換行改 CRLF", Buffer.concat([idx.subarray(0, nl), Buffer.from([13]), idx.subarray(nl)]));
     variant("開頭加 UTF-8 BOM", Buffer.concat([Buffer.from([0xef, 0xbb, 0xbf]), idx]));
     variant("index.html 不見", null);
+    // #4027：weak-export.js 缺檔、或 core.js 改了沒重建 weak-export.js，--check 也要紅
+    const wx = fs.readFileSync(path.join(tmp, "weak-export.js"));
+    fs.rmSync(path.join(tmp, "weak-export.js"));
+    assert.notEqual(require("child_process").spawnSync("python3", [path.join(tmp, "build.py"), "--check"], { encoding: "utf8" }).status, 0, "--check 沒抓到：weak-export.js 不見");
+    fs.writeFileSync(path.join(tmp, "weak-export.js"), Buffer.concat([wx, Buffer.from("\n")]));
+    assert.notEqual(require("child_process").spawnSync("python3", [path.join(tmp, "build.py"), "--check"], { encoding: "utf8" }).status, 0, "--check 沒抓到：weak-export.js 和 src 不同");
+    fs.writeFileSync(path.join(tmp, "weak-export.js"), wx);
     fs.writeFileSync(path.join(tmp, "src", "app.html"), app.replace('"提示："+c.hint', '"提示：坊不是土字旁。"'));
     const bad = require("child_process").spawnSync("python3", [path.join(tmp, "build.py"), "--check"], { encoding: "utf8" });
     assert.notEqual(bad.status, 0, "只改 app.html 的提示顯示、沒重建 index.html，--check 沒紅（Codex 反例 F2）");
