@@ -197,10 +197,11 @@ test("④讀不懂回 {ok:false}：壞 JSON、空字串、別科格式、版本�
 
 test("⑤欄位都是非負整數、weakToday≤weak、challengeToday≤challenge；answers＝log 筆數、seen＝cards[*].seen 加總（同 sync.js practiceScore）；錯題站驗證器收", () => {
   const x = exp(), B = C.bankFrom(MB);
-  let AW = null;
-  // 錯題站的驗證程式（同一台有那個 repo 才跑；沒有就只驗本站這邊）
+  // 錯題站的驗證程式：受審樹裡固定一份（g5-wrong-review 6a4f87e 的 src/appweak.js 原文，未改一字）一定跑；
+  // 這台另有 g5-wrong-review（或 G5_APPWEAK 指定）時，連它現在的版本也跑一次——錯題站改了驗證規則這裡會紅
+  const AWS = [require("./fixtures/appweak.g5-wrong-review-6a4f87e.js")];
   for (const p of [process.env.G5_APPWEAK, path.join(require("os").homedir(), "Documents", "g5-wrong-review", "src", "appweak.js")]) {
-    if (p && fs.existsSync(p)) { AW = require(p); break; }
+    if (p && fs.existsSync(p)) { AWS.push(require(p)); break; }
   }
   SEEDS.forEach((sd) => {
     const s = synth(sd, B), got = x.summarize(JSON.stringify(s), NOW);
@@ -210,15 +211,18 @@ test("⑤欄位都是非負整數、weakToday≤weak、challengeToday≤challeng
     assert.ok(got.weakToday <= got.weak && got.challengeToday <= got.challenge);
     assert.equal(got.answers, s.log.length);
     assert.equal(got.seen, Object.values(s.cards).reduce((a, c) => a + c.seen, 0));
-    if (AW) { assert.ok(AW.okSummary(got), "錯題站 okSummary 不收（seed " + sd + "）"); assert.deepEqual(AW.summarize(x, JSON.stringify(s), NOW), Object.fromEntries(FIELDS.map((f) => [f, got[f]]))); }
+    AWS.forEach((AW) => { assert.ok(AW.okSummary(got), "錯題站 okSummary 不收（seed " + sd + "）"); assert.deepEqual(AW.summarize(x, JSON.stringify(s), NOW), Object.fromEntries(FIELDS.map((f) => [f, got[f]]))); });
   });
-  if (AW) {
+  AWS.forEach((AW) => {
     const subj = AW.SUBJECTS.find((s) => s.key === "g5chi.v1");
     assert.ok(AW.okExport(x, "g5chi.v1"), "錯題站 okExport 不收");
     assert.deepEqual(AW.links(x, subj), { weak: null, challenge: null });
     assert.ok(AW.snapshot(x, subj), "錯題站 snapshot 不收");
     assert.equal(AW.summarize(x, "{", NOW), null, "讀不懂要讓錯題站判成讀不懂（不是格式不對）");
-  }
+    const row = AW.resolve(subj, { exp: AW.snapshot(x, subj), local: { raw: JSON.stringify(synth(4, B)) }, cloud: "nocode" }, NOW);
+    assert.equal(row.state, "ok", "錯題站 resolve 沒採用：" + row.why);
+    assert.equal(row.sum.weak, x.summarize(JSON.stringify(synth(4, B)), NOW).weak);
+  });
 });
 
 test("成品一致：weak-export.js 等於 build.py 由 src 重建的結果（改了 core.js／chibank.js 沒 build 會紅）", () => {
